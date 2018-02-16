@@ -1,0 +1,135 @@
+body {
+	background: $base;
+	font-family: $font--basic;
+}
+
+input, textarea, button, select {
+	font-family: $font--basic;
+}
+
+.container {
+	@include container;
+}
+
+.margin {
+	@include margin;
+}
+
+.padding {
+	@include padding;
+}
+
+.overlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background: $tr;
+	z-index: 900;
+	opacity: 0;
+	transition: $anim_duration ease-in-out;
+
+	&.shown {
+		opacity: 1;
+	}
+}
+
+.s-chat {
+	&-messages {
+		background: #fff;
+		padding: 10px;
+
+		&__author {
+			font-weight: bold;
+			margin-right: 20px;
+		}
+
+		&__date {
+			font-size: 14px;
+			color: $gray;
+			font-weight: bold;
+			font-family: $font--headings;
+		}
+
+		&__message {
+			padding: 5px;
+			margin-bottom: 20px;
+			opacity: 0;
+			transition: $anim_duration ease-in-out;
+
+			&.shown {
+				opacity: 1;
+			}
+
+			&--self,
+			&--user {
+				p {
+					margin-top: 15px;
+					line-height: 18px;
+				}
+			}
+
+			&--server {
+				color: $gray;
+				font-family: $font--headings;
+				font-size: 14px;
+
+				em {
+					font-style: normal;
+					font-weight: bold;
+					color: $primary;
+				}
+			}
+		}
+	}
+	
+	&-input {
+		@include container;
+
+		&-container {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			background: $base;
+		}
+
+		&__submit,
+		&__input {
+			height: 50px;
+			line-height: 46px;
+			font-size: 16px;
+			display: inline-block;
+			vertical-align: top;
+			color: #000;
+		}
+
+		&__submit {
+			text-align: center;
+			width: 100px;
+			border: 2px solid $primary;
+			background: #fff;
+
+			&:hover,
+			&:focus,
+			&:active {
+				border: 2px solid $active;
+			}
+		}
+
+		&__input {
+			width: calc(100% - 100px - #{$gutter});
+			margin-right: $gutter;
+			padding-left: 15px;
+			padding-right: 15px;
+			border: 2px solid lighten($primary, 10%);
+
+			&:hover,
+			&:focus, 
+			&:active {
+				border: 2px solid $primary;
+			}
+		}
+	}
+}

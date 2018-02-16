@@ -1,0 +1,27 @@
+{
+  "name": "chat",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "watch:node-sass": "nodemon -e scss -x \"npm run sass\"",
+    "sass": "node-sass --include-path sass public/scss/main.scss public/css/styles.css",
+    "watch": "npm run watch:node-sass"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "^0.11.0",
+    "nodemon": "^1.14.12",
+    "npm-watch": "^0.3.0",
+    "serve-favicon": "~2.4.5",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "node-sass": "^4.7.2"
+  }
+}
