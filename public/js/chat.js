@@ -1,5 +1,24 @@
 var socket = io.connect();
 
+var firstChannel = io.connect("/first_channel");
+var secondChannel = io.connect("/second_channel");
+
+document.querySelector('#firstChannel').onclick = function() {
+	firstChannel.send('hiii!');
+}
+
+document.querySelector('#secondChannel').onclick = function() {
+	secondChannel.send('hiii!');
+}
+
+firstChannel.on('message', function(message) {
+	console.log(message);
+}); 
+
+secondChannel.on('message', function(message) {
+	console.log(message);
+})
+
 var container = document.querySelector('.s-chat-messages'),
 	sendButton = document.querySelector('#send'),
 	messageBody,
@@ -11,17 +30,6 @@ var container = document.querySelector('.s-chat-messages'),
 
 socket.on('message', function(data) {
 	data = JSON.parse(data);
-	// messageType = data.type;
-	// messageBody = document.createElement('div');
-	// messageBody.classList.add('s-chat-messages__message');
-	// if (data.type == 'userMessage') {
-	// 	messageBody.classList.add('s-chat-messages__message--user');
-	// }  else if (data.type == 'serverMessage') {
-	// 	messageBody.classList.add('s-chat-messages__message--server');
-	// }  else {
-	// 	messageBody.classList.add('s-chat-messages__message--self');
-	// }
-
 	displayMessage(data.author, data.date, data.message, data.type);
 });
 
