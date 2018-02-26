@@ -55,29 +55,34 @@ function authorization() {
 }
 
 function usersOnlineMonitoring() {
-	var usersContainer = document.querySelector('.users');
+	var usersContainer = document.querySelector('.users'),
+		usersList;
 
 	socket.emit('request_list_of_users');
 
 	socket.on('fetch_list_of_users', function(data) {
-		console.log(data);
+		usersList = JSON.parse(data),
+		usersListContainer = document.querySelector('.users');
+			
+		for (var i in usersList) {
+			appendUser(usersList[i], usersListContainer);
+		}
 	})
 }
 
 function appendUser(user, container) {
+	
 	var userDiv = document.createElement('div');
 		userSpan = document.createElement('span');
 	container.appendChild(userDiv);
 	userDiv.appendChild(userSpan);
-	if (user.userId = getUserId()) {
+	userDiv.id = 'user-' + user.id;
+	userSpan.innerHTML = user.username;	
+	if (user.id == getUserId()) {
 		var thatsYouSpan = document.createElement('span');
 		userSpan.appendChild(thatsYouSpan);
 		thatsYouSpan.innerHTML = "(that's you)";
 	}
-
-	userDiv.id = 'user-' + user.userId;
-
-	userSpan.innerHTML = user.username + ', ' + user.userId;	
 }
 
 window.addEventListener('load', function() {

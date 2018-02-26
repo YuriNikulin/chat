@@ -2,7 +2,14 @@ var io = require('socket.io'),
 	userId = 0,
 	clients = [],
 	clientsToFetch = [],
-	rooms = {};
+	rooms = {},
+	newUserData;
+
+function newUser(id, username) {
+	debugger;
+	this.id = id;
+	this.username = username ? username : 'anonymous';
+}	
 
 exports.initialize = function(server) {
 	io = io.listen(server);
@@ -17,22 +24,18 @@ exports.initialize = function(server) {
 		// 	}
 		// });
 
-
-
 		socket.on('disconnect', function() {
 			console.log('disconnected!');		
 		})
 
 		socket.on('request_user_id', function() {
-			
+			socket.emit('fetch_user_id', socket.id);
 		})
 
 		socket.on('request_list_of_users', function() {
 			var usersToFetch = {};
-			
 			for (var i in io.sockets.sockets) {
-				usersToFetch[i] = {};
-				usersToFetch[i].id = io.sockets.sockets[i].id;
+				usersToFetch[i] = new newUser(io.sockets.sockets[i].id, io.sockets.sockets[i].username);
 			}
 			socket.emit('fetch_list_of_users', JSON.stringify(usersToFetch));
 		})
