@@ -60,10 +60,7 @@ function usersOnlineMonitoring() {
 	socket.emit('request_list_of_users');
 
 	socket.on('fetch_list_of_users', function(data) {
-		
-		for (var i in data) {
-			appendUser(data[i], usersContainer);
-		}
+		console.log(data);
 	})
 }
 
