@@ -17,6 +17,39 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function popups() {
+	var openers = document.querySelectorAll('.popup-opener'),
+		popup;
+	for (var i = 0; i < openers.length; i++) {
+		openers[i].addEventListener('click', function() {
+			popup = this.parentNode.querySelector('.popup');
+			showPopup(popup);
+		})
+	}
+}
+
+function getUserNickname() {
+	var userNickname = document.cookie.match( /chatUserNickname=([^;]+)/);
+
+	if (userNickname) {
+		userNickname = userNickname[1];
+	}  else {
+		userNickname = null;
+	}
+	return userNickname;
+}
+
+function getUserId() {
+	var userId = document.cookie.match( /chatUserId=([^;]+)/);
+	if (userId) {
+		userId = userId[1];
+	}   else {
+		userUd = null;
+	}
+
+	return userId;
+}
+
 function appendOverlay(overlayClassList) {
 	var overlay = document.createElement('div');
 	overlay.classList.add(overlayClassList, 'overlay');
@@ -52,11 +85,17 @@ function showPopup(popup) {
 	popup.style.display = 'block';
 	popup.classList.add('shown');
 	appendOverlay('popup-overlay');
+	if (popup.querySelector('.focus')) {
+		popup.querySelector('.focus').focus();
+	}
 }
 
 function closePopup(popup) {
 	if (!popup) {
-		return 0;
+		popup = document.querySelector('.popup.shown');
+		if (!popup) {
+			return 0;
+		}
 	}
 
 	popup.classList.remove('shown');
@@ -67,5 +106,5 @@ function closePopup(popup) {
 }
 
 window.addEventListener('load', function() {
-	chatSizeCalculate();
-});
+	popups();
+})

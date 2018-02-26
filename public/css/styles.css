@@ -17,8 +17,11 @@ body {
 input, textarea, button, select {
   font-family: "lato--regular"; }
 
+.h2 {
+  font-size: 24px; }
+
 .container {
-  max-width: 730px;
+  max-width: 900px;
   padding-left: 15px;
   padding-right: 15px;
   margin-left: auto;
@@ -31,6 +34,28 @@ input, textarea, button, select {
 .padding {
   padding-top: 15px;
   padding-bottom: 15px; }
+
+.text--big {
+  font-size: 16px; }
+
+.tac {
+  text-align: center; }
+
+.btn {
+  font-size: 16px;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: top; }
+  .btn--primary {
+    background-color: #B3B1DB; }
+    .btn--primary:hover, .btn--primary:active, .btn--primary:focus {
+      background-color: #c4c2e3; }
+
+.title {
+  font-family: "lato--thin";
+  text-transform: uppercase; }
 
 .overlay {
   position: fixed;
@@ -76,7 +101,7 @@ input, textarea, button, select {
         color: #B3B1DB; }
 
 .s-chat-input {
-  max-width: 730px;
+  max-width: 900px;
   padding-left: 15px;
   padding-right: 15px;
   margin-left: auto;
@@ -98,7 +123,8 @@ input, textarea, button, select {
     text-align: center;
     width: 100px;
     border: 2px solid #B3B1DB;
-    background: #fff; }
+    background: #fff;
+    cursor: pointer; }
     .s-chat-input__submit:hover, .s-chat-input__submit:focus, .s-chat-input__submit:active {
       border: 2px solid #DA7856; }
   .s-chat-input__input {
@@ -107,6 +133,11 @@ input, textarea, button, select {
     padding-left: 15px;
     padding-right: 15px;
     border: 2px solid #d5d4eb; }
+    @media (max-width: 768px) {
+      .s-chat-input__input {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px; } }
     .s-chat-input__input:hover, .s-chat-input__input:focus, .s-chat-input__input:active {
       border: 2px solid #B3B1DB; }
 
@@ -127,3 +158,16 @@ input, textarea, button, select {
   .popup__text {
     margin-bottom: 20px;
     font-size: 18px; }
+
+@media (max-width: 768px) {
+  .popup {
+    width: calc(100% - 30px); } }
+
+.header {
+  padding: 30px 0;
+  text-align: center; }
+  .header__text {
+    margin-bottom: 20px; }
+    .header__text span {
+      margin-left: 5px;
+      color: #B3B1DB; }

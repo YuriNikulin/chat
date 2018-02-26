@@ -7,3 +7,7 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+exports.chatroom = function(req, res) {
+  res.render('chatroom', { title: 'Express Chat' });
+}

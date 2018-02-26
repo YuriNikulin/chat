@@ -7,6 +7,10 @@ input, textarea, button, select {
 	font-family: $font--basic;
 }
 
+.h2 {
+	font-size: 24px;
+}
+
 .container {
 	@include container;
 }
@@ -17,6 +21,38 @@ input, textarea, button, select {
 
 .padding {
 	@include padding;
+}
+
+.text {
+	&--big {
+		font-size: 16px;
+	}
+}
+
+.tac {
+	text-align: center;
+}
+
+.btn {
+	font-size: 16px;
+	color: #fff;
+	padding: 10px 20px;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
+
+	&--primary {
+		background-color: $primary;
+
+		&:hover, &:active, &:focus {
+			background-color: lighten($primary, 5%);
+		}
+	}
+}
+
+.title {
+	font-family: $font--headings;
+	text-transform: uppercase;
 }
 
 .overlay {
@@ -110,6 +146,7 @@ input, textarea, button, select {
 			width: 100px;
 			border: 2px solid $primary;
 			background: #fff;
+			cursor: pointer;
 
 			&:hover,
 			&:focus,
@@ -124,6 +161,12 @@ input, textarea, button, select {
 			padding-left: 15px;
 			padding-right: 15px;
 			border: 2px solid lighten($primary, 10%);
+
+			@media (max-width: $md) {
+				width: 100%;
+				margin-right: 0;
+				margin-bottom: $gutter;;
+			}
 
 			&:hover,
 			&:focus, 

@@ -20,3 +20,9 @@
 		font-size: 18px;
 	}
 }
+
+@media (max-width: $md) {
+	.popup {
+		width: calc(100% - #{$gutter * 2});
+	}
+}
