@@ -1,6 +1,7 @@
 var socket = io.connect();
 
-var userNickname;
+var userNickname,
+	currentUser = {};
 socket.on('debug_data', function(data) {
 	console.log(data);
 })
@@ -8,12 +9,16 @@ socket.on('debug_data', function(data) {
 socket.on('name_set', function(data) {
 	closePopup();
 	authorization();
+
+	currentUser.username = data.name;
+	removeUser(currentUser);
+	appendUser(currentUser, document.querySelector('.users'));
 });
 
 socket.on('fetch_user_id', function(userId) {
 	document.cookie = 'chatUserId=' + userId;
+	currentUser.id = userId;
 })
-
 
 function requestUserId() {
 	socket.emit('request_user_id');
@@ -31,11 +36,14 @@ function authorization() {
 
 	if (nicknameContainer) {
 		for (var i = 0; i < nicknameContainer.length; i++) {
-			if (nicknameContainer[i].querySelector('span')) {
-				nicknameContainer[i].removeChild(nicknameContainer[i].querySelector('span'));
+			var username = nicknameContainer[i].querySelector('.username');
+
+			if (username) {
+				username.parentNode.removeChild(nicknameContainer[i].querySelector('.username'));
 			}
 			nicknameSpan = document.createElement('span');
 			nicknameContainer[i].appendChild(nicknameSpan);
+			nicknameSpan.classList.add('username');
 			nicknameSpan.innerHTML = userNickname;
 		}
 	}
@@ -61,28 +69,21 @@ function usersOnlineMonitoring() {
 	socket.emit('request_list_of_users');
 
 	socket.on('fetch_list_of_users', function(data) {
-		usersList = JSON.parse(data),
-		usersListContainer = document.querySelector('.users');
-			
+		usersList = JSON.parse(data);
 		for (var i in usersList) {
-			appendUser(usersList[i], usersListContainer);
+			appendUser(usersList[i], usersContainer);
 		}
-	})
-}
+	});
 
-function appendUser(user, container) {
-	
-	var userDiv = document.createElement('div');
-		userSpan = document.createElement('span');
-	container.appendChild(userDiv);
-	userDiv.appendChild(userSpan);
-	userDiv.id = 'user-' + user.id;
-	userSpan.innerHTML = user.username;	
-	if (user.id == getUserId()) {
-		var thatsYouSpan = document.createElement('span');
-		userSpan.appendChild(thatsYouSpan);
-		thatsYouSpan.innerHTML = "(that's you)";
-	}
+	socket.on('new_user_connected', function(data) {
+		var user = JSON.parse(data);
+		appendUser(user, usersContainer);
+	})
+
+	socket.on('user_disconnected', function(data) {
+		var user = JSON.parse(data);
+		removeUser(user);
+	});
 }
 
 window.addEventListener('load', function() {

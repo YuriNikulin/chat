@@ -105,6 +105,30 @@ function closePopup(popup) {
 	}, 300);
 }
 
+function appendUser(user, container) {
+	var userContainer = document.createElement('div');
+		userDiv = document.createElement('div'),
+		userSpan = document.createElement('span');
+	container.appendChild(userContainer);
+	userContainer.appendChild(userDiv);
+	userContainer.classList.add('user-' + user.id);
+	userSpan.classList.add('username');
+	userDiv.appendChild(userSpan);
+	userSpan.innerHTML = user.username;
+	if (user.id == getUserId()) {
+		var thatsYouSpan = document.createElement('span');
+		userDiv.appendChild(thatsYouSpan);
+		thatsYouSpan.innerHTML = "(that's you)";
+	}
+}
+
+function removeUser(user) {
+	var elements = document.querySelectorAll('.user-' + user.id);
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].parentNode.removeChild(elements[i]);
+	}
+}
+
 window.addEventListener('load', function() {
 	popups();
 })

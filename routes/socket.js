@@ -6,10 +6,14 @@ var io = require('socket.io'),
 	newUserData;
 
 function newUser(id, username) {
-	debugger;
 	this.id = id;
 	this.username = username ? username : 'anonymous';
-}	
+}
+
+function newUserToFetch(user) {
+	var newUserToFetch = new newUser(user.id, user.username);
+	return JSON.stringify(newUserToFetch);
+}
 
 exports.initialize = function(server) {
 	io = io.listen(server);
@@ -25,7 +29,8 @@ exports.initialize = function(server) {
 		// });
 
 		socket.on('disconnect', function() {
-			console.log('disconnected!');		
+			console.log('disconnected!');
+			socket.broadcast.emit('user_disconnected', newUserToFetch(socket));
 		})
 
 		socket.on('request_user_id', function() {
@@ -42,6 +47,8 @@ exports.initialize = function(server) {
 
 		socket.on('user_sends_nickname', function(username) {
 			username ? (socket.username = username) : (socket.username = 'anonymous');
+			socket.broadcast.emit('user_disconnected', newUserToFetch(socket));
+			socket.broadcast.emit('new_user_connected', newUserToFetch(socket));
 		})
 
 		socket.on('set_name', function(data) {
