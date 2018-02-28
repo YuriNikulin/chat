@@ -111,19 +111,21 @@ function appendUser(user, container) {
 		userSpan = document.createElement('span');
 	container.appendChild(userContainer);
 	userContainer.appendChild(userDiv);
-	userContainer.classList.add('user-' + user.id);
-	userSpan.classList.add('username');
+	userContainer.dataset.userid = user.id;
+	userContainer.classList.add('users-user');
 	userDiv.appendChild(userSpan);
+	userSpan.classList.add('username');
 	userSpan.innerHTML = user.username;
 	if (user.id == getUserId()) {
 		var thatsYouSpan = document.createElement('span');
 		userDiv.appendChild(thatsYouSpan);
 		thatsYouSpan.innerHTML = "(that's you)";
+		thatsYouSpan.classList.add('users__self')
 	}
 }
 
 function removeUser(user) {
-	var elements = document.querySelectorAll('.user-' + user.id);
+	var elements = document.querySelectorAll('[data-userid="' + user.id + '"]');
 	for (var i = 0; i < elements.length; i++) {
 		elements[i].parentNode.removeChild(elements[i]);
 	}

@@ -19,6 +19,12 @@ input, textarea, button, select {
 	@include margin;
 }
 
+.mb {
+	&--reg {
+		margin-bottom: 20px;
+	}
+}
+
 .padding {
 	@include padding;
 }
@@ -68,6 +74,29 @@ input, textarea, button, select {
 
 	&.shown {
 		opacity: 1;
+	}
+}
+
+.users {
+	&__self {
+		font-size: 13px;
+		margin-left: 10px;
+	}
+	&-user {
+		@include padding;
+		padding-left: 15px;
+		padding-right: 15px;
+		cursor: pointer;
+		transition: .1s ease-in-out background;
+
+		span {
+			transition: .1s ease-in-out color;
+		}
+
+		&:hover {
+			background: $primary;
+			color: #fff;
+		}
 	}
 }
 

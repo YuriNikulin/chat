@@ -31,6 +31,9 @@ input, textarea, button, select {
   margin-top: 15px;
   margin-bottom: 15px; }
 
+.mb--reg {
+  margin-bottom: 20px; }
+
 .padding {
   padding-top: 15px;
   padding-bottom: 15px; }
@@ -69,6 +72,23 @@ input, textarea, button, select {
   transition: 0.3s ease-in-out; }
   .overlay.shown {
     opacity: 1; }
+
+.users__self {
+  font-size: 13px;
+  margin-left: 10px; }
+
+.users-user {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  transition: .1s ease-in-out background; }
+  .users-user span {
+    transition: .1s ease-in-out color; }
+  .users-user:hover {
+    background: #B3B1DB;
+    color: #fff; }
 
 .s-chat-messages {
   background: #fff;
