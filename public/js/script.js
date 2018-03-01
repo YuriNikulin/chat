@@ -90,6 +90,25 @@ function showPopup(popup) {
 	}
 }
 
+function showNotification(content) {
+	var notificationContainer = document.createElement('div');
+	body.appendChild(notificationContainer);
+	notificationContainer.classList.add('notification');
+	notificationContainer.appendChild(content);
+	setTimeout(function() {
+		notificationContainer.classList.add('shown');
+	}, 100)
+
+	return notificationContainer;
+}
+
+function closeNotification(elem) {
+	elem.classList.remove('shown');
+	setTimeout(function() {
+		elem.parentNode.removeChild(elem);
+	}, 300);
+}
+
 function closePopup(popup) {
 	if (!popup) {
 		popup = document.querySelector('.popup.shown');
@@ -103,6 +122,14 @@ function closePopup(popup) {
 	setTimeout(function() {
 		popup.style.display = '';
 	}, 300);
+}
+
+function inviteUsers(users, initiator) {
+	if (!users) {
+		return 0;
+	}
+
+	socket.emit('user_sends_invitation', users, initiator);
 }
 
 function appendUser(user, container) {
@@ -121,6 +148,7 @@ function appendUser(user, container) {
 		userDiv.appendChild(thatsYouSpan);
 		thatsYouSpan.innerHTML = "(that's you)";
 		thatsYouSpan.classList.add('users__self')
+		userContainer.classList.add('users-user--self');
 	}
 }
 

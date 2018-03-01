@@ -20,6 +20,33 @@ socket.on('fetch_user_id', function(userId) {
 	currentUser.id = userId;
 })
 
+socket.on('server_sends_invitation', function(initiator) {
+	var invitationContainer = document.createElement('div'),
+		acceptButton = document.createElement('a'),
+		declineButton = document.createElement('a'),
+		invitationText = document.createElement('span'),
+		invitationInitiator = document.createElement('span');
+
+	invitationContainer.appendChild(invitationText);
+	invitationContainer.appendChild(acceptButton);
+	invitationContainer.appendChild(declineButton);
+
+	acceptButton.innerHTML = 'Accept';
+	acceptButton.className = 'btn btn--primary';
+	declineButton.className = 'btn btn--secondary fl--r';
+	declineButton.innerHTML = 'Decline';
+	invitationText.innerHTML = ' is inviting you to join a room';
+	invitationText.className = 'invitation__text notification__text mb--reg';
+	
+	invitationInitiator.innerHTML = initiator;
+	invitationInitiator.classList.add('notification__span');
+	invitationText.insertBefore(invitationInitiator, invitationText.childNodes[0]);
+	var notificationContainer = showNotification(invitationContainer);
+	declineButton.addEventListener('click', function() {
+		closeNotification(notificationContainer);
+	})
+})
+
 function requestUserId() {
 	socket.emit('request_user_id');
 }
@@ -86,8 +113,71 @@ function usersOnlineMonitoring() {
 	});
 }
 
+function usersInvitation() {
+	var users = document.querySelectorAll('.users-user'),
+		usersContainer = document.querySelector('.users'),
+		invite = document.querySelector('.users__invite'),
+		inviteCounter = invite.querySelector('.users__counter');
+		selectedUsers = {};
+
+	function selectUser(user) {
+		user.classList.add('selected');
+		selectedUsers[user.dataset.userid] = 1;
+	}
+
+	function unselectUser(user) {
+		user.classList.remove('selected');
+		delete selectedUsers[user.dataset.userid];
+	}
+
+	function updateInviteButton() {
+		var counter = Object.keys(selectedUsers).length;
+		inviteCounter.innerHTML = '(' + counter + ')';
+
+		if (counter > 0) {
+			invite.classList.remove('btn--disabled');
+		}  else {
+			invite.classList.add('btn--disabled');
+		}
+	}
+
+	invite.addEventListener('click', function() {
+		inviteUsers(selectedUsers, userNickname);
+	});
+
+	usersContainer.addEventListener('click', function(event) {
+
+		var clickedUser = event.target,
+			clickedUserParent = clickedUser.parentNode;
+		if (!clickedUser.classList.contains('users-user')) {
+			while (!clickedUserParent.classList.contains('users-user') && clickedUserParent != document) {
+				clickedUser = clickedUserParent;
+				clickedUserParent = clickedUser.parentNode;
+			}
+
+			if (clickedUserParent.classList.contains('users-user')) {
+				clickedUser = clickedUserParent;
+			} else {
+				return 0;
+			}
+		}
+
+		if (clickedUser.classList.contains('users-user--self')) {
+			return 0;
+		}
+
+		if (!clickedUser.classList.contains('selected')) {
+			selectUser(clickedUser);
+		}  else {
+			unselectUser(clickedUser);
+		}
+		updateInviteButton();
+	})
+}
+
 window.addEventListener('load', function() {
 	requestUserId();
 	authorization();
 	usersOnlineMonitoring();
+	usersInvitation();
 })

@@ -51,6 +51,14 @@ exports.initialize = function(server) {
 			socket.broadcast.emit('new_user_connected', newUserToFetch(socket));
 		})
 
+		socket.on('user_sends_invitation', function(users, initiator) {
+			for (var i in users) {
+				if (io.sockets.sockets[i]) {
+					io.sockets.sockets[i].emit('server_sends_invitation', initiator);
+				}
+			}
+		})
+
 		socket.on('set_name', function(data) {
 			socket.username = data.name;
 			socket.emit('name_set', data);

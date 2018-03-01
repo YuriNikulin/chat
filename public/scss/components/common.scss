@@ -39,6 +39,43 @@ input, textarea, button, select {
 	text-align: center;
 }
 
+.fl {
+	&--r {
+		float: right;
+	}
+}
+
+.notification {
+	z-index: 100;
+	width: 300px;
+	max-height: 200px;
+	overflow: auto;
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+	padding: $gutter;
+	background: rgba(0,0,0,.8);
+	opacity: 0;
+	transform: translateY(30px);
+	transition: $anim_duration ease-in-out;
+
+	&.shown {
+		transform: none;
+		opacity: 1;
+	}
+
+	&__span {
+		font-weight: bold;
+		font-size: 15px;
+	}
+
+	&__text {
+		display: block;
+		font-size: 13px;
+		color: #fff;
+	}
+}
+
 .btn {
 	font-size: 16px;
 	color: #fff;
@@ -52,6 +89,23 @@ input, textarea, button, select {
 
 		&:hover, &:active, &:focus {
 			background-color: lighten($primary, 5%);
+		}
+	}
+
+	&--secondary {
+		background-color: $gray;
+
+		&:hover, &:active, &:focus {
+			background-color: lighten($gray, 5%);
+		}
+	}
+
+	&--disabled {
+		background-color: $gray;
+
+		&:hover, &:active, &:focus {
+			background-color: $gray;
+			cursor: auto;
 		}
 	}
 }
@@ -77,25 +131,87 @@ input, textarea, button, select {
 	}
 }
 
+@keyframes user-selected-anim {
+	0% {
+		box-shadow: 0px 0px 0px 0px $tr--light;
+	}
+	100% {
+		box-shadow: 0px 0px 190px 0px $tr--light;
+	}
+}
+
 .users {
 	&__self {
 		font-size: 13px;
 		margin-left: 10px;
 	}
+
+	&__counter {
+		font-size: 12px;
+		margin-left: 5px;
+	}
+
+	&__invite {
+		transition: $anim_duration ease-in-out;
+	}
+
 	&-user {
 		@include padding;
 		padding-left: 15px;
-		padding-right: 15px;
+		padding-right: 25px;
+		background: #fff;
 		cursor: pointer;
-		transition: .1s ease-in-out background;
+		transition: .1s ease-in-out background-color;
+		border-bottom: 1px solid $base;
+		position: relative;
+
+		&:after {
+			content: '\ea10';
+			font-family: icomoon;
+			opacity: 0;
+			position: absolute;
+			top: 50%;
+			right: 20px;
+			transform: translate(0, -50%);
+			transition: .3s ease-in-out opacity;
+		}
+		
+		&:active,
+		&:focus {
+			border-bottom: 1px solid $base;
+		}
 
 		span {
 			transition: .1s ease-in-out color;
 		}
 
-		&:hover {
+		&:hover,
+		&.selected {
 			background: $primary;
 			color: #fff;
+		}
+
+		& > div {
+			transition: .3s ease-in-out transform;
+		}
+
+		&.selected {
+			& > div {
+				transform: translateX(10px);
+			}
+
+			&:after {
+				opacity: 1;
+			}
+		}
+
+		&--self {
+			&:hover,
+			&.selected {
+				background: #fff;
+				color: #000;
+				cursor: auto;
+			}
 		}
 	}
 }
