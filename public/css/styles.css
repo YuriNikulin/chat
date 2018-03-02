@@ -36,6 +36,9 @@
 .icon-checkmark:before {
   content: "\ea10"; }
 
+.icon-cheveron-down:before {
+  content: "\e900"; }
+
 body {
   background: #F7F7F7;
   font-family: "lato--regular"; }
@@ -161,12 +164,25 @@ input, textarea, button, select {
 
 .selectbox {
   position: relative;
-  cursor: pointer; }
+  cursor: pointer;
+  padding: 0; }
+  .selectbox [data-triggered=true] + .icon {
+    color: #B3B1DB; }
+  .selectbox, .selectbox:hover, .selectbox:active, .selectbox:focus {
+    border: none; }
   .selectbox__item {
     display: block;
     width: 100%;
     margin-top: -1px;
     background: #fff; }
+    .selectbox__item:hover {
+      z-index: 10;
+      position: relative; }
+  .selectbox .icon {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    font-size: 20px; }
   .selectbox__item, .selectbox__title {
     height: auto;
     min-height: 50px;
