@@ -12,9 +12,11 @@ block content
 			h2.title.h2.users__title.mb--reg Users are online		
 			div.users.mb--reg
 			div.tac
-				a.btn.btn--primary.btn--disabled.users__invite 
+				a.btn.btn--primary.btn--disabled.popup-opener
 					span Invite users to chat
-					span.users__counter (0) 
+					span.users__counter (0)
+				include popup.jade
+					include new_room.jade	
 block scripts
 	script(src='/socket.io/socket.io.js')
 	script(src='/js/script.js')

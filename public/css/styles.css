@@ -70,8 +70,32 @@ input, textarea, button, select {
 .tac {
   text-align: center; }
 
+.tal {
+  text-align: left; }
+
 .fl--r {
   float: right; }
+
+.input {
+  font-size: 16px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 2px solid #d5d4eb;
+  width: 350px;
+  display: inline-block;
+  vertical-align: middle; }
+  .input-container {
+    margin-bottom: 15px; }
+  .input-label {
+    width: calc(100% - 350px);
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 15px;
+    font-size: 13px; }
+  .input:focus, .input:hover, .input:active {
+    border: 2px solid #B3B1DB; }
+  .input--text {
+    height: 50px; }
 
 .notification {
   z-index: 100;
@@ -134,6 +158,27 @@ input, textarea, button, select {
   transition: 0.3s ease-in-out; }
   .overlay.shown {
     opacity: 1; }
+
+.selectbox {
+  position: relative;
+  cursor: pointer; }
+  .selectbox__item {
+    display: block;
+    width: 100%;
+    margin-top: -1px;
+    background: #fff; }
+  .selectbox__item, .selectbox__title {
+    height: auto;
+    min-height: 50px;
+    padding-top: 15px;
+    padding-bottom: 15px; }
+  .selectbox-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0; }
+  .selectbox.shown .selectbox-container {
+    display: block; }
 
 @keyframes user-selected-anim {
   0% {

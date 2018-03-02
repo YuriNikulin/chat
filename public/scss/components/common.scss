@@ -39,9 +39,43 @@ input, textarea, button, select {
 	text-align: center;
 }
 
+.tal {
+	text-align: left;
+}
+
 .fl {
 	&--r {
 		float: right;
+	}
+}
+
+.input {
+	font-size: 16px;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 2px solid lighten($primary, 10%);
+	width: 350px;
+	display: inline-block;
+	vertical-align: middle;
+
+	&-container {
+		margin-bottom: $gutter;
+	}
+
+	&-label {
+		width: calc(100% - 350px);
+		display: inline-block;
+		vertical-align: middle;
+		padding-left: $gutter;
+		font-size: 13px;
+	}
+
+	&:focus, &:hover, &:active {
+		border: 2px solid $primary;
+	}
+
+	&--text {
+		height: 50px;
 	}
 }
 
@@ -128,6 +162,39 @@ input, textarea, button, select {
 
 	&.shown {
 		opacity: 1;
+	}
+}
+
+.selectbox {
+	position: relative;
+	cursor: pointer;
+
+	&__item {
+		display: block;
+		width: 100%;
+		margin-top: -1px;
+		background: #fff;
+	}
+
+	&__item,
+	&__title {
+		height: auto;
+		min-height: 50px;
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+
+	&-container {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+	}
+
+	&.shown {
+		.selectbox-container {
+			display: block;
+		}
 	}
 }
 

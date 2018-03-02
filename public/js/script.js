@@ -55,6 +55,7 @@ function appendOverlay(overlayClassList) {
 	overlay.classList.add(overlayClassList, 'overlay');
 	body.appendChild(overlay);
 	overlay.classList.add('shown');
+	return overlay;
 }
 
 function leadingZero(number) {
@@ -84,10 +85,30 @@ function removeOverlay() {
 function showPopup(popup) {
 	popup.style.display = 'block';
 	popup.classList.add('shown');
-	appendOverlay('popup-overlay');
+	var overlay = appendOverlay('popup-overlay');
 	if (popup.querySelector('.focus')) {
 		popup.querySelector('.focus').focus();
 	}
+	overlay.addEventListener('click', function() {
+		closePopup(popup);
+	})
+
+}
+
+function showSelectbox(title) {
+	title.parentNode.classList.add('shown');
+
+	title.close = function() {
+		closeSelectbox(title);
+	}
+
+	body.addEventListener('click', title.close);
+}
+
+function closeSelectbox(title) {
+	title.parentNode.classList.remove('shown');
+	title.dataset.triggered = 'false';
+	body.removeEventListener('click', title.close);
 }
 
 function showNotification(content) {
