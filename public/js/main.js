@@ -1,6 +1,7 @@
 var socket = io.connect();
 
 var userNickname,
+	maxUsersCount = 16;
 	body = document.querySelector('body');
 	currentUser = {};
 socket.on('debug_data', function(data) {
@@ -114,11 +115,63 @@ function usersOnlineMonitoring() {
 	});
 }
 
+function nr() {
+	var nrContainer = document.querySelector('.nr'),
+		nrName = nrContainer.querySelector('#room-name'),
+		nrUsersCount = nrContainer.querySelector('#room-users-count'),
+		nrSecurity = nrContainer.querySelector('#room-security .selectbox__title'),
+		nrCreate = nrContainer.querySelector('.nr__create'),
+		nrBuffer,
+		newRoomDescription = {},
+		nrRegExp,
+		nrError;
+
+		nrCreate.onclick = function() {
+			removeInputErrors(nrContainer);
+			nrDataCheck();
+		}
+
+	function nrDataCheck() {
+		nrError = false;
+		nrRegExp = (nrName.value).match(/\S/g);
+
+		if (!nrRegExp) {
+			nrError = true;
+			showInputError(nrName, 'Room name can not be empty or consist of whitespaces only');
+		} else {
+			newRoomDescription.roomName = nrName.value;
+		}
+
+		nrBuffer = parseInt(nrUsersCount.value);
+
+		if (!nrBuffer || nrBuffer > maxUsersCount) {
+			nrError = true;
+			showInputError(nrUsersCount, 'The value of this field should be integer value no more than ' + maxUsersCount);
+		} else {
+			newRoomDescription.roomMaxUsersCount = nrBuffer;
+		}
+
+		nrBuffer = nrSecurity.dataset.value;
+
+		if (!nrBuffer) {
+			nrError = true;
+			showInputError(nrSecurity.parentNode);
+		} else {
+			newRoomDescription.roomSecurity = nrBuffer;
+		}
+
+		if (!nrError) {
+			newRoomDescription;
+		}
+
+	}	
+}
 
 function usersInvitation() {
 	var users = document.querySelectorAll('.users-user'),
 		usersContainer = document.querySelector('.users'),
 		invite = document.querySelector('.users__invite'),
+		nrPopup = document.querySelector('.users__invite + .popup'),
 		inviteCounter = invite.querySelector('.users__counter');
 		selectedUsers = {};
 
@@ -144,7 +197,10 @@ function usersInvitation() {
 	}
 
 	invite.addEventListener('click', function() {
-		inviteUsers(selectedUsers, userNickname);
+		if (!this.classList.contains('btn--disabled')) {
+			showPopup(nrPopup);
+			nr();
+		}
 	});
 
 	usersContainer.addEventListener('click', function(event) {
@@ -182,5 +238,5 @@ window.addEventListener('load', function() {
 	authorization();
 	usersOnlineMonitoring();
 	selectboxes();
-	// usersInvitation();
+	usersInvitation();
 })

@@ -135,7 +135,34 @@ function selectItemSelectbox(item) {
 
 }
 
+function removeInputErrors(container) {
+	var errors = container.querySelectorAll('.input__error');
+	for (var i = 0; i < errors.length; i++) {
+		errors[i].parentNode.removeChild(errors[i]);
+	}
+}
+
+function showInputError(elem, warning) {
+	if (!elem) {
+		return 0;
+	}
+
+	if (!warning) {
+		warning = 'This field has not been filled correctly';
+	}
+
+	var warningSpan = document.createElement('span');
+	warningSpan.classList.add('input__error');
+	elem = elem.parentNode;
+	elem.appendChild(warningSpan);
+	warningSpan.innerHTML = warning;
+
+}
+
 function showPopup(popup) {
+	if (!popup) {
+		return 0;
+	}
 	popup.style.display = 'block';
 	popup.classList.add('shown');
 	var overlay = appendOverlay('popup-overlay');

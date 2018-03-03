@@ -54,13 +54,28 @@ input, textarea, button, select {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 2px solid lighten($primary, 10%);
-	width: 350px;
+	width: $input_width;
 	display: inline-block;
 	vertical-align: middle;
 
 	@media (max-width: $sm) {
 		width: 100%;
 		margin-bottom: 5px;
+	}
+
+	&__error {
+		padding: 10px 20px;
+		width: $input_width;
+		display: block;
+		background-color: $active;
+		color: #fff;
+		font-size: 13px;
+		line-height: 16px;
+		animation: input_error_animation 10s linear infinite;
+
+		@media (max-width: $sm) {
+			width: 100%;
+		}
 	}
 
 	&-container {
@@ -72,7 +87,7 @@ input, textarea, button, select {
 	}
 
 	&-label {
-		width: calc(100% - 350px);
+		width: calc(100% - #{$input_width});
 		display: inline-block;
 		vertical-align: middle;
 		padding-left: $gutter;
@@ -247,6 +262,7 @@ input, textarea, button, select {
 	&.shown {
 		.selectbox-container {
 			display: block;
+			margin-bottom: $gutter;
 		}
 	}
 }

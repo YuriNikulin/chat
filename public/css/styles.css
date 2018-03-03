@@ -39,6 +39,20 @@
 .icon-cheveron-down:before {
   content: "\e900"; }
 
+@keyframes input_error_animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.8, 0.8); }
+  2% {
+    transform: scale(1.07, 1.07); }
+  4% {
+    opacity: 1;
+    transform: scale(0.9, 0.9); }
+  6% {
+    transform: scale(1.03, 1.03); }
+  8% {
+    transform: scale(1, 1); } }
+
 body {
   background: #F7F7F7;
   font-family: "lato--regular"; }
@@ -91,6 +105,18 @@ input, textarea, button, select {
     .input {
       width: 100%;
       margin-bottom: 5px; } }
+  .input__error {
+    padding: 10px 20px;
+    width: 350px;
+    display: block;
+    background-color: #DA7856;
+    color: #fff;
+    font-size: 13px;
+    line-height: 16px;
+    animation: input_error_animation 10s linear infinite; }
+    @media (max-width: 620px) {
+      .input__error {
+        width: 100%; } }
   .input-container {
     margin-bottom: 15px; }
     @media (max-width: 620px) {
@@ -218,7 +244,8 @@ input, textarea, button, select {
       .selectbox-container {
         margin-top: -6px; } }
   .selectbox.shown .selectbox-container {
-    display: block; }
+    display: block;
+    margin-bottom: 15px; }
 
 @keyframes user-selected-anim {
   0% {
@@ -358,7 +385,8 @@ input, textarea, button, select {
   opacity: 0;
   transition: 0.3s ease-in-out;
   max-height: 100%;
-  overflow-y: auto; }
+  overflow-y: scroll;
+  box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.3); }
   .popup.shown {
     opacity: 1; }
   .popup__text {
