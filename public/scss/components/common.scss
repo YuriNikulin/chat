@@ -58,8 +58,17 @@ input, textarea, button, select {
 	display: inline-block;
 	vertical-align: middle;
 
+	@media (max-width: $sm) {
+		width: 100%;
+		margin-bottom: 5px;
+	}
+
 	&-container {
 		margin-bottom: $gutter;
+
+		@media (max-width: $sm) {
+			margin-bottom: 30px;
+		}
 	}
 
 	&-label {
@@ -68,6 +77,12 @@ input, textarea, button, select {
 		vertical-align: middle;
 		padding-left: $gutter;
 		font-size: 13px;
+
+		@media (max-width: $sm) {
+			width: 100%;
+			display: block;
+			padding-left: 0;
+		}
 	}
 
 	&:focus, &:hover, &:active {
@@ -182,7 +197,12 @@ input, textarea, button, select {
 		display: block;
 		width: 100%;
 		margin-top: -1px;
+		margin-bottom: 0;
 		background: #fff;
+
+		&.active {
+			display: none;
+		}
 
 		&:hover {
 			z-index: 10;
@@ -193,7 +213,7 @@ input, textarea, button, select {
 	.icon {
 		position: absolute;
 		top: 17px;
-		right: 20px;
+		right: 10px;
 		font-size: 20px;
 	}
 
@@ -205,11 +225,23 @@ input, textarea, button, select {
 		padding-bottom: 15px;
 	}
 
+	&__title {
+		position: relative;
+		z-index: 1;
+		padding-right: 30px;
+	}
+
 	&-container {
 		display: none;
 		position: absolute;
 		top: 100%;
 		left: 0;
+		z-index: 10;
+		box-shadow: 0px 0px 15px 8px $tr--light;
+
+		@media (max-width: $sm) {
+			margin-top: -6px;
+		}
 	}
 
 	&.shown {

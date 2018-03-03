@@ -1,6 +1,11 @@
 var animDuration = 300,
 	body = document.querySelector('body');
 
+// var selectboxChangeEvent = document.createEvent('Event');
+// 	selectboxChangeEvent.initEvent('selectboxChange', true, true);
+
+var selectboxChangeEvent = new CustomEvent('selectboxChange');
+
 function chatSizeCalculate() {
 	var clientHeight,
 		chat = document.querySelector('.s-chat .s-chat-messages'),
@@ -82,6 +87,54 @@ function removeOverlay() {
 	}, 300);
 }
 
+function selectboxes() {
+	var selectboxes = document.querySelectorAll('.selectbox');
+	
+	
+	for (var i = 0; i < selectboxes.length; i++) {
+		
+		var selectbox = selectboxes[i];
+			selectbox.selectboxTitle = selectbox.querySelector('.selectbox__title'),
+			selectbox.container = selectbox.querySelector('.selectbox-container'),
+			selectbox.items = selectbox.querySelectorAll('.selectbox__item');
+			selectbox.items.selectboxParent = selectbox.selectboxTitle.selectboxParent = selectbox;
+
+		for (var j = 0; j < selectbox.items.length; j++) {
+			var selectboxItem = selectbox.items[j];
+			selectboxItem.selectboxParent = selectbox;
+			selectboxItem.onclick = function() {
+				selectItemSelectbox(this);
+			}
+		}
+
+		selectbox.selectboxTitle.onclick = function(event) {
+			self = this;
+
+			if (this.dataset.triggered == 'false') {
+				showSelectbox(this.selectboxParent);
+				event.stopPropagation();
+			}
+
+			body.onclick = function(event) {
+				if (!event.target.classList.contains('selectbox__item') || event.target.classList.contains('selectbox__title')) {
+					closeSelectbox(self.selectboxParent);
+				}
+			}
+		}
+	}
+}
+
+function selectItemSelectbox(item) {
+	var parent = item.selectboxParent;
+	parent.selectboxTitle.dataset.value = item.dataset.value;
+	parent.selectboxTitle.innerHTML = item.innerHTML;
+	parent.querySelector('.active').classList.remove('active');
+	item.classList.add('active');
+	closeSelectbox(parent);
+	parent.dispatchEvent(selectboxChangeEvent);
+
+}
+
 function showPopup(popup) {
 	popup.style.display = 'block';
 	popup.classList.add('shown');
@@ -95,20 +148,14 @@ function showPopup(popup) {
 
 }
 
-function showSelectbox(title) {
-	title.parentNode.classList.add('shown');
-
-	title.close = function() {
-		closeSelectbox(title);
-	}
-
-	body.addEventListener('click', title.close);
+function showSelectbox(selectbox) {
+	selectbox.classList.add('shown');
+	selectbox.selectboxTitle.dataset.triggered = 'true';
 }
 
-function closeSelectbox(title) {
-	title.parentNode.classList.remove('shown');
-	title.dataset.triggered = 'false';
-	body.removeEventListener('click', title.close);
+function closeSelectbox(selectbox) {
+	selectbox.classList.remove('shown');
+	selectbox.selectboxTitle.dataset.triggered = 'false';
 }
 
 function showNotification(content) {

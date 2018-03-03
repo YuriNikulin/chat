@@ -87,14 +87,26 @@ input, textarea, button, select {
   width: 350px;
   display: inline-block;
   vertical-align: middle; }
+  @media (max-width: 620px) {
+    .input {
+      width: 100%;
+      margin-bottom: 5px; } }
   .input-container {
     margin-bottom: 15px; }
+    @media (max-width: 620px) {
+      .input-container {
+        margin-bottom: 30px; } }
   .input-label {
     width: calc(100% - 350px);
     display: inline-block;
     vertical-align: middle;
     padding-left: 15px;
     font-size: 13px; }
+    @media (max-width: 620px) {
+      .input-label {
+        width: 100%;
+        display: block;
+        padding-left: 0; } }
   .input:focus, .input:hover, .input:active {
     border: 2px solid #B3B1DB; }
   .input--text {
@@ -174,25 +186,37 @@ input, textarea, button, select {
     display: block;
     width: 100%;
     margin-top: -1px;
+    margin-bottom: 0;
     background: #fff; }
+    .selectbox__item.active {
+      display: none; }
     .selectbox__item:hover {
       z-index: 10;
       position: relative; }
   .selectbox .icon {
     position: absolute;
     top: 17px;
-    right: 20px;
+    right: 10px;
     font-size: 20px; }
   .selectbox__item, .selectbox__title {
     height: auto;
     min-height: 50px;
     padding-top: 15px;
     padding-bottom: 15px; }
+  .selectbox__title {
+    position: relative;
+    z-index: 1;
+    padding-right: 30px; }
   .selectbox-container {
     display: none;
     position: absolute;
     top: 100%;
-    left: 0; }
+    left: 0;
+    z-index: 10;
+    box-shadow: 0px 0px 15px 8px rgba(0, 0, 0, 0.1); }
+    @media (max-width: 620px) {
+      .selectbox-container {
+        margin-top: -6px; } }
   .selectbox.shown .selectbox-container {
     display: block; }
 
@@ -332,7 +356,9 @@ input, textarea, button, select {
   padding: 20px 15px;
   display: none;
   opacity: 0;
-  transition: 0.3s ease-in-out; }
+  transition: 0.3s ease-in-out;
+  max-height: 100%;
+  overflow-y: auto; }
   .popup.shown {
     opacity: 1; }
   .popup__text {

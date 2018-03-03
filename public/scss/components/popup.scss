@@ -10,6 +10,8 @@
 	display: none;
 	opacity: 0;
 	transition: $anim_duration ease-in-out;
+	max-height: 100%;
+	overflow-y: auto;
 
 	&.shown {
 		opacity: 1;

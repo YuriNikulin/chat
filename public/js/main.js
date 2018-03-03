@@ -114,21 +114,6 @@ function usersOnlineMonitoring() {
 	});
 }
 
-function selectboxes() {
-	var selectboxes = document.querySelectorAll('.selectbox');
-	for (var i = 0; i < selectboxes.length; i++) {
-		var selectboxTitle = selectboxes[i].querySelector('.selectbox__title'),
-			selectboxContainer = selectboxes[i].querySelector('.selectbox-container'),
-			selectboxItems = selectboxes[i].querySelector('.selectbox__item');
-		selectboxTitle.addEventListener('click', function(event) {
-			if (this.dataset.triggered != 'true') {
-				event.stopPropagation();
-				this.dataset.triggered = 'true';
-			}
-			showSelectbox(this);
-		})
-	}
-}
 
 function usersInvitation() {
 	var users = document.querySelectorAll('.users-user'),
