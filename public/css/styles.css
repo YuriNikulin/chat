@@ -36,6 +36,9 @@
 .icon-checkmark:before {
   content: "\ea10"; }
 
+.icon-cheveron-up:before {
+  content: "\e901"; }
+
 .icon-cheveron-down:before {
   content: "\e900"; }
 
