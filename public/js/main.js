@@ -49,6 +49,12 @@ socket.on('server_sends_invitation', function(initiator) {
 	})
 })
 
+socket.on('server_directs_to_namespace', function(data) {
+	document.cookie = 'chatRoomId=' + data;
+	window.location.replace('/chatroom');
+
+})
+
 function requestUserId() {
 	socket.emit('request_user_id');
 }
@@ -115,16 +121,23 @@ function usersOnlineMonitoring() {
 	});
 }
 
-function nr() {
+function nr(invitedUsers) {
 	var nrContainer = document.querySelector('.nr'),
 		nrName = nrContainer.querySelector('#room-name'),
 		nrUsersCount = nrContainer.querySelector('#room-users-count'),
 		nrSecurity = nrContainer.querySelector('#room-security .selectbox__title'),
 		nrCreate = nrContainer.querySelector('.nr__create'),
+		nrInitiator,
 		nrBuffer,
 		newRoomDescription = {},
 		nrRegExp,
 		nrError;
+
+		if (invitedUsers) {
+			newRoomDescription.roomInvitedUsers = invitedUsers;
+		}
+
+		newRoomDescription.roomInitiator = currentUser;
 
 		nrCreate.onclick = function() {
 			removeInputErrors(nrContainer);
@@ -161,7 +174,8 @@ function nr() {
 		}
 
 		if (!nrError) {
-			newRoomDescription;
+			socket.emit('user_creates_room', newRoomDescription);
+			closePopup(nrContainer.parentNode);
 		}
 
 	}	
@@ -199,7 +213,7 @@ function usersInvitation() {
 	invite.addEventListener('click', function() {
 		if (!this.classList.contains('btn--disabled')) {
 			showPopup(nrPopup);
-			nr();
+			nr(selectedUsers);
 		}
 	});
 

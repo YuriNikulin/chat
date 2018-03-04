@@ -3,8 +3,16 @@ body {
 	font-family: $font--basic;
 }
 
+body, html {
+	height: 100%;
+}
+
 input, textarea, button, select {
 	font-family: $font--basic;
+}
+
+a {
+	text-decoration: none;
 }
 
 .h2 {
@@ -46,6 +54,13 @@ input, textarea, button, select {
 .fl {
 	&--r {
 		float: right;
+	}
+}
+
+.animated-link {
+	&:active {
+		position: relative;
+		top: 1px;
 	}
 }
 

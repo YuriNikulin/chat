@@ -4,11 +4,6 @@ div.tal.nr
 		input(class="input input--text focus" id="room-name" placeholder="Enter the room name")
 		label(for="room-name" class="input-label") Enter the name for your room
 	div.input-container
-		input(class="input input--text" id="room-users-count" placeholder="Enter the maximum count of users")
-		label(for="room-users-count" class="input-label") Enter the maximum count of users in the room (no more than 
-			span.nr__max-users 16
-			)	
-	div.input-container
 		div(class="selectbox input" id="room-security")
 			span(class="selectbox__title input--text input" data-value="A" data-triggered="false") Any user can enter
 			i(class="icon-cheveron-down icon")
@@ -16,6 +11,11 @@ div.tal.nr
 				li(class="selectbox__item input--text input active" data-value="A") Any user can enter
 				li(class="selectbox__item input--text input" data-value="B") User must get a room initiator's acception to enter
 				li(class="selectbox__item input--text input" data-value="C") No users can enter the room except invited ones
-		label(for="room-security" class="input-label") Select the way new users can (or can not) join your room
+		label(for="room-security" class="input-label") Select the way new users can (or can not) join your room	
+	div.input-container
+		input(class="input input--text" id="room-users-count" placeholder="Enter the maximum count of users")
+		label(for="room-users-count" class="input-label") Enter the maximum count of users in the room (no more than 
+			span.nr__max-users 16
+			)	
 	div.tac
 		a(class="btn btn--primary nr__create") Create							

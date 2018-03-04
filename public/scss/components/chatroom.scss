@@ -1,0 +1,48 @@
+.cr {
+	background-color: $cr_bg;
+	height: 100%;
+
+	&-header {
+		padding-top: 30px;
+		padding-bottom: 30px;
+
+		.title {
+			color: #fff;
+		}
+	}
+
+	&-chat {
+		position: fixed;
+		bottom: $gutter;
+		right: $gutter;
+		background-color: #fff;
+		width: 300px;
+
+		&-item {
+
+		}
+
+		&__title {
+			padding: 15px 20px;
+			display: block;
+			font-weight: bold;
+			font-size: 16px;
+			cursor: pointer;
+
+			&:hover {
+				background: $primary;
+				color: #fff;
+			}
+		}
+
+		&-content {
+			height: 0;
+			transition: $anim_duration ease-in-out height;
+			overflow-y: scroll;
+		}
+
+		&__title {
+			color: #000;
+		}
+	}
+}

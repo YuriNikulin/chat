@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  include popup.jade
+    include auth.jade
+  section(id="chatroom" class="s-chat")
+    div.container
+      div.s-chat-messages.margin
+      div.s-chat-input-container
+        div.s-chat-input.padding
+          input(id="message" class="s-chat-input__input s-input" placeholder="Enter your message here")
+          button(id="send" class="s-chat-input__submit") Send
+

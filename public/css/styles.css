@@ -57,8 +57,14 @@ body {
   background: #F7F7F7;
   font-family: "lato--regular"; }
 
+body, html {
+  height: 100%; }
+
 input, textarea, button, select {
   font-family: "lato--regular"; }
+
+a {
+  text-decoration: none; }
 
 .h2 {
   font-size: 24px; }
@@ -92,6 +98,10 @@ input, textarea, button, select {
 
 .fl--r {
   float: right; }
+
+.animated-link:active {
+  position: relative;
+  top: 1px; }
 
 .input {
   font-size: 16px;
@@ -405,3 +415,33 @@ input, textarea, button, select {
     .header__text span {
       margin-left: 5px;
       color: #B3B1DB; }
+
+.cr {
+  background-color: #212937;
+  height: 100%; }
+  .cr-header {
+    padding-top: 30px;
+    padding-bottom: 30px; }
+    .cr-header .title {
+      color: #fff; }
+  .cr-chat {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background-color: #fff;
+    width: 300px; }
+    .cr-chat__title {
+      padding: 15px 20px;
+      display: block;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer; }
+      .cr-chat__title:hover {
+        background: #B3B1DB;
+        color: #fff; }
+    .cr-chat-content {
+      height: 0;
+      transition: 0.3s ease-in-out height;
+      overflow-y: scroll; }
+    .cr-chat__title {
+      color: #000; }

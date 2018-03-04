@@ -3,6 +3,7 @@ var io = require('socket.io'),
 	clients = [],
 	clientsToFetch = [],
 	rooms = {},
+	namespaces = [],
 	newUserData;
 
 function newUser(id, username) {
@@ -62,6 +63,19 @@ exports.initialize = function(server) {
 		socket.on('set_name', function(data) {
 			socket.username = data.name;
 			socket.emit('name_set', data);
+		})
+
+		socket.on('user_creates_room', function(data) {
+			var newNamespaceName,
+				newNamespace,
+				invitedUsers;
+			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName;
+			newNamespace = io.of('/' + newNamespaceName);
+			newNamespace.roomInitiator = data.roomInitiator;
+			newNamespace.roomName = data.roomName;
+			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
+			newNamespace.roomSecurity = data.roomSecurity;
+			socket.emit('server_directs_to_namespace', newNamespaceName);
 		})
 	});
 };

@@ -1,13 +1,42 @@
 extends layout
 
-block content
-  include popup.jade
-    include auth.jade
-  section(id="chatroom" class="s-chat")
-    div.container
-      div.s-chat-messages.margin
-      div.s-chat-input-container
-        div.s-chat-input.padding
-          input(id="message" class="s-chat-input__input s-input" placeholder="Enter your message here")
-          button(id="send" class="s-chat-input__submit") Send
-
+block content 
+	div(class="cr")
+		div(class="container cr-header")
+			a(class="h2 title animated-link" href="/") Back to homepage
+		div(class="cr-video")
+		div(class="cr-chat")
+			div(class="cr-chat-item cr-chat-chat")
+				span(class="cr-chat__title h4 title") chat
+				div(class="cr-chat-content open chat")
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.						
+			div(class="cr-chat-item cr-chat-users")
+				span(class="cr-chat__title h4 title") users
+				div(class="cr-chat-content users")
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+					div(class="chat-message")
+						p  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore impedit porro debitis, accusamus architecto soluta.
+block scripts
+	script(src='/socket.io/socket.io.js')								
+	script(src='/js/script.js')								
+	script(src='/js/chatroom.js')								

@@ -8,6 +8,7 @@ var sassMiddleware = require('node-sass-middleware');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var chatroom = require('./routes/index');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/chatroom', chatroom);
 
 // app.get('/chatroom', routes.chatroom);
 
