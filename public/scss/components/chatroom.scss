@@ -2,11 +2,52 @@
 	background-color: $cr_bg;
 	height: 100%;
 
+	&-settings {
+		&__opener {
+			float: right;
+			color: #fff;
+			font-size: 32px;
+			cursor: pointer;
+
+			i {
+				transition: .4s ease-in-out;
+				display: block; 
+			}
+
+			&:hover i {
+				color: lighten($active, 15%);
+				transform: rotate(360deg);
+			}
+		}
+
+		&__item {
+			display: block;
+
+			&:hover:after {
+				color: #fff;
+			}
+
+			&:after {
+				content: "\ea0f";
+				font-family: 'icomoon';
+				color: #000;
+				opacity: 1;
+			}
+
+			&.selected {
+				&:after {
+					content: "\ea10";
+					color: #fff;
+				}
+			}
+		}
+	}
+
 	&-header {
 		padding-top: 30px;
 		padding-bottom: 30px;
 
-		.title {
+		&__title {
 			color: #fff;
 		}
 	}
@@ -15,18 +56,24 @@
 		position: fixed;
 		bottom: $gutter;
 		right: $gutter;
-		background-color: #fff;
 		width: 300px;
 
 		&-item {
 			position: relative;
+			opacity: 0;
+			transition: $anim_duration ease-in-out;
+			background-color: #fff;
+
+			&.shown {
+				opacity: 1;
+			}
 
 			&.open {
 				.cr-chat__title {
 					background-color: $primary;
 					color: #fff;
 
-					& + .icon-cheveron-down {
+					.icon-cheveron-down {
 						transform: rotate(180deg);
 						color: #fff;
 					}
@@ -40,8 +87,10 @@
 			font-weight: bold;
 			font-size: 16px;
 			cursor: pointer;
+			position: relative;
+			z-index: 1;
 
-			& + .icon-cheveron-down {
+			.icon-cheveron-down {
 				position: absolute;
 				right: 10px;
 				top: 16px;

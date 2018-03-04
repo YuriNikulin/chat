@@ -33,6 +33,24 @@ function popups() {
 	}
 }
 
+function toggleElem(elem) {
+	if (!elem) {
+		return 0;
+	}
+
+	if (elem.classList.contains('shown')) {
+		elem.classList.remove('shown');
+		setTimeout(function() {
+			elem.style.display = 'none';
+		}, animDuration);
+	} else {
+		elem.style.display = 'block';
+		setTimeout(function() {
+			elem.classList.add('shown');
+		}, 10);
+	}
+}
+
 function getUserNickname() {
 	var userNickname = document.cookie.match( /chatUserNickname=([^;]+)/);
 

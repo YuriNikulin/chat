@@ -27,10 +27,32 @@ function crAccordion() {
 			items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
 		}
 	}
+}
 
-	
+function crSettings() {
+	var sContainer = document.querySelector('.cr-settings'),
+		sItems = sContainer.querySelectorAll('.cr-settings__item'),
+		sChat = sContainer.querySelector('.cr-settings__chat'),
+		sUsers = sContainer.querySelector('.cr-settings__users'),
+		crChat = document.querySelector('.cr-chat-chat'),
+		crUsers = document.querySelector('.cr-chat-users');
+
+	for (var i = 0; i < sItems.length; i++) {
+		sItems[i].addEventListener('click', function() {
+			this.classList.toggle('selected');
+		})
+	}
+
+	sChat.addEventListener('click', function() {
+		toggleElem(crChat);
+	})
+
+	sUsers.addEventListener('click', function() {
+		toggleElem(crUsers);
+	})
 }
 
 window.addEventListener('load', function() {
 	crAccordion();
+	crSettings();
 })
