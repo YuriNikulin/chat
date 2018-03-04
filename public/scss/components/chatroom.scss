@@ -19,7 +19,19 @@
 		width: 300px;
 
 		&-item {
+			position: relative;
 
+			&.open {
+				.cr-chat__title {
+					background-color: $primary;
+					color: #fff;
+
+					& + .icon-cheveron-down {
+						transform: rotate(180deg);
+						color: #fff;
+					}
+				}
+			}
 		}
 
 		&__title {
@@ -29,9 +41,19 @@
 			font-size: 16px;
 			cursor: pointer;
 
+			& + .icon-cheveron-down {
+				position: absolute;
+				right: 10px;
+				top: 16px;
+			}
+
 			&:hover {
 				background: $primary;
 				color: #fff;
+
+				& + .icon-cheveron-down {
+					color: #fff;
+				}
 			}
 		}
 

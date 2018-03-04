@@ -71,6 +71,14 @@ function leadingZero(number) {
 	return number;
 }
 
+function getWindowWidth() {
+	return window.outerWidth;
+}
+
+function getWindowHeight() {
+	return window.outerHeight;
+}
+
 function submitOnEnter(elem, functionToInvoke) {
 	elem.addEventListener('keydown', function(event) {
 		if (event.key == "Enter" || event.keyCode == 13) {
