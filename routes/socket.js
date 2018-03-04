@@ -76,6 +76,11 @@ exports.initialize = function(server) {
 			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
 			newNamespace.roomSecurity = data.roomSecurity;
 			socket.emit('server_directs_to_namespace', newNamespaceName);
+
+			newNamespace.on('connection', function(socket) {
+				debugger;
+				socket.emit('message', 'ty durak)');
+			})
 		})
 	});
 };

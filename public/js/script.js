@@ -67,10 +67,21 @@ function getUserId() {
 	if (userId) {
 		userId = userId[1];
 	}   else {
-		userUd = null;
+		userId = null;
 	}
 
 	return userId;
+}
+
+function getRoomId() {
+	var RoomId = document.cookie.match( /chatRoomId=([^;]+)/);
+	if (RoomId) {
+		RoomId = RoomId[1];
+	}   else {
+		RoomId = null;
+	}
+
+	return RoomId;
 }
 
 function appendOverlay(overlayClassList) {

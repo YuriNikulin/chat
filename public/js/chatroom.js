@@ -1,3 +1,11 @@
+console.log(document.cookie);
+
+var namespace = io('/' + getRoomId());
+namespace.on('message', function(data) {
+	debugger;
+	console.log(data);
+})
+
 function crAccordion() {
 	var container = document.querySelector('.cr-chat'),
 		items = document.querySelectorAll('.cr-chat-item'),
