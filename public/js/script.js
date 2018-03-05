@@ -264,6 +264,7 @@ function inviteUsers(users, initiator) {
 	socket.emit('user_sends_invitation', users, initiator);
 }
 
+
 function appendUser(user, container) {
 	var userContainer = document.createElement('div');
 		userDiv = document.createElement('div'),

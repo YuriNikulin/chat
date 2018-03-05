@@ -1,9 +1,10 @@
-console.log(document.cookie);
 
 var namespace = io('/' + getRoomId());
-namespace.on('message', function(data) {
-	debugger;
-	console.log(data);
+
+
+namespace.on('server_requests_username', function() {
+	userName = getUserNickname();
+	namespace.emit('user_sends_username', userName);
 })
 
 function crAccordion() {
@@ -60,7 +61,69 @@ function crSettings() {
 	})
 }
 
+function crChat() {
+	var container = document.querySelector('.cr-chat'),
+		chat = container.querySelector('.chat'),
+		chatContainer = container.querySelector('.chat-container'),
+		input = container.querySelector('.chat-field__input'),
+		send = container.querySelector('.chat-field__send'),
+		messageData = {},
+		messageText;
+
+		send.addEventListener('click', sendMessageToServer);
+		submitOnEnter(input, sendMessageToServer);
+
+	function sendMessageToServer() {
+		messageText = input.value;
+
+		if (!messageText) {
+			return 0;
+		}
+
+		input.value = '';
+		messageData.message = messageText;
+		messageData.type = 'userMessage';
+		namespace.send(JSON.stringify(messageData));
+		input.focus();
+	}
+
+	namespace.on('message', function(data) {
+		data = JSON.parse(data);
+		var toShowDate,
+			toShowAuthor,
+			chatContainer = document.querySelector('.chat'),
+			chatScrollContainer = document.querySelector('.chat-container'),
+			msgContainer = document.createElement('div'),
+			msgClass,
+			msgText = document.createElement('p');
+
+		msgContainer.className = ('chat-msg chat-msg--') + data.type;
+
+		toShowDate = toShowAuthor = (data.type != 'serverMessage');
+		if (toShowAuthor) {
+			var msgAuthor = document.createElement('span');
+			msgAuthor.classList.add('chat-msg__author');
+			msgAuthor.innerHTML = data.author;
+			msgContainer.appendChild(msgAuthor);
+		} 	
+		if (toShowDate) {
+			var formattedDate;
+			var msgDate = document.createElement('span');
+			msgDate.classList.add('chat-msg__date');
+			formattedDate = new Date();
+			formattedDate = leadingZero((formattedDate.getHours())).toString() + ':' + leadingZero(formattedDate.getMinutes());
+			msgDate.innerHTML = formattedDate;
+			msgContainer.appendChild(msgDate);
+		}
+		msgText.innerHTML = data.message;
+		msgContainer.appendChild(msgText);
+		chatContainer.appendChild(msgContainer);
+		chatScrollContainer.scrollTop = chatContainer.scrollHeight;
+	})
+}
+
 window.addEventListener('load', function() {
 	crAccordion();
 	crSettings();
+	crChat();
 })

@@ -1,9 +1,5 @@
 var socket = io.connect();
 
-var userNickname,
-	maxUsersCount = 16;
-	body = document.querySelector('body');
-	currentUser = {};
 socket.on('debug_data', function(data) {
 	console.log(data);
 })
@@ -174,6 +170,7 @@ function nr(invitedUsers) {
 		}
 
 		if (!nrError) {
+			document.cookie = 'chatRoomName=' + newRoomDescription.roomName;
 			socket.emit('user_creates_room', newRoomDescription);
 			closePopup(nrContainer.parentNode);
 		}

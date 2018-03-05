@@ -3,6 +3,7 @@ var io = require('socket.io'),
 	clients = [],
 	clientsToFetch = [],
 	rooms = {},
+	message = {},
 	namespaces = [],
 	newUserData;
 
@@ -69,7 +70,8 @@ exports.initialize = function(server) {
 			var newNamespaceName,
 				newNamespace,
 				invitedUsers;
-			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName;
+				
+			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName.match(/\S/g).join("");
 			newNamespace = io.of('/' + newNamespaceName);
 			newNamespace.roomInitiator = data.roomInitiator;
 			newNamespace.roomName = data.roomName;
@@ -78,8 +80,28 @@ exports.initialize = function(server) {
 			socket.emit('server_directs_to_namespace', newNamespaceName);
 
 			newNamespace.on('connection', function(socket) {
-				debugger;
-				socket.emit('message', 'ty durak)');
+
+				socket.emit('server_requests_username');
+
+				socket.on('user_sends_username', function(username) {
+					username ? (socket.username = username) : (socket.username = 'anonymous');
+					newNamespace.send(JSON.stringify({	
+						'message': socket.username + ' has been connected',
+						'type': 'serverMessage'
+					}));
+				})
+
+				socket.on('message', function(message) {
+					message = JSON.parse(message);
+					message.author = socket.username;
+					console.log(message);
+					if (message.type == "userMessage") {
+						socket.broadcast.send(JSON.stringify(message));
+						message.type = "myMessage";
+						socket.send(JSON.stringify(message));
+					}
+				});
+
 			})
 		})
 	});

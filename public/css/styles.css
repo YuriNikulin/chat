@@ -45,6 +45,12 @@
 .icon-gear:before {
   content: "\e902"; }
 
+.icon-cheveron-right:before {
+  content: "\e903"; }
+
+.icon-cheveron-outline-right:before {
+  content: "\e904"; }
+
 @keyframes input_error_animation {
   0% {
     opacity: 0;
@@ -469,7 +475,7 @@ a {
       display: block; }
     .cr-settings__opener:hover i {
       color: #e8aa95;
-      transform: rotate(360deg); }
+      transform: rotate(180deg); }
   .cr-settings__item {
     display: block; }
     .cr-settings__item:hover:after {
@@ -525,6 +531,60 @@ a {
     .cr-chat-content {
       height: 0;
       transition: 0.3s ease-in-out height;
-      overflow-y: scroll; }
+      overflow-y: scroll;
+      position: relative; }
     .cr-chat__title {
       color: #000; }
+
+.chat {
+  position: relative;
+  min-height: 100%;
+  padding-bottom: 35px; }
+  .chat-field {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-left: 10px; }
+    .chat-field__send, .chat-field__input {
+      display: inline-block;
+      vertical-align: top; }
+    .chat-field__send {
+      width: 30px;
+      height: 35px;
+      line-height: 36px;
+      background: #B3B1DB;
+      color: #fff;
+      border: none;
+      font-size: 26px;
+      cursor: pointer; }
+      .chat-field__send:hover {
+        background: #DA7856; }
+      .chat-field__send:active {
+        background: #d46139; }
+    .chat-field__input {
+      width: calc(100% - 30px);
+      height: 35px;
+      line-height: 35px;
+      resize: none;
+      border: none;
+      border-bottom: 1px solid #d5d4eb;
+      padding-left: 0;
+      padding-right: 5px; }
+      .chat-field__input:hover, .chat-field__input:focus {
+        border: none; }
+      .chat-field__input:hover {
+        border-bottom: 1px solid #B3B1DB; }
+      .chat-field__input:focus {
+        border-bottom: 1px solid #DA7856; }
+  .chat-msg {
+    padding: 5px 10px; }
+    .chat-msg__author {
+      font-weight: bold; }
+    .chat-msg__date {
+      margin-left: 8px;
+      font-size: 13px; }
+    .chat-msg--serverMessage {
+      font-style: italic; }
+    .chat-msg--myMessage .chat-msg__author {
+      color: #B3B1DB; }
