@@ -53,13 +53,17 @@ exports.initialize = function(server) {
 			socket.broadcast.emit('new_user_connected', newUserToFetch(socket));
 		})
 
-		// socket.on('user_sends_invitation', function(users, initiator) {
-		// 	for (var i in users) {
-		// 		if (io.sockets.sockets[i]) {
-		// 			io.sockets.sockets[i].emit('server_sends_invitation', initiator);
-		// 		}
-		// 	}
-		// })
+		socket.on('user_sends_invitation', function(users, initiator, namespace) {
+			if (!users || !namespace) {
+				return 0;
+			}
+
+			for (var i in users) {
+				if (io.sockets.sockets[i]) {
+					io.sockets.sockets[i].emit('server_sends_invitation', initiator, namespace);
+				}
+			}
+		})
 
 		socket.on('set_name', function(data) {
 			socket.username = data.name;
@@ -115,6 +119,13 @@ exports.initialize = function(server) {
 						socket.send(JSON.stringify(message));
 					}
 				});
+
+				socket.on('disconnect', function() {
+					newNamespace.send(JSON.stringify({
+						'message': socket.username + ' has left',
+						'type': 'serverMessage'
+					}))
+				})
 
 			})
 		})

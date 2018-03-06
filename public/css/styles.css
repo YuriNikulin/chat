@@ -498,6 +498,9 @@ a {
     bottom: 15px;
     right: 15px;
     width: 300px; }
+    .cr-chat-chat__unread {
+      font-size: 14px;
+      margin-left: 2px; }
     .cr-chat-item {
       position: relative;
       opacity: 0;

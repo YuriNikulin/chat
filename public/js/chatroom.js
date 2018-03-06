@@ -1,10 +1,18 @@
 
 var namespace = io('/' + getRoomId());
 
+var socket = io.connect();
+
+var msgUnreadCounter = 80;
 
 namespace.on('server_requests_username', function() {
 	userName = getUserNickname();
 	namespace.emit('user_sends_username', userName);
+})
+
+socket.on('fetch_user_id', function(userId) {
+	document.cookie = 'chatUserId=' + userId;
+	currentUser.id = userId;
 })
 
 function crAccordion() {
@@ -64,6 +72,7 @@ function crSettings() {
 function crChat() {
 	var container = document.querySelector('.cr-chat'),
 		chat = container.querySelector('.chat'),
+		chatTitle = container.querySelector('.cr-chat-chat .cr-chat__title'),
 		input = container.querySelector('.chat-field__input'),
 		send = container.querySelector('.chat-field__send'),
 		messageData = {},
@@ -71,6 +80,13 @@ function crChat() {
 
 		send.addEventListener('click', sendMessageToServer);
 		submitOnEnter(input, sendMessageToServer);
+
+	chatTitle.addEventListener('click', function() {
+		msgUnreadCounter = 0;
+		if (chatTitle.querySelector('.cr-chat-chat__unread')) {
+			chatTitle.removeChild(chatTitle.querySelector('.cr-chat-chat__unread'));
+		}
+	})	
 
 	function sendMessageToServer() {
 		messageText = input.value;
@@ -99,12 +115,14 @@ function crChat() {
 		msgContainer.className = ('chat-msg chat-msg--') + data.type;
 
 		toShowDate = toShowAuthor = (data.type != 'serverMessage');
+
 		if (toShowAuthor) {
 			var msgAuthor = document.createElement('span');
 			msgAuthor.classList.add('chat-msg__author');
 			msgAuthor.innerHTML = data.author;
 			msgContainer.appendChild(msgAuthor);
 		} 	
+
 		if (toShowDate) {
 			var formattedDate;
 			var msgDate = document.createElement('span');
@@ -113,6 +131,21 @@ function crChat() {
 			formattedDate = leadingZero((formattedDate.getHours())).toString() + ':' + leadingZero(formattedDate.getMinutes());
 			msgDate.innerHTML = formattedDate;
 			msgContainer.appendChild(msgDate);
+		}
+
+		if (data.type == 'userMessage' && !document.querySelector('.cr-chat-chat').classList.contains('open')) {
+			msgUnreadCounter++;
+			var unreadSpan = document.createElement('span'),
+				container = document.querySelector('.cr-chat-chat .cr-chat__title'),
+				oldCounter = container.querySelector('.cr-chat-chat__unread');
+
+			if (oldCounter) {
+				oldCounter.parentNode.removeChild(oldCounter);
+			}	
+
+			container.appendChild(unreadSpan);
+			unreadSpan.className = 'cr-chat-chat__unread';
+			unreadSpan.innerHTML = '(' + (msgUnreadCounter < 100 ? msgUnreadCounter : '99+') + ')';
 		}
 		msgText.innerHTML = data.message;
 		msgContainer.appendChild(msgText);
@@ -125,4 +158,9 @@ window.addEventListener('load', function() {
 	crAccordion();
 	crSettings();
 	crChat();
+	requestUserId();
+	authorization();
+	usersOnlineMonitoring();
+	usersInvitation();
+
 })

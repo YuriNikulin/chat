@@ -58,6 +58,13 @@
 		right: $gutter;
 		width: 300px;
 
+		&-chat {
+			&__unread {
+				font-size: 14px;
+				margin-left: 2px;
+			}
+		}
+
 		&-item {
 			position: relative;
 			opacity: 0;
