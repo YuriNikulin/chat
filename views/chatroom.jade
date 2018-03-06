@@ -25,10 +25,20 @@ block content
 				span(class="cr-chat__title h4 title") users
 					i(class="icon-cheveron-down")
 				div(class="cr-chat-content users-container")
-					div(class="users")
-					a.btn.btn--primary.btn--disabled.users__invite
-						span Invite users to chat
-						span.users__counter (0)	
+					div(class="users mb--reg")
+					div(class="tac")
+						a.btn.btn--primary.btn--disabled.users__invite
+							span Invite users to chat
+							span.users__counter (0)
+			div(class="cr-chat-item cr-chat-users shown")
+				span(class="cr-chat__title h4 title") users
+					i(class="icon-cheveron-down")
+				div(class="cr-chat-content users-container")
+					div(class="users mb--reg")
+					div(class="tac")
+						a.btn.btn--primary.btn--disabled.users__invite
+							span Invite users to chat
+							span.users__counter (0)					
 block scripts
 	script(src='/socket.io/socket.io.js')								
 	script(src='/js/script.js')						

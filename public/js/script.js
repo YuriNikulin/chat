@@ -105,7 +105,7 @@ function getWindowWidth() {
 }
 
 function getWindowHeight() {
-	return window.outerHeight;
+	return window.innerHeight;
 }
 
 function submitOnEnter(elem, functionToInvoke) {
@@ -222,7 +222,7 @@ function closeSelectbox(selectbox) {
 	selectbox.selectboxTitle.dataset.triggered = 'false';
 }
 
-function showNotification(content) {
+function showNotification(content, timeout) {
 	var notificationContainer = document.createElement('div');
 	body.appendChild(notificationContainer);
 	notificationContainer.classList.add('notification');
@@ -230,6 +230,12 @@ function showNotification(content) {
 	setTimeout(function() {
 		notificationContainer.classList.add('shown');
 	}, 100)
+
+	if (timeout) {
+		setTimeout(function() {
+			closeNotification(notificationContainer);
+		}, timeout)
+	}
 
 	return notificationContainer;
 }
@@ -405,6 +411,11 @@ function usersInvitation() {
 				nr(selectedUsers);
 			}  else {
 				socket.emit('user_sends_invitation', selectedUsers, currentUser.username, getRoomId());
+				var elem = document.createElement('p'),
+					usersLength = Object.keys(selectedUsers).length;
+				elem.className = 'notification__text';	
+				elem.innerHTML = usersLength + (usersLength > 1 ?  'users have' : ' user has') + ' been invited';
+				showNotification(elem, 5000);
 			}
 		}
 	});

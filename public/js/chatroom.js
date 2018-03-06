@@ -23,7 +23,8 @@ function crAccordion() {
 
 	function calcContentSize() {
 		windowHeight = getWindowHeight();
-		contentSize = windowHeight / items.length - 100;
+		console.log(windowHeight);
+		contentSize = (windowHeight / items.length) - (((gutter * 2) / items.length) + document.querySelector('.cr-chat__title').offsetHeight);
 	}
 
 	calcContentSize();
