@@ -181,8 +181,8 @@ a {
 	max-height: 200px;
 	overflow: auto;
 	position: fixed;
-	right: 20px;
-	bottom: 20px;
+	right: $gutter;
+	bottom: $gutter;
 	padding: $gutter;
 	background: rgba(0,0,0,.8);
 	opacity: 0;
