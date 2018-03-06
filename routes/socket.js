@@ -53,24 +53,28 @@ exports.initialize = function(server) {
 			socket.broadcast.emit('new_user_connected', newUserToFetch(socket));
 		})
 
-		socket.on('user_sends_invitation', function(users, initiator) {
-			for (var i in users) {
-				if (io.sockets.sockets[i]) {
-					io.sockets.sockets[i].emit('server_sends_invitation', initiator);
-				}
-			}
-		})
+		// socket.on('user_sends_invitation', function(users, initiator) {
+		// 	for (var i in users) {
+		// 		if (io.sockets.sockets[i]) {
+		// 			io.sockets.sockets[i].emit('server_sends_invitation', initiator);
+		// 		}
+		// 	}
+		// })
 
 		socket.on('set_name', function(data) {
 			socket.username = data.name;
 			socket.emit('name_set', data);
 		})
 
+		socket.on('user_accepted_server_invitation', function(namespace) {
+			socket.emit('server_directs_to_namespace', namespace);
+		})
+
 		socket.on('user_creates_room', function(data) {
 			var newNamespaceName,
 				newNamespace,
-				invitedUsers;
-				
+				invitedUsers;	
+
 			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName.match(/\S/g).join("");
 			newNamespace = io.of('/' + newNamespaceName);
 			newNamespace.roomInitiator = data.roomInitiator;
@@ -78,6 +82,16 @@ exports.initialize = function(server) {
 			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
 			newNamespace.roomSecurity = data.roomSecurity;
 			socket.emit('server_directs_to_namespace', newNamespaceName);
+
+			invitedUsers = data.roomInvitedUsers;
+
+			if (invitedUsers) {
+				for (var i in invitedUsers) {
+					if (io.sockets.sockets[i]) {
+						io.sockets.sockets[i].emit('server_sends_invitation', data.roomInitiator.username, newNamespaceName);
+					}
+				}
+			}
 
 			newNamespace.on('connection', function(socket) {
 

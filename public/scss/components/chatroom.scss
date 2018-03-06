@@ -122,14 +122,15 @@
 .chat {
 	position: relative;
 	min-height: 100%;
-	padding-bottom: 35px;
-	
+	padding-bottom: 40px;
+
 	&-field {
 		position: absolute;
 		bottom: 0;
 		left: 0;
 		width: 100%;
 		padding-left: 10px;
+		box-shadow: 3px -2px 11px 0 $tr--light;
 
 		&__send,
 		&__input {
@@ -181,7 +182,7 @@
 	}
 
 	&-msg {
-		padding: 5px 10px;
+		padding: 8px 10px;
 
 		&__author {
 			font-weight: bold;
@@ -190,6 +191,13 @@
 		&__date {
 			margin-left: 8px;
 			font-size: 13px;
+		}
+
+		&--myMessage,
+		&--userMessage {
+			p {
+				margin-top: 5px;
+			}
 		}
 
 		&--serverMessage {

@@ -18,7 +18,7 @@ socket.on('fetch_user_id', function(userId) {
 	currentUser.id = userId;
 })
 
-socket.on('server_sends_invitation', function(initiator) {
+socket.on('server_sends_invitation', function(initiator, namespace) {
 	var invitationContainer = document.createElement('div'),
 		acceptButton = document.createElement('a'),
 		declineButton = document.createElement('a'),
@@ -42,7 +42,13 @@ socket.on('server_sends_invitation', function(initiator) {
 	var notificationContainer = showNotification(invitationContainer);
 	declineButton.addEventListener('click', function() {
 		closeNotification(notificationContainer);
-	})
+	});
+
+	acceptButton.addEventListener('click', function() {
+		closeNotification(notificationContainer);
+		socket.emit('user_accepted_server_invitation', namespace);
+	});
+
 })
 
 socket.on('server_directs_to_namespace', function(data) {
@@ -58,7 +64,7 @@ function requestUserId() {
 function authorization() {
 	var nicknameContainer = document.querySelectorAll('.user-nickname'),
 		nicknameSpan;	
-	userNickname = getUserNickname();
+	userNickname = currentUser.username = getUserNickname();
 
 	socket.emit('user_sends_nickname', userNickname);
 	if (!userNickname) {
@@ -173,6 +179,10 @@ function nr(invitedUsers) {
 			document.cookie = 'chatRoomName=' + newRoomDescription.roomName;
 			socket.emit('user_creates_room', newRoomDescription);
 			closePopup(nrContainer.parentNode);
+
+			if (invitedUsers) {
+				socket.emit('user_sends_invitation', invitedUsers, currentUser.username);
+			}
 		}
 
 	}	

@@ -64,7 +64,6 @@ function crSettings() {
 function crChat() {
 	var container = document.querySelector('.cr-chat'),
 		chat = container.querySelector('.chat'),
-		chatContainer = container.querySelector('.chat-container'),
 		input = container.querySelector('.chat-field__input'),
 		send = container.querySelector('.chat-field__send'),
 		messageData = {},
