@@ -117,9 +117,9 @@ exports.initialize = function(server) {
 		socket.on('user_creates_room', function(data) {
 			var newNamespaceName,
 				newNamespace,
-				invitedUsers;	
+				invitedUsers;
 
-			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName.match(/\S/g).join("");
+			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName.match(/[^,\s]/g).join("");
 			newNamespace = io.of('/' + newNamespaceName);
 			newNamespace.roomInitiator = data.roomInitiator;
 			newNamespace.roomName = data.roomName;
