@@ -13,6 +13,10 @@ socket.on('name_set', function(data) {
 	appendUser(currentUser, document.querySelector('.users'));
 });
 
+socket.on('server_error', function(data) {
+	showErrorPopup(data);
+})
+
 socket.on('fetch_user_id', function(userId) {
 	document.cookie = 'chatUserId=' + userId;
 	currentUser.id = userId;

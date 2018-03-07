@@ -15,6 +15,13 @@ socket.on('fetch_user_id', function(userId) {
 	currentUser.id = userId;
 })
 
+socket.on('users_have_been_invited', function(data) {
+	var elem = document.createElement('p');
+		elem.className = 'notification__text';	
+		elem.innerHTML = data;
+		showNotification(elem, 2500);
+})
+
 function crAccordion() {
 	var container = document.querySelector('.cr-chat'),
 		items = document.querySelectorAll('.cr-chat-item'),
@@ -34,7 +41,7 @@ function crAccordion() {
 			var parent = this.parentNode;
 			if (parent.classList.contains('open')) {
 				parent.classList.remove('open');
-				parent.querySelector('.cr-chat-content').style = '';
+				parent.querySelector('.cr-chat-content').style.height = '';
 			}  else {
 				parent.classList.add('open');
 				parent.querySelector('.cr-chat-content').style.height = contentSize + 'px';
@@ -156,6 +163,25 @@ function crChat() {
 }
 
 window.addEventListener('load', function() {
+	if (!namespace) {
+		var errorPopup = document.createElement('div'),
+			errorText = document.createElement('p'),
+			errorButton = document.createElement('a');
+		body.appendChild(errorPopup);
+		errorPopup.className = 'popup tac';
+		errorText.className = 'popup__text';
+		errorText.innerHTML = 'The room was not found';
+		errorButton.className = 'btn btn--primary';
+		errorButton.innerHTML = 'Return to homepage';
+		errorButton.href = '/';
+		errorPopup.appendChild(errorText);
+		errorPopup.appendChild(errorButton);
+
+		showPopup(errorPopup);
+
+		return 0;
+	}
+
 	crAccordion();
 	crSettings();
 	crChat();

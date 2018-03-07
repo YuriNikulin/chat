@@ -54,15 +54,27 @@ exports.initialize = function(server) {
 		})
 
 		socket.on('user_sends_invitation', function(users, initiator, namespace) {
-			if (!users || !namespace) {
+			var invitedUsersCounter = 0,
+				invitedUsersMsg;
+			if (!users || !namespace || !io.nsps['/' + namespace]) {
 				return 0;
 			}
 
 			for (var i in users) {
-				if (io.sockets.sockets[i]) {
+				if (io.sockets.sockets[i] && Object.keys(io.nsps['/' + namespace].sockets).length < io.nsps['/' + namespace].roomMaxUsersCount) {
+					invitedUsersCounter++;
 					io.sockets.sockets[i].emit('server_sends_invitation', initiator, namespace);
 				}
 			}
+			if (invitedUsersCounter == 1) {
+				invitedUsersMsg = '1 user has been invited';
+			}   else if (invitedUsersCounter > 1) {
+				invitedUsersMsg = invitedUsersCounter + ' users have been invited';
+			}   else {
+				invitedUsersMsg = 'No users have been invited';
+			}
+
+			socket.emit('users_have_been_invited', invitedUsersMsg);
 		})
 
 		socket.on('set_name', function(data) {
@@ -71,7 +83,12 @@ exports.initialize = function(server) {
 		})
 
 		socket.on('user_accepted_server_invitation', function(namespace) {
-			socket.emit('server_directs_to_namespace', namespace);
+			if (Object.keys(io.nsps['/' + namespace].sockets).length < io.nsps['/' + namespace].roomMaxUsersCount) {
+				socket.emit('server_directs_to_namespace', namespace);
+			}   else {
+				socket.emit('server_error', 'The room is full');
+			}
+
 		})
 
 		socket.on('user_creates_room', function(data) {

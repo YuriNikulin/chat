@@ -22,6 +22,25 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function showErrorPopup(data) {
+	var errorPopup = document.createElement('div'),
+		errorText = document.createElement('p'),
+		errorTitle = document.createElement('h2');
+
+	errorPopup.className = 'popup';
+	errorText.className = 'popup__text';
+	errorTitle.className = 'h2 title mb--reg';
+
+	errorTitle.innerHTML = 'Error';
+	errorText.innerHTML = data;
+
+	body.appendChild(errorPopup);
+	errorPopup.appendChild(errorTitle);
+	errorPopup.appendChild(errorText);
+
+	showPopup(errorPopup, true);
+}
+
 function popups() {
 	var openers = document.querySelectorAll('.popup-opener'),
 		popup;
@@ -196,7 +215,7 @@ function showInputError(elem, warning) {
 
 }
 
-function showPopup(popup) {
+function showPopup(popup, removeOnClosing) {
 	if (!popup) {
 		return 0;
 	}
@@ -206,10 +225,33 @@ function showPopup(popup) {
 	if (popup.querySelector('.focus')) {
 		popup.querySelector('.focus').focus();
 	}
-	overlay.addEventListener('click', function() {
-		closePopup(popup);
-	})
 
+	var closingEvent = new Event('popupClosed');
+	if (removeOnClosing) {
+		popup.addEventListener('popupClosed', function() {
+			popup.parentNode.removeChild(popup);
+		})
+	}
+
+	overlay.addEventListener('click', function() {
+		closePopup(popup, closingEvent);
+	})
+}
+
+function closePopup(popup, closingEvent) {
+	if (!popup) {
+		popup = document.querySelector('.popup.shown');
+		if (!popup) {
+			return 0;
+		}
+	}
+
+	popup.classList.remove('shown');
+	removeOverlay();
+	setTimeout(function() {
+		popup.style.display = '';
+		popup.dispatchEvent(closingEvent);
+	}, 300);
 }
 
 function showSelectbox(selectbox) {
@@ -244,21 +286,6 @@ function closeNotification(elem) {
 	elem.classList.remove('shown');
 	setTimeout(function() {
 		elem.parentNode.removeChild(elem);
-	}, 300);
-}
-
-function closePopup(popup) {
-	if (!popup) {
-		popup = document.querySelector('.popup.shown');
-		if (!popup) {
-			return 0;
-		}
-	}
-
-	popup.classList.remove('shown');
-	removeOverlay();
-	setTimeout(function() {
-		popup.style.display = '';
 	}, 300);
 }
 
@@ -411,11 +438,6 @@ function usersInvitation() {
 				nr(selectedUsers);
 			}  else {
 				socket.emit('user_sends_invitation', selectedUsers, currentUser.username, getRoomId());
-				var elem = document.createElement('p'),
-					usersLength = Object.keys(selectedUsers).length;
-				elem.className = 'notification__text';	
-				elem.innerHTML = usersLength + (usersLength > 1 ?  'users have' : ' user has') + ' been invited';
-				showNotification(elem, 5000);
 			}
 		}
 	});
