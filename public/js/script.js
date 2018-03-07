@@ -219,6 +219,7 @@ function showPopup(popup, removeOnClosing) {
 	if (!popup) {
 		return 0;
 	}
+
 	popup.style.display = 'block';
 	popup.classList.add('shown');
 	var overlay = appendOverlay('popup-overlay');
@@ -226,7 +227,7 @@ function showPopup(popup, removeOnClosing) {
 		popup.querySelector('.focus').focus();
 	}
 
-	var closingEvent = new Event('popupClosed');
+	popup.closingEvent = new Event('popupClosed');
 	if (removeOnClosing) {
 		popup.addEventListener('popupClosed', function() {
 			popup.parentNode.removeChild(popup);
@@ -234,8 +235,10 @@ function showPopup(popup, removeOnClosing) {
 	}
 
 	overlay.addEventListener('click', function() {
-		closePopup(popup, closingEvent);
-	})
+		closePopup(popup, popup.closingEvent);
+	});
+
+
 }
 
 function closePopup(popup, closingEvent) {
@@ -248,9 +251,11 @@ function closePopup(popup, closingEvent) {
 
 	popup.classList.remove('shown');
 	removeOverlay();
+	closingEvent = closingEvent || popup.closingEvent;
+
 	setTimeout(function() {
 		popup.style.display = '';
-		popup.dispatchEvent(closingEvent);
+			popup.dispatchEvent(closingEvent);
 	}, 300);
 }
 
@@ -295,6 +300,23 @@ function inviteUsers(users, initiator) {
 	}
 
 	socket.emit('user_sends_invitation', users, initiator);
+}
+
+function rooms() {
+	var rContainer = document.querySelector('.rooms-container'),
+		rCreate = rContainer.querySelector('.rooms__create'),
+		nrPopup = document.querySelector('.nr').parentNode;
+
+	rCreate.addEventListener('click', function() {
+		nr();
+		showPopup(nrPopup);
+	});
+
+	socket.emit('user_requests_list_of_rooms');
+
+	socket.on('server_fetches_room', function(data) {
+		console.log(data);
+	})
 }
 
 
@@ -397,9 +419,13 @@ function usersInvitation() {
 	var users = document.querySelectorAll('.users-user'),
 		usersContainer = document.querySelector('.users'),
 		invite = document.querySelector('.users__invite'),
-		nrPopup = document.querySelector('.users__invite + .popup'),
+		nrPopup = document.querySelector('.nr'),
 		inviteCounter = invite.querySelector('.users__counter');
 		selectedUsers = {};
+
+	if (nrPopup) {
+		nrPopup = nrPopup.parentNode;
+	}
 
 	function selectUser(user) {
 		user.classList.add('selected');

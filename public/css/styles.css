@@ -357,6 +357,17 @@ a {
     color: #000;
     cursor: auto; }
 
+.rooms-item {
+  padding: 15px;
+  background-color: #fff;
+  cursor: pointer; }
+
+.rooms__create {
+  background-color: #B3B1DB;
+  color: #fff; }
+  .rooms__create:hover {
+    background-color: #c4c2e3; }
+
 .s-chat-messages {
   background: #fff;
   padding: 10px; }

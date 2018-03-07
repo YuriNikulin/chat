@@ -128,5 +128,5 @@ window.addEventListener('load', function() {
 	usersOnlineMonitoring();
 	selectboxes();
 	usersInvitation();
-	console.log(getUserId());
+	rooms();
 })

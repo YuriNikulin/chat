@@ -418,6 +418,23 @@ a {
 	}
 }
 
+.rooms {
+	&-item {
+		padding: $gutter;
+		background-color: #fff;
+		cursor: pointer;
+	}
+
+	&__create {
+		background-color: $primary;
+		color: #fff;
+
+		&:hover {
+			background-color: lighten($primary, 5%);
+		}
+	}
+}
+
 .s-chat {
 	&-messages {
 		background: #fff;

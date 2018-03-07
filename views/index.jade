@@ -8,7 +8,7 @@ block content
 			a.btn.btn--primary.popup-opener Log as another user
 			include popup.jade
 				include auth.jade
-		div.users-container
+		div.users-container.mb--reg
 			h2.title.h2.users__title.mb--reg Users are online		
 			div.users.mb--reg
 			div.tac
@@ -16,7 +16,12 @@ block content
 					span Invite users to chat
 					span.users__counter (0)
 				include popup.jade
-					include new_room.jade	
+					include new_room.jade
+		div.rooms-container
+			h2.title.h2.users__title.mb--reg Rooms
+			div.rooms
+			div(class="tac")
+				a(class="btn btn--primary rooms__create") Create a new room
 block scripts
 	script(src='/socket.io/socket.io.js')
 	script(src='/js/script.js')

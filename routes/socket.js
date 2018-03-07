@@ -17,6 +17,19 @@ function newUserToFetch(user) {
 	return JSON.stringify(newUserToFetch);
 }
 
+function newRoom(id, name, initiator, currentUsers, maxUsers, security) {
+	this.id = id;
+	this.name = name;
+	this.currentUsers = currentUsers;
+	this.maxUsers = maxUsers;
+	this.security = security;
+}
+
+function newRoomToFetch(room) {
+	var newRoomToFetch = new newRoom(room.name, room.roomName, room.roomInitiator.username, Object.keys(room.sockets).length, room.roomMaxUsersCount, room.roomSecurity);
+	return JSON.stringify(newRoomToFetch);
+}
+
 exports.initialize = function(server) {
 	io = io.listen(server);
 	io.sockets.on('connection', function(socket) {
@@ -45,6 +58,16 @@ exports.initialize = function(server) {
 				usersToFetch[i] = new newUser(io.sockets.sockets[i].id, io.sockets.sockets[i].username);
 			}
 			socket.emit('fetch_list_of_users', JSON.stringify(usersToFetch));
+		})
+
+		socket.on('user_requests_list_of_rooms', function() {
+			var rooms = io.nsps;
+			for (var i in rooms) {
+				if (rooms[i].name == '/') {
+					continue;
+				}
+				socket.emit('server_fetches_room', newRoomToFetch(rooms[i]));
+			}
 		})
 
 		socket.on('user_sends_nickname', function(username) {
@@ -102,6 +125,15 @@ exports.initialize = function(server) {
 			newNamespace.roomName = data.roomName;
 			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
 			newNamespace.roomSecurity = data.roomSecurity;
+
+			newNamespace.removeNamespace = function() {
+				for (var i in this.sockets) {
+					this.sockets[i].disconnect();
+				}
+				this.removeAllListeners();
+				delete io.nsps[this.name];
+			}
+
 			socket.emit('server_directs_to_namespace', newNamespaceName);
 
 			invitedUsers = data.roomInvitedUsers;
@@ -138,10 +170,13 @@ exports.initialize = function(server) {
 				});
 
 				socket.on('disconnect', function() {
+					if (Object.keys(newNamespace.sockets).length < 1) {
+						newNamespace.removeNamespace();
+					}
 					newNamespace.send(JSON.stringify({
 						'message': socket.username + ' has left',
 						'type': 'serverMessage'
-					}))
+					}));
 				})
 
 			})
