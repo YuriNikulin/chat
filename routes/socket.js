@@ -20,6 +20,7 @@ function newUserToFetch(user) {
 function newRoom(id, name, initiator, currentUsers, maxUsers, security) {
 	this.id = id;
 	this.name = name;
+	this.initiator = initiator;
 	this.currentUsers = currentUsers;
 	this.maxUsers = maxUsers;
 	this.security = security;
@@ -79,12 +80,12 @@ exports.initialize = function(server) {
 		socket.on('user_sends_invitation', function(users, initiator, namespace) {
 			var invitedUsersCounter = 0,
 				invitedUsersMsg;
-			if (!users || !namespace || !io.nsps['/' + namespace]) {
+			if (!users || !namespace || !io.nsps[namespace]) {
 				return 0;
 			}
 
 			for (var i in users) {
-				if (io.sockets.sockets[i] && Object.keys(io.nsps['/' + namespace].sockets).length < io.nsps['/' + namespace].roomMaxUsersCount) {
+				if (io.sockets.sockets[i] && Object.keys(io.nsps[namespace].sockets).length < io.nsps[namespace].roomMaxUsersCount) {
 					invitedUsersCounter++;
 					io.sockets.sockets[i].emit('server_sends_invitation', initiator, namespace);
 				}
@@ -106,7 +107,11 @@ exports.initialize = function(server) {
 		})
 
 		socket.on('user_accepted_server_invitation', function(namespace) {
-			if (Object.keys(io.nsps['/' + namespace].sockets).length < io.nsps['/' + namespace].roomMaxUsersCount) {
+
+			if (!namespace) {
+				return 0;
+			}
+			if (Object.keys(io.nsps[namespace].sockets).length < io.nsps[namespace].roomMaxUsersCount) {
 				socket.emit('server_directs_to_namespace', namespace);
 			}   else {
 				socket.emit('server_error', 'The room is full');
@@ -119,12 +124,14 @@ exports.initialize = function(server) {
 				newNamespace,
 				invitedUsers;
 
-			newNamespaceName = data.roomInitiator.id + '_'  + data.roomName.match(/[^,\s]/g).join("");
-			newNamespace = io.of('/' + newNamespaceName);
+			newNamespaceName = '/' + data.roomInitiator.id + '_'  + data.roomName.match(/[^,\s]/g).join("");
+			newNamespace = io.of(newNamespaceName);
 			newNamespace.roomInitiator = data.roomInitiator;
 			newNamespace.roomName = data.roomName;
 			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
 			newNamespace.roomSecurity = data.roomSecurity;
+
+
 
 			newNamespace.removeNamespace = function() {
 				for (var i in this.sockets) {

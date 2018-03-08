@@ -23,6 +23,7 @@ socket.on('fetch_user_id', function(userId) {
 })
 
 socket.on('server_sends_invitation', function(initiator, namespace) {
+	debugger;
 	var invitationContainer = document.createElement('div'),
 		acceptButton = document.createElement('a'),
 		declineButton = document.createElement('a'),

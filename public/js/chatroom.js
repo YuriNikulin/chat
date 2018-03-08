@@ -1,5 +1,5 @@
 
-var namespace = io('/' + getRoomId());
+var namespace = io(getRoomId());
 
 var socket = io.connect();
 

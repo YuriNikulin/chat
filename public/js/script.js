@@ -303,8 +303,15 @@ function inviteUsers(users, initiator) {
 }
 
 function rooms() {
-	var rContainer = document.querySelector('.rooms-container'),
-		rCreate = rContainer.querySelector('.rooms__create'),
+	var rWrapper = document.querySelector('.rooms-container'),
+		rContainer = rWrapper.querySelector('.rooms'),
+		rCreate = rWrapper.querySelector('.rooms__create'),
+		rItem,
+		rParameter,
+		rValueContainer,
+		rValue,
+		rDescription,
+		rEnter,
 		nrPopup = document.querySelector('.nr').parentNode;
 
 	rCreate.addEventListener('click', function() {
@@ -315,7 +322,62 @@ function rooms() {
 	socket.emit('user_requests_list_of_rooms');
 
 	socket.on('server_fetches_room', function(data) {
-		console.log(data);
+		data = JSON.parse(data);
+		rItem = document.createElement('div');
+		rItem.className = 'rooms-item';
+		rContainer.appendChild(rItem);
+		rItem.dataset.roomId = data.id;
+
+		rDescription = {
+			'name': {
+				'value': data.name
+			},
+			'initiator': {
+				'parameter': 'Created by ',
+				'value': data.initiator
+			},
+			'currentUsers': {
+				'parameter': 'Count of users: ',
+				'value': data.currentUsers + '/' + data.maxUsers
+			}
+		}	
+		
+		for (var i in data) {
+			if (rDescription[i]) {
+				rValueContainer = document.createElement('div');
+				rValueContainer.className = 'rooms-item-container rooms-item-container--' + i;
+
+				if (rDescription[i].parameter) {
+					rParameter = document.createElement('span');
+					rParameter.className = 'rooms-item-container__parameter';
+					rParameter.innerHTML = rDescription[i].parameter;
+					rValueContainer.appendChild(rParameter);
+				}
+
+				rValue = document.createElement('span');
+				rValue.className = 'rooms-item-container__value';
+				rValue.innerHTML = rDescription[i].value;
+				rValueContainer.appendChild(rValue);
+				rItem.appendChild(rValueContainer);
+			}
+		}
+
+		if (data.security == 'A' || data.security == 'B') {
+			rValueContainer = document.createElement('div');
+			rValueContainer.className = 'rooms-item-container rooms-item-container--enter';
+			rEnter = document.createElement('a');
+			rEnter.className = 'btn btn--primary';
+			rValueContainer.appendChild(rEnter);
+			rItem.appendChild(rValueContainer);
+			if (data.security == 'A') {
+				rEnter.innerHTML = 'Join the room';
+				rEnter.addEventListener('click', function() {
+					socket.emit('user_accepted_server_invitation', data.id);
+				})
+			}  else {
+				rEnter.innerHTML = 'Send a request to join';
+			}
+		}
 	})
 }
 
