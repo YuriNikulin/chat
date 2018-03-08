@@ -168,6 +168,7 @@ exports.initialize = function(server) {
 			newNamespace.roomSecurity = data.roomSecurity;
 
 			newNamespace.removeNamespace = function() {
+				socket.broadcast.emit('room_has_been_deleted', newRoomToFetch(this));
 				for (var i in this.sockets) {
 					this.sockets[i].disconnect();
 				}
@@ -176,6 +177,7 @@ exports.initialize = function(server) {
 			}
 
 			socket.emit('server_directs_to_namespace', newNamespaceName);
+			socket.broadcast.emit('server_fetches_room', newRoomToFetch(newNamespace));
 
 			invitedUsers = data.roomInvitedUsers;
 
@@ -188,7 +190,13 @@ exports.initialize = function(server) {
 			}
 
 			newNamespace.on('connection', function(socket) {
+				if (newNamespace.removeTimer) {
+					clearTimeout(newNamespace.removeTimer);
+				}
+
 				socket.emit('server_requests_username');
+
+				io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 
 				socket.on('initiator_check', function(data) {
 					if (data == newNamespace.roomInitiator.id) {
@@ -217,7 +225,7 @@ exports.initialize = function(server) {
 
 				socket.on('disconnect', function() {
 					if (Object.keys(newNamespace.sockets).length < 1) {
-						setTimeout(function() {
+						newNamespace.removeTimer = setTimeout(function() {
 							newNamespace.removeNamespace();
 						}, 10000);
 					}
@@ -225,6 +233,8 @@ exports.initialize = function(server) {
 						'message': socket.username + ' has left',
 						'type': 'serverMessage'
 					}));
+
+					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 				})
 
 			})

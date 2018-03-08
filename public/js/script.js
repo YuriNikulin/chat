@@ -382,6 +382,21 @@ function rooms() {
 			}
 		}
 	})
+
+	socket.on('room_has_been_updated', function(room, parameter, newValue) {
+		var elems = document.querySelectorAll('[data-room-id="' + room + '"] .rooms-item-container--' + parameter + ' .rooms-item-container__value');
+		for (var i = 0; i < elems.length; i++) {
+			elems[i].innerHTML = newValue;
+		}
+	})
+
+	socket.on('room_has_been_deleted', function(data) {
+		data = JSON.parse(data);
+		var elemsToRemove = document.querySelectorAll('[data-room-id="' + data.id + '"]');
+		for (var i = 0; i < elemsToRemove.length; i++) {
+			elemsToRemove[i].parentNode.removeChild(elemsToRemove[i]);
+		}
+	})
 }
 
 
