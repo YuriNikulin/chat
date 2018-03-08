@@ -108,7 +108,7 @@ exports.initialize = function(server) {
 
 		socket.on('user_accepted_server_invitation', function(namespace) {
 
-			if (!namespace) {
+			if (!namespace || !io.nsps[namespace]) {
 				return 0;
 			}
 			if (Object.keys(io.nsps[namespace].sockets).length < io.nsps[namespace].roomMaxUsersCount) {
@@ -117,6 +117,42 @@ exports.initialize = function(server) {
 				socket.emit('server_error', 'The room is full');
 			}
 
+		})
+
+		socket.on('user_wants_join_room', function(room) {
+			var namespace = io.nsps[room],
+				initiator;
+			if (!namespace || !namespace.sockets) {
+				return 0;
+			}
+
+			if (Object.keys(namespace.sockets).length >= namespace.roomMaxUsersCount) {
+				socket.emit('server_error', 'The room is full');
+				return 0;
+			}
+
+			if (namespace.sockets[namespace.roomInitiator.id]) {
+				initiator = namespace.sockets[namespace.roomInitiator.id]
+			}  else {
+				for (var j in namespace.sockets) {
+					initiator = namespace.sockets[j];
+					break;
+				}
+
+				if (!initiator) {
+					return 0;
+				}
+			}
+
+			socket.emit('server_sends_notification', 'Your request has been sent');
+
+			initiator.emit('user_wants_join_room', socket.username, socket.id);
+		})
+
+		socket.on('user_accepted_user_request', function(id, namespace) {
+			if (io.sockets.sockets[id] && io.nsps[namespace] && Object.keys(io.nsps[namespace].sockets).length < io.nsps[namespace].roomMaxUsersCount) {
+				io.sockets.sockets[id].emit('server_directs_to_namespace', namespace);
+			}
 		})
 
 		socket.on('user_creates_room', function(data) {
@@ -130,8 +166,6 @@ exports.initialize = function(server) {
 			newNamespace.roomName = data.roomName;
 			newNamespace.roomMaxUsersCount = data.roomMaxUsersCount;
 			newNamespace.roomSecurity = data.roomSecurity;
-
-
 
 			newNamespace.removeNamespace = function() {
 				for (var i in this.sockets) {
@@ -154,8 +188,13 @@ exports.initialize = function(server) {
 			}
 
 			newNamespace.on('connection', function(socket) {
-
 				socket.emit('server_requests_username');
+
+				socket.on('initiator_check', function(data) {
+					if (data == newNamespace.roomInitiator.id) {
+						newNamespace.roomInitiator.id = socket.id;
+					}
+				})
 
 				socket.on('user_sends_username', function(username) {
 					username ? (socket.username = username) : (socket.username = 'anonymous');
@@ -178,7 +217,9 @@ exports.initialize = function(server) {
 
 				socket.on('disconnect', function() {
 					if (Object.keys(newNamespace.sockets).length < 1) {
-						newNamespace.removeNamespace();
+						setTimeout(function() {
+							newNamespace.removeNamespace();
+						}, 10000);
 					}
 					newNamespace.send(JSON.stringify({
 						'message': socket.username + ' has left',

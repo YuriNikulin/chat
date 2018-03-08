@@ -17,13 +17,21 @@ socket.on('server_error', function(data) {
 	showErrorPopup(data);
 })
 
+socket.on('server_sends_notification', function(data) {
+	var container = document.createElement('div'),
+		text = document.createElement('span');
+	text.className = 'notification__text';
+	text.innerHTML = data;
+	container.appendChild(text);
+	showNotification(container, 2000);	
+})
+
 socket.on('fetch_user_id', function(userId) {
 	document.cookie = 'chatUserId=' + userId;
 	currentUser.id = userId;
 })
 
 socket.on('server_sends_invitation', function(initiator, namespace) {
-	debugger;
 	var invitationContainer = document.createElement('div'),
 		acceptButton = document.createElement('a'),
 		declineButton = document.createElement('a'),
@@ -53,7 +61,6 @@ socket.on('server_sends_invitation', function(initiator, namespace) {
 		closeNotification(notificationContainer);
 		socket.emit('user_accepted_server_invitation', namespace);
 	});
-
 })
 
 socket.on('server_directs_to_namespace', function(data) {

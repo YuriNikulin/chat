@@ -376,6 +376,9 @@ function rooms() {
 				})
 			}  else {
 				rEnter.innerHTML = 'Send a request to join';
+				rEnter.addEventListener('click', function() {
+					socket.emit('user_wants_join_room', data.id);
+				})
 			}
 		}
 	})

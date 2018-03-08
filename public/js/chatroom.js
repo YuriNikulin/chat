@@ -1,6 +1,8 @@
 
 var namespace = io(getRoomId());
 
+namespace.emit('initiator_check', getUserId());
+
 var socket = io.connect();
 
 var msgUnreadCounter = 80;
@@ -8,6 +10,38 @@ var msgUnreadCounter = 80;
 namespace.on('server_requests_username', function() {
 	userName = getUserNickname();
 	namespace.emit('user_sends_username', userName);
+})
+
+namespace.on('user_wants_join_room', function(name, id) {
+	var invitationContainer = document.createElement('div'),
+		acceptButton = document.createElement('a'),
+		declineButton = document.createElement('a'),
+		invitationText = document.createElement('span'),
+		invitationInitiator = document.createElement('span');
+
+	invitationContainer.appendChild(invitationText);
+	invitationContainer.appendChild(acceptButton);
+	invitationContainer.appendChild(declineButton);
+
+	acceptButton.innerHTML = 'Accept';
+	acceptButton.className = 'btn btn--primary';
+	declineButton.className = 'btn btn--secondary fl--r';
+	declineButton.innerHTML = 'Decline';
+	invitationText.innerHTML = ' wants to join your room';
+	invitationText.className = 'invitation__text notification__text mb--reg';
+	
+	invitationInitiator.innerHTML = name;
+	invitationInitiator.classList.add('notification__span');
+	invitationText.insertBefore(invitationInitiator, invitationText.childNodes[0]);
+	var notificationContainer = showNotification(invitationContainer);
+	declineButton.addEventListener('click', function() {
+		closeNotification(notificationContainer);
+	});
+
+	acceptButton.addEventListener('click', function() {
+		closeNotification(notificationContainer);
+		socket.emit('user_accepted_user_request', id, namespace.nsp);
+	});
 })
 
 socket.on('fetch_user_id', function(userId) {
