@@ -422,7 +422,25 @@ a {
 	&-item {
 		padding: $gutter;
 		background-color: #fff;
-		cursor: pointer;
+		border-bottom: 1px solid $base;
+		text-align: center;
+
+		&-container {
+			display: inline-block;
+			vertical-align: middle;
+			width: 33.3333%;
+
+			&__value {
+				font-weight: bold;
+			}
+
+			&--name {
+				width: 100%;
+				display: block;
+				margin-bottom: 15px;
+				font-size: 18px;
+			}
+		}
 	}
 
 	&__create {
@@ -431,6 +449,19 @@ a {
 
 		&:hover {
 			background-color: lighten($primary, 5%);
+		}
+	}
+
+	@media (max-width: $md) {
+		&-item {
+			&-container {
+				width: 100%;
+				display: block;
+
+				&--enter {
+					margin-top: 15px;
+				}
+			}
 		}
 	}
 }

@@ -220,6 +220,22 @@ function showPopup(popup, removeOnClosing) {
 		return 0;
 	}
 
+	var closeButton = popup.querySelector('.popup__close');
+
+	if (!closeButton) {
+		closeButton = document.createElement('a');
+		closeButton.className = 'popup__close';
+		var closeIcon = document.createElement('i');
+		closeIcon.className = 'icon-cross';
+		closeButton.appendChild(closeIcon);
+		popup.appendChild(closeButton);
+	}
+
+	closeButton.onclick = function() {
+
+		closePopup(popup);
+	}
+
 	popup.style.display = 'block';
 	popup.classList.add('shown');
 	var overlay = appendOverlay('popup-overlay');
@@ -333,7 +349,7 @@ function rooms() {
 				'value': data.name
 			},
 			'initiator': {
-				'parameter': 'Created by ',
+				'parameter': 'Created by: ',
 				'value': data.initiator
 			},
 			'currentUsers': {
@@ -362,13 +378,16 @@ function rooms() {
 			}
 		}
 
+		rValueContainer = document.createElement('div');
+		rValueContainer.className = 'rooms-item-container rooms-item-container--enter';
+		rItem.appendChild(rValueContainer);
+
 		if (data.security == 'A' || data.security == 'B') {
-			rValueContainer = document.createElement('div');
-			rValueContainer.className = 'rooms-item-container rooms-item-container--enter';
+			
 			rEnter = document.createElement('a');
 			rEnter.className = 'btn btn--primary';
 			rValueContainer.appendChild(rEnter);
-			rItem.appendChild(rValueContainer);
+	
 			if (data.security == 'A') {
 				rEnter.innerHTML = 'Join the room';
 				rEnter.addEventListener('click', function() {
