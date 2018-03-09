@@ -1,0 +1,37 @@
+extends layout
+
+block content 
+	div(class="cr")
+		div(class="container cr-header")
+			a(class="h2 title animated-link cr-header__title" href="/") Back to homepage
+			a(class="popup-opener cr-settings__opener tooltip-container")
+				div(class="tooltip tooltip--left") 
+					p Show settings
+				i(class="icon-gear")
+			include popup.jade
+				include room_settings.jade		
+		div(class="cr-video")
+		div(class="cr-chat")
+			div(class="cr-chat-item cr-chat-chat open shown")
+				span(class="cr-chat__title h4 title") chat
+					i(class="icon-cheveron-down")
+				div(class="cr-chat-content chat-container")
+					div(class="chat")
+						div(class="chat-field")
+							input(class="chat-field__input" placeholder="Your message..." class="input")
+							button(class="chat-field__send")
+								i(class="icon-cheveron-right")
+			div(class="cr-chat-item cr-chat-users shown")
+				span(class="cr-chat__title h4 title") users
+					i(class="icon-cheveron-down")
+				div(class="cr-chat-content users-container")
+					div(class="users mb--reg")
+					div(class="tac")
+						a.btn.btn--primary.btn--disabled.users__invite
+							span Invite users to chat
+							span.users__counter (0)			
+block scripts
+	script(src='/socket.io/socket.io.js')								
+	script(src='/js/script.js')						
+	script(src='/js/common.js')						
+	script(src='/js/chatroom.js')								

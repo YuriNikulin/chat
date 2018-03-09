@@ -3,8 +3,20 @@ body {
 	font-family: $font--basic;
 }
 
+body, html {
+	height: 100%;
+}
+
 input, textarea, button, select {
 	font-family: $font--basic;
+}
+
+a {
+	text-decoration: none;
+}
+
+.h2 {
+	font-size: 24px;
 }
 
 .container {
@@ -15,8 +27,222 @@ input, textarea, button, select {
 	@include margin;
 }
 
+.mb {
+	&--reg {
+		margin-bottom: 20px;
+	}
+}
+
+.tooltip {
+	display: none;
+	background: $primary;
+	color: #fff;
+	font-size: 14px;
+	line-height: 18px;
+	position: absolute;
+	top: 0;
+	padding: 10px;
+
+	&:after {
+		content: '';
+		position: absolute;
+		top: 5px;
+		height: 0;
+		width: 0;
+	}
+
+	&--left {
+		right: calc(100% + 13px);
+
+		&:after {
+			left: 100%;
+			border-top: 6px solid transparent;
+			border-bottom: 6px solid transparent;
+			border-left: 9px solid $primary;
+		}
+	}
+
+	&--right {
+		left: calc(100% + 13px);
+
+		&:after {
+			right: 100%;
+			border-top: 6px solid transparent;
+			border-bottom: 6px solid transparent;
+			border-right: 9px solid $primary;
+		}
+	}
+
+	&-container {
+		position: relative;
+		
+		&:hover {
+			.tooltip {
+				display: block;
+			}
+		}
+	}
+}
+
 .padding {
 	@include padding;
+}
+
+.text {
+	&--big {
+		font-size: 16px;
+	}
+}
+
+.tac {
+	text-align: center;
+}
+
+.tal {
+	text-align: left;
+}
+
+.fl {
+	&--r {
+		float: right;
+	}
+}
+
+.animated-link {
+	&:active {
+		position: relative;
+		top: 1px;
+	}
+}
+
+.input {
+	font-size: 16px;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 2px solid lighten($primary, 10%);
+	width: $input_width;
+	display: inline-block;
+	vertical-align: middle;
+
+	@media (max-width: $sm) {
+		width: 100%;
+		margin-bottom: 5px;
+	}
+
+	&__error {
+		padding: 10px 20px;
+		width: $input_width;
+		display: block;
+		background-color: $active;
+		color: #fff;
+		font-size: 13px;
+		line-height: 16px;
+		animation: input_error_animation 10s linear infinite;
+
+		@media (max-width: $sm) {
+			width: 100%;
+		}
+	}
+
+	&-container {
+		margin-bottom: $gutter;
+
+		@media (max-width: $sm) {
+			margin-bottom: 30px;
+		}
+	}
+
+	&-label {
+		width: calc(100% - #{$input_width});
+		display: inline-block;
+		vertical-align: middle;
+		padding-left: $gutter;
+		font-size: 13px;
+
+		@media (max-width: $sm) {
+			width: 100%;
+			display: block;
+			padding-left: 0;
+		}
+	}
+
+	&:focus, &:hover, &:active {
+		border: 2px solid $primary;
+	}
+
+	&--text {
+		height: 50px;
+	}
+}
+
+.notification {
+	z-index: 100;
+	width: 300px;
+	max-height: 200px;
+	overflow: auto;
+	position: fixed;
+	right: $gutter;
+	bottom: $gutter;
+	padding: $gutter;
+	background: rgba(0,0,0,.8);
+	opacity: 0;
+	transform: translateY(30px);
+	transition: $anim_duration ease-in-out;
+
+	&.shown {
+		transform: none;
+		opacity: 1;
+	}
+
+	&__span {
+		font-weight: bold;
+		font-size: 15px;
+	}
+
+	&__text {
+		display: block;
+		font-size: 13px;
+		color: #fff;
+	}
+}
+
+.btn {
+	font-size: 16px;
+	color: #fff;
+	padding: 10px 20px;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
+
+	&--primary {
+		background-color: $primary;
+
+		&:hover, &:active, &:focus {
+			background-color: lighten($primary, 5%);
+		}
+	}
+
+	&--secondary {
+		background-color: $gray;
+
+		&:hover, &:active, &:focus {
+			background-color: lighten($gray, 5%);
+		}
+	}
+
+	&--disabled {
+		background-color: $gray;
+
+		&:hover, &:active, &:focus {
+			background-color: $gray;
+			cursor: auto;
+		}
+	}
+}
+
+.title {
+	font-family: $font--headings;
+	text-transform: uppercase;
 }
 
 .overlay {
@@ -32,6 +258,211 @@ input, textarea, button, select {
 
 	&.shown {
 		opacity: 1;
+	}
+}
+
+.selectbox {
+	position: relative;
+	cursor: pointer;
+	padding: 0;
+
+	[data-triggered=true] + .icon {
+		color: $primary;
+	}
+
+	&, &:hover, &:active, &:focus {
+		border: none;
+	}
+
+	&__item {
+		display: block;
+		width: 100%;
+		margin-top: -1px;
+		margin-bottom: 0;
+		background: #fff;
+
+		&.active {
+			display: none;
+		}
+
+		&:hover {
+			z-index: 10;
+			position: relative;
+		}
+	}
+
+	.icon {
+		position: absolute;
+		top: 17px;
+		right: 10px;
+		font-size: 20px;
+	}
+
+	&__item,
+	&__title {
+		height: auto;
+		min-height: 50px;
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+
+	&__title {
+		position: relative;
+		z-index: 1;
+		padding-right: 30px;
+	}
+
+	&-container {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		z-index: 10;
+		box-shadow: 0px 0px 15px 8px $tr--light;
+
+		@media (max-width: $sm) {
+			margin-top: -6px;
+		}
+	}
+
+	&.shown {
+		.selectbox-container {
+			display: block;
+			margin-bottom: $gutter;
+		}
+	}
+}
+
+@keyframes user-selected-anim {
+	0% {
+		box-shadow: 0px 0px 0px 0px $tr--light;
+	}
+	100% {
+		box-shadow: 0px 0px 190px 0px $tr--light;
+	}
+}
+
+.users {
+	&__self {
+		font-size: 13px;
+		margin-left: 10px;
+	}
+
+	&__counter {
+		font-size: 12px;
+		margin-left: 5px;
+	}
+
+	&__invite {
+		transition: $anim_duration ease-in-out;
+	}
+
+	&-user {
+		@include padding;
+		padding-left: 15px;
+		padding-right: 25px;
+		background: #fff;
+		cursor: pointer;
+		transition: .1s ease-in-out background-color;
+		border-bottom: 1px solid $base;
+		position: relative;
+
+		&:after {
+			content: '\ea10';
+			font-family: icomoon;
+			opacity: 0;
+			position: absolute;
+			top: 50%;
+			right: 20px;
+			transform: translate(0, -50%);
+			transition: .3s ease-in-out opacity;
+		}
+		
+		&:active,
+		&:focus {
+			border-bottom: 1px solid $base;
+		}
+
+		span {
+			transition: .1s ease-in-out color;
+		}
+
+		&:hover,
+		&.selected {
+			background: $primary;
+			color: #fff;
+		}
+
+		& > div {
+			transition: .3s ease-in-out transform;
+		}
+
+		&.selected {
+			& > div {
+				transform: translateX(10px);
+			}
+
+			&:after {
+				opacity: 1;
+			}
+		}
+
+		&--self {
+			&:hover,
+			&.selected {
+				background: #fff;
+				color: #000;
+				cursor: auto;
+			}
+		}
+	}
+}
+
+.rooms {
+	&-item {
+		padding: $gutter;
+		background-color: #fff;
+		border-bottom: 1px solid $base;
+		text-align: center;
+
+		&-container {
+			display: inline-block;
+			vertical-align: middle;
+			width: 33.3333%;
+
+			&__value {
+				font-weight: bold;
+			}
+
+			&--name {
+				width: 100%;
+				display: block;
+				margin-bottom: 15px;
+				font-size: 18px;
+			}
+		}
+	}
+
+	&__create {
+		background-color: $primary;
+		color: #fff;
+
+		&:hover {
+			background-color: lighten($primary, 5%);
+		}
+	}
+
+	@media (max-width: $md) {
+		&-item {
+			&-container {
+				width: 100%;
+				display: block;
+
+				&--enter {
+					margin-top: 15px;
+				}
+			}
+		}
 	}
 }
 
@@ -110,6 +541,7 @@ input, textarea, button, select {
 			width: 100px;
 			border: 2px solid $primary;
 			background: #fff;
+			cursor: pointer;
 
 			&:hover,
 			&:focus,
@@ -124,6 +556,12 @@ input, textarea, button, select {
 			padding-left: 15px;
 			padding-right: 15px;
 			border: 2px solid lighten($primary, 10%);
+
+			@media (max-width: $md) {
+				width: 100%;
+				margin-right: 0;
+				margin-bottom: $gutter;;
+			}
 
 			&:hover,
 			&:focus, 

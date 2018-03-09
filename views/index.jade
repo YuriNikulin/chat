@@ -1,13 +1,29 @@
 extends layout
 
 block content
-  include popup.jade
-    include auth.jade
-  section(id="chatroom" class="s-chat")
-    div.container
-      div.s-chat-messages.margin
-      div.s-chat-input-container
-        div.s-chat-input.padding
-          input(id="message" class="s-chat-input__input s-input" placeholder="Enter your message here")
-          button(id="send" class="s-chat-input__submit") Send
-
+	div.container
+		div.header
+			h3.header__text.text--big.tac.user-nickname.
+				You are logged as
+			a.btn.btn--primary.popup-opener Log as another user
+			include popup.jade
+				include auth.jade
+		div.users-container.mb--reg
+			h2.title.h2.users__title.mb--reg Users are online		
+			div.users.mb--reg
+			div.tac
+				a.btn.btn--primary.btn--disabled.users__invite
+					span Invite users to chat
+					span.users__counter (0)
+				include popup.jade
+					include new_room.jade
+		div.rooms-container
+			h2.title.h2.users__title.mb--reg Rooms
+			div.rooms.mb--reg
+			div(class="tac mb--reg")
+				a(class="btn btn--primary rooms__create") Create a new room
+block scripts
+	script(src='/socket.io/socket.io.js')
+	script(src='/js/script.js')
+	script(src='/js/common.js')
+	script(src='/js/main.js')

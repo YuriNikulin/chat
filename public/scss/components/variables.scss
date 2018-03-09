@@ -3,11 +3,19 @@ $gray: #A49F9D;
 $primary: #B3B1DB;
 $active: #DA7856;
 $tr: rgba(0,0,0, .3);
+$tr--light: rgba(0,0,0,.1);
+$cr_bg: #212937;
 
 $gutter: 15px;
-$container: 730px;
+$container: 900px;
+$input_width: 350px;
 
 $anim_duration: .3s;
 
 $font--basic: 'lato--regular';
 $font--headings: 'lato--thin';
+
+$xl: 1400px;
+$lg: 1024px;
+$md: 768px;
+$sm: 620px;

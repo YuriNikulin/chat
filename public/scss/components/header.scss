@@ -1,0 +1,13 @@
+.header {
+	padding: 30px 0;
+	text-align: center;
+
+	&__text {
+		margin-bottom: 20px;
+		
+		span {
+			margin-left: 5px;
+			color: $primary;
+		}
+	}
+}
