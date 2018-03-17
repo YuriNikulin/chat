@@ -2,6 +2,49 @@
 	background-color: $cr_bg;
 	height: 100%;
 
+	&-video {
+		width: 100%;
+		max-width: $xll;
+		padding-left: $gutter;
+		font-size: 0;
+		transition: $anim_duration ease-in-out;
+
+		@media (max-width: $xll + $chat_width--lg + $gutter) {
+			padding-right: $chat_width--lg + $gutter * 2;
+
+			&--no-chat {
+				padding-right: $gutter;
+			}
+		}
+
+		@media (max-width: $xll) {
+			padding-right: $chat_width + $gutter * 2;
+
+			&--no-chat {
+				padding-right: $gutter;
+			}
+		}
+
+		&-item {
+			display: inline-block;
+			vertical-align: top;
+			padding: $gutter / 2;
+			width: (100% / 6);
+
+			@media (max-width: 1920px) {
+				width: 25%;
+			}
+
+			@media (max-width: $xl - 1) {
+				width: (100% / 3);
+			}
+
+			&__video {
+				max-width: 100%;
+			}
+		}
+	}
+
 	&-settings {
 		&__opener {
 			float: right;
@@ -56,7 +99,11 @@
 		position: fixed;
 		bottom: $gutter;
 		right: $gutter;
-		width: 300px;
+		width: $chat_width--lg;
+
+		@media (max-width: $xll) {
+			width: $chat_width;
+		}
 
 		&-chat {
 			&__unread {

@@ -5,6 +5,9 @@ namespace.emit('initiator_check', getUserId());
 
 var socket = io.connect();
 
+var chatClosed = false,
+	usersClosed = false;
+
 var msgUnreadCounter = 80;
 
 namespace.on('server_requests_username', function() {
@@ -64,11 +67,17 @@ function crAccordion() {
 
 	function calcContentSize() {
 		windowHeight = getWindowHeight();
-		console.log(windowHeight);
 		contentSize = (windowHeight / items.length) - (((gutter * 2) / items.length) + document.querySelector('.cr-chat__title').offsetHeight);
+		for (var i = 0; i < items.length; i++) {
+			if (items[i].classList.contains('open')) {
+				items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
+			}
+		}
 	}
 
 	calcContentSize();
+
+	window.addEventListener('resize', calcContentSize);
 
 	for (var i = 0; i < items.length; i++) {
 		items[i].querySelector('.cr-chat__title').onclick = function() {
@@ -104,11 +113,24 @@ function crSettings() {
 
 	sChat.addEventListener('click', function() {
 		toggleElem(crChat);
+		chatClosed ? chatClosed = false : chatClosed = true;
+		crIsChatClosed();
 	})
 
 	sUsers.addEventListener('click', function() {
 		toggleElem(crUsers);
+		usersClosed ? usersClosed = false : usersClosed = true;
+		crIsChatClosed();
 	})
+}
+
+function crIsChatClosed() {
+	var container = document.querySelector('.cr-video');
+	if (chatClosed && usersClosed) {
+		container.classList.add('cr-video--no-chat')
+	} else {
+		container.classList.remove('cr-video--no-chat');
+	}
 }
 
 function crChat() {

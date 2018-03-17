@@ -506,6 +506,35 @@ a {
 .cr {
   background-color: #212937;
   height: 100%; }
+  .cr-video {
+    width: 100%;
+    max-width: 2560px;
+    padding-left: 15px;
+    font-size: 0;
+    transition: 0.3s ease-in-out; }
+    @media (max-width: 3075px) {
+      .cr-video {
+        padding-right: 530px; }
+        .cr-video--no-chat {
+          padding-right: 15px; } }
+    @media (max-width: 2560px) {
+      .cr-video {
+        padding-right: 330px; }
+        .cr-video--no-chat {
+          padding-right: 15px; } }
+    .cr-video-item {
+      display: inline-block;
+      vertical-align: top;
+      padding: 7.5px;
+      width: 16.66667%; }
+      @media (max-width: 1920px) {
+        .cr-video-item {
+          width: 25%; } }
+      @media (max-width: 1399px) {
+        .cr-video-item {
+          width: 33.33333%; } }
+      .cr-video-item__video {
+        max-width: 100%; }
   .cr-settings__opener {
     float: right;
     color: #fff;
@@ -538,7 +567,10 @@ a {
     position: fixed;
     bottom: 15px;
     right: 15px;
-    width: 300px; }
+    width: 500px; }
+    @media (max-width: 2560px) {
+      .cr-chat {
+        width: 300px; } }
     .cr-chat-chat__unread {
       font-size: 14px;
       margin-left: 2px; }

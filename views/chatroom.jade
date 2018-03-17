@@ -11,6 +11,8 @@ block content
 			include popup.jade
 				include room_settings.jade		
 		div(class="cr-video")
+			div(class="cr-video-main")
+			div(class="cr-video-items row")
 		div(class="cr-chat")
 			div(class="cr-chat-item cr-chat-chat open shown")
 				span(class="cr-chat__title h4 title") chat
@@ -34,4 +36,5 @@ block scripts
 	script(src='/socket.io/socket.io.js')								
 	script(src='/js/script.js')						
 	script(src='/js/common.js')						
-	script(src='/js/chatroom.js')								
+	script(src='/js/chatroom.js')							
+	script(src='/js/webrtc.js')							

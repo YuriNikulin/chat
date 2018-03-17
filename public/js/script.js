@@ -22,6 +22,25 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function basicRender(tagName, elemClassName, container, deleteIfExists) {
+	if (elemClassName && container) {
+		var oldElemClass = '.' + elemClassName.replace(/\s/g, '.');
+		var oldElem = container.querySelector(oldElemClass);
+		if (oldElem && deleteIfExists) {
+			oldElem.parentNode.removeChild(oldElem);
+		}
+	}
+
+	var elem = document.createElement(tagName);
+	if (elemClassName) {
+		elem.className = elemClassName;
+	}
+	if (container) {
+		container.appendChild(elem);
+	}
+	return elem;
+}
+
 function showErrorPopup(data) {
 	var errorPopup = document.createElement('div'),
 		errorText = document.createElement('p'),
