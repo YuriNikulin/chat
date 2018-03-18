@@ -42,10 +42,6 @@ window.addEventListener('load', function() {
 		        navigator.enumerateDevices = window.MediaStreamTrack.getSources.bind(window.MediaStreamTrack);
 		    }
 
-		    if (!navigator.enumerateDevices && navigator.enumerateDevices) {
-		        navigator.enumerateDevices = navigator.enumerateDevices.bind(navigator);
-		    }
-
 		    if (!navigator.enumerateDevices) {
 		        if (callback) {
 		            callback();
