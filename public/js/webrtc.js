@@ -55,7 +55,8 @@ window.addEventListener('load', function() {
 
 		    MediaDevices = [];
 		    navigator.enumerateDevices(function(devices) {
-		        devices.forEach(function(_device) {
+		        for (var i = 0; i < devices.length; i++) {
+		        	var _device = devices[i];
 		            var device = {};
 		            for (var d in _device) {
 		                device[d] = _device[d];
@@ -115,10 +116,8 @@ window.addEventListener('load', function() {
 		                hasWebcam = true;
 		            }
 
-		            // there is no 'videoouput' in the spec.
-
 		            MediaDevices.push(device);
-		        });
+		        };
 
 		        if (callback) {
 		            callback();
