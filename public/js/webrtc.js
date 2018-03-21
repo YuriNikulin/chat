@@ -1,5 +1,6 @@
 window.addEventListener('load', function() {
 	var webrtcObj = {};
+	webrtcObj.config = {};
 
 	function addVideoElem(stream) {
 		var container = document.querySelector('.cr-video-items');
@@ -9,7 +10,7 @@ window.addEventListener('load', function() {
 		videoElem.autoplay = true;
 	}
 
-	function crGetMediaDevices() {
+	function crGetConnection() {
 		if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
 		    navigator.enumerateDevices = function(callback) {
 		        navigator.mediaDevices.enumerateDevices().then(callback);
@@ -131,6 +132,18 @@ window.addEventListener('load', function() {
 		return (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia); 
 	}
 
+	function startPeerConnection(stream) {
+		var localConnection = new RTCPeerConnection({});
+		localConnection.addStream(stream);
+
+		localConnection.createOffer().then(function(offer) {
+			debugger;
+			return localConnection.setLocalDescription(offer);
+		})
+
+		// TODO: I NEED TO CREATE OFFER FOR yourConnection AND THEN SOMEHOW SEND THIS OFFER TO OTHER SOCKETS
+	}
+
 	function crGetUserMedia() {
 		if (crHasUserMedia()) {
 			navigator.getUserMedia = crHasUserMedia();
@@ -138,13 +151,25 @@ window.addEventListener('load', function() {
 
 		navigator.getUserMedia({
 			video: webrtcObj.video,
-			audio: webrtcObj.audio
+			audio: false
 		}, function(stream){
 			addVideoElem(stream);
+
+			if (crHasRTCPeerConnection()) {
+				startPeerConnection(stream);
+			} else {
+				showErrorPopup('Your browser doesn\'t support WebRTC');
+			}
+
 		}, function(error) {
 			console.log(error);
 		})
 	};
 
-	crGetMediaDevices();
+	function crHasRTCPeerConnection() {
+		window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+		return !!window.RTCPeerConnection;
+	}
+
+	crGetConnection();
 })
