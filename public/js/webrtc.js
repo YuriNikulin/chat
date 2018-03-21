@@ -1,6 +1,12 @@
 window.addEventListener('load', function() {
 	var webrtcObj = {};
-	webrtcObj.config = {};
+	webrtcObj.config = {
+		'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
+	};
+
+	namespace.on('webrtcMsg', function(data) {
+		console.log(data);
+	})
 
 	function addVideoElem(stream) {
 		var container = document.querySelector('.cr-video-items');
@@ -133,11 +139,14 @@ window.addEventListener('load', function() {
 	}
 
 	function startPeerConnection(stream) {
-		var localConnection = new RTCPeerConnection({});
+		var localConnection = new RTCPeerConnection(webrtcObj.config);
 		localConnection.addStream(stream);
 
 		localConnection.createOffer().then(function(offer) {
-			debugger;
+			namespace.emit('webrtcMsg', {
+				'type': 'offer',
+				'msg': offer
+			})
 			return localConnection.setLocalDescription(offer);
 		})
 

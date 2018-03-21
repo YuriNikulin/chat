@@ -237,9 +237,13 @@ exports.initialize = function(server) {
 					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 				});
 
-				socket.on('webrtcMessage', function(message) {
-					debugger;
-					console.log(message);
+				socket.on('webrtcMsg', function(data) {
+					if (data.type == 'offer') {
+						newNamespace.emit('webrtcMsg', {
+							'type': 'offer',
+							'msg': data.msg
+						});
+					}
 				})
 
 			})
