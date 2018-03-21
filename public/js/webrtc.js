@@ -4,10 +4,6 @@ window.addEventListener('load', function() {
 		'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 	};
 
-	namespace.on('webrtcMsg', function(data) {
-		console.log(data);
-	})
-
 	function addVideoElem(stream) {
 		var container = document.querySelector('.cr-video-items');
 		var videoElemContainer = basicRender('div', 'cr-video-item', container);
@@ -143,14 +139,36 @@ window.addEventListener('load', function() {
 		localConnection.addStream(stream);
 
 		localConnection.createOffer().then(function(offer) {
-			namespace.emit('webrtcMsg', {
-				'type': 'offer',
-				'msg': offer
-			})
+			namespace.emit('webrtcMsg', JSON.stringify(offer));
+
+			console.log(offer);
 			return localConnection.setLocalDescription(offer);
+		});
+
+		namespace.on('webrtcMsg', function(data) {
+			data = JSON.parse(data);
+			if (data.type == 'offer') {
+				var remoteConnection = new RTCPeerConnection(webrtcObj.conf);
+				var remoteDescription = new RTCSessionDescription(data);
+				remoteConnection.setRemoteDescription(remoteDescription).then(function() {
+					console.log('normal');
+					remoteConnection.createAnswer().then(function(answer) {
+						console.log('voobshe ok');
+						return remoteConnection.setLocalDescription(answer);
+					}).then(function() {
+						console.log('polnyi kaef');
+					})
+				});
+
+				// localConnection.createAnswer().then(function(answer) {
+				// 	return localConnection.setLocalDescription(answer);
+				// }).then(function() {
+				// 	console.log('success');
+				// })
+				// debugger;
+			}
 		})
 
-		// TODO: I NEED TO CREATE OFFER FOR yourConnection AND THEN SOMEHOW SEND THIS OFFER TO OTHER SOCKETS
 	}
 
 	function crGetUserMedia() {
