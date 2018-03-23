@@ -1,7 +1,12 @@
-var webrtcObj = {};
+var webrtcObj = {},
+	webrtcUsers = {};
 webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 };
+
+function WebRTCUser() {
+	this.pc = new RTCPeerConnection(webrtcObj.config);
+}
 
 function addVideoElem(stream) {
 	// debugger;
@@ -190,7 +195,17 @@ function startPeerConnection(stream) {
 }
 
 function getListOfUsersInRoom() {
-	namespace.emit('w_user_requests_list_of_users');
+	namespace.emit('w_user_requests_list_of_users', currentUser.wid);
+
+	namespace.on('w_server_fetches_list_of_users', function(data) {
+		for (var i in data) {
+			if (data[i] == currentUser.wid) {
+				continue;
+			}
+			webrtcUsers[data[i]] = new WebRTCUser();
+			debugger;
+		}
+	})
 }
 
 function crGetUserMedia() {
@@ -219,9 +234,6 @@ function crHasRTCPeerConnection() {
 	window.RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 	return !!window.RTCPeerConnection;
 }
-
-
-
 
 
 window.addEventListener('load', function() {

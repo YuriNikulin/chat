@@ -15,6 +15,11 @@ namespace.on('server_requests_username', function() {
 	namespace.emit('user_sends_username', userName);
 })
 
+namespace.on('server_sends_wid', function(data) {
+	document.cookie = 'chatUserWid=' + data;
+	currentUser.wid = data;
+})
+
 namespace.on('user_wants_join_room', function(name, id) {
 	var invitationContainer = document.createElement('div'),
 		acceptButton = document.createElement('a'),

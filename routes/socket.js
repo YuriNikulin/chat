@@ -195,6 +195,7 @@ exports.initialize = function(server) {
 				}
 
 				socket.emit('server_requests_username');
+				socket.emit('server_sends_wid', socket.id);
 
 				io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 
@@ -237,9 +238,9 @@ exports.initialize = function(server) {
 					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 				});
 
-				socket.on('w_user_requests_list_of_users', function() {
-					debugger;
-					newNamespace;
+				socket.on('w_user_requests_list_of_users', function(socket) {
+					var socket = newNamespace.sockets[socket];
+					socket.emit('w_server_fetches_list_of_users', Object.keys(newNamespace.sockets));
 				})
 
 				socket.on('webrtcMsg', function(msg) {
