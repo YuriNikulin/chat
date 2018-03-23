@@ -5,10 +5,11 @@ window.addEventListener('load', function() {
 	};
 
 	function addVideoElem(stream) {
+		// debugger;
 		var container = document.querySelector('.cr-video-items');
 		var videoElemContainer = basicRender('div', 'cr-video-item', container);
 		var videoElem = basicRender('video', 'cr-video-item__video', videoElemContainer);
-		videoElem.src = window.URL.createObjectURL(stream);
+		videoElem.srcObject = stream;
 		videoElem.autoplay = true;
 	}
 
@@ -136,7 +137,16 @@ window.addEventListener('load', function() {
 
 	function startPeerConnection(stream) {
 		var localConnection = new RTCPeerConnection(webrtcObj.config);
-		localConnection.addStream(stream);
+		var tracks = stream.getTracks();
+		debugger;
+		if (typeof(localConnection.addTrack) == 'function') {
+			for (var i = 0; i < tracks.length; i++) {
+				localConnection.addTrack(tracks[i], stream);
+			}
+		} else {
+			localConnection.addStream(stream);
+		}
+		
 
 		localConnection.createOffer().then(function(offer) {
 			namespace.emit('webrtcMsg', JSON.stringify(offer));
@@ -145,30 +155,41 @@ window.addEventListener('load', function() {
 			return localConnection.setLocalDescription(offer);
 		});
 
+		localConnection.onicecandidate = function(event) {
+			namespace.emit('webrtcMsg', JSON.stringify({
+				'type': 'candidate',
+				'msg': event.candidate
+			}));
+		}
+
 		namespace.on('webrtcMsg', function(data) {
 			data = JSON.parse(data);
+
 			if (data.type == 'offer') {
 				var remoteConnection = new RTCPeerConnection(webrtcObj.conf);
 				var remoteDescription = new RTCSessionDescription(data);
+
+				remoteConnection.onaddstream = function(e) {
+					addVideoElem(e.stream);
+				}
+
 				remoteConnection.setRemoteDescription(remoteDescription).then(function() {
 					console.log('normal');
 					remoteConnection.createAnswer().then(function(answer) {
-						console.log('voobshe ok');
+						namespace.emit('webrtcMsg', JSON.stringify(answer));
 						return remoteConnection.setLocalDescription(answer);
 					}).then(function() {
 						console.log('polnyi kaef');
 					})
 				});
-
-				// localConnection.createAnswer().then(function(answer) {
-				// 	return localConnection.setLocalDescription(answer);
-				// }).then(function() {
-				// 	console.log('success');
-				// })
-				// debugger;
+			} else if (data.type == 'answer') {
+				localConnection.setRemoteDescription(new RTCSessionDescription(data));
+			} else if (data.type == 'candidate' && data.msg) {
+				if (localConnection.remoteDescription.sdp) {
+					localConnection.addIceCandidate(new RTCIceCandidate(data.msg)).then(function() { console.log('poluchilos') });
+				}
 			}
 		})
-
 	}
 
 	function crGetUserMedia() {
