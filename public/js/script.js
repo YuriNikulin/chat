@@ -100,26 +100,28 @@ function getUserNickname() {
 	return userNickname;
 }
 
-function getUserId() {
-	var userId = document.cookie.match( /chatUserId=([^;]+)/);
-	if (userId) {
-		userId = userId[1];
+function getFromCookie(parameter) {
+	var pattern = new RegExp(parameter + '=([^;]+)');
+	var match = document.cookie.match(pattern);
+	if (match) {
+		match = match[1];
 	}   else {
-		userId = null;
+		match = null;
 	}
 
-	return userId;
+	return match;
+}
+
+function getUserId() {
+	return getFromCookie('chatUserId');
+}
+
+function getUserWid() {
+	return getFromCookie('chatUserWid');
 }
 
 function getRoomId() {
-	var RoomId = document.cookie.match( /chatRoomId=([^;]+)/);
-	if (RoomId) {
-		RoomId = RoomId[1];
-	}   else {
-		RoomId = null;
-	}
-
-	return RoomId;
+	return getFromCookie('chatRoomId');
 }
 
 function appendOverlay(overlayClassList) {
