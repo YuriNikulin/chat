@@ -234,6 +234,7 @@ exports.initialize = function(server) {
 						'message': socket.username + ' has left',
 						'type': 'serverMessage'
 					}));
+					newNamespace.emit('w_user_disconnected', socket.id);
 
 					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 				});

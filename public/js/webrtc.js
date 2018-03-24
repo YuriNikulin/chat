@@ -16,6 +16,13 @@ namespace.on('webrtcMsg', function(data) {
 	}
 })
 
+namespace.on('w_user_disconnected', function(user) {
+	user = webrtcUsers[user];
+	if (user) {
+		user.remove();
+	}
+})
+
 function WebRTCUser(user) {
 	var self = this;
 	this.stream = webrtcObj.stream;
@@ -30,7 +37,16 @@ function WebRTCUser(user) {
 	}
 
 	this.pc.onaddstream = function(e) {
-		addVideoElem(e.stream);
+		self.videoElem = addVideoElem(e.stream);
+	}
+
+	this.remove = function() {
+		var video = self.videoElem;
+		var parent = video.parentNode;
+		if (video) {
+			parent.parentNode.removeChild(parent);
+		}
+		delete webrtcUsers[self.wid];
 	}
 
 	this.username = user.username;
@@ -38,7 +54,6 @@ function WebRTCUser(user) {
 	this.iceCandidates = [];
 
 	this.attachStreamToPc = function() {
-		debugger;
 		var stream = this.stream;
 		var pc = this.pc;
 		var tracks = stream.getTracks();
@@ -85,12 +100,17 @@ function WebRTCUser(user) {
 	}
 }
 
-function addVideoElem(stream) {
+function addVideoElem(stream, muted) {
 	var container = document.querySelector('.cr-video-items');
 	var videoElemContainer = basicRender('div', 'cr-video-item', container);
 	var videoElem = basicRender('video', 'cr-video-item__video', videoElemContainer);
 	videoElem.srcObject = stream;
 	videoElem.autoplay = true;
+	if (muted) {
+		videoElem.muted = true;
+	}
+
+	return videoElem;
 }
 
 function crGetConnection() {
@@ -293,9 +313,9 @@ function crGetUserMedia() {
 
 	navigator.getUserMedia({
 		video: webrtcObj.video,
-		audio: false
+		audio: webrtcObj.audio
 	}, function(stream){
-		addVideoElem(stream);
+		addVideoElem(stream, true);
 		webrtcObj.stream = stream;
 		if (crHasRTCPeerConnection()) {
 			getListOfUsersInRoom();
