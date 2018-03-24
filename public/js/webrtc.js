@@ -7,19 +7,76 @@ webrtcObj.config = {
 namespace.on('webrtcMsg', function(data) {
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
+		webrtcUsers[data.from.wid].handleOffer(data.msg);
+	} else if (data.msg.type == 'answer') {
+		webrtcUsers[data.from.wid].handleAnswer(data.msg);
+	} else if (data.msg.type == 'candidate') {
+		webrtcUsers[data.from.wid].handleCandidate(data.msg);
 	}
 })
 
 function WebRTCUser(user) {
+	var self = this;
 	this.pc = new RTCPeerConnection(webrtcObj.config);
+	this.pc.onicecandidate = function(event) {
+		if (event.candidate) {
+			webrtcMsg(currentUser, self.wid, {
+				'type': 'candidate',
+				'candidate': event.candidate
+			});
+		}
+	}
+	
+	this.pc.onaddstream = function(e) {
+		addVideoElem(e.stream);
+	}
+
 	this.username = user.username;
 	this.wid = user.wid || user.id;
+	this.iceCandidates = [];
+
+	this.attachStreamToPc = function(stream) {
+		var pc = this.pc;
+		var tracks = stream.getTracks();
+		if (typeof(pc.addTrack) == 'function') {
+			for (var i = 0; i < tracks.length; i++) {
+				pc.addTrack(tracks[i], stream);
+			}
+		} else {
+			pc.addStream(stream);
+		}	
+	}
+
 	this.doCall = function() {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
+		})
+	}
+
+	this.handleCandidate = function(candidate) {
+		candidate = new RTCIceCandidate(candidate.candidate);
+		this.pc.addIceCandidate(candidate);
+	}
+
+	this.handleOffer = function(offer) {
+		var pc = this.pc;
+		var wid = this.wid;
+		var remoteDescription = new RTCSessionDescription(offer);
+		pc.setRemoteDescription(offer).then(function() {
+			pc.createAnswer().then(function(answer) {
+				pc.setLocalDescription(answer);
+				webrtcMsg(currentUser, wid, answer);
+			})
+		})
+	}
+
+	this.handleAnswer = function(answer) {
+		var pc = this.pc;
+		pc.setRemoteDescription(answer).then(function() {
+			console.log('Answer has been processed');
 		})
 	}
 }
@@ -209,7 +266,7 @@ function startPeerConnection(stream) {
 	})
 }
 
-function getListOfUsersInRoom() {
+function getListOfUsersInRoom(stream) {
 	namespace.emit('w_user_requests_list_of_users', currentUser.wid);
 
 	namespace.on('w_server_fetches_list_of_users', function(data) {
@@ -219,6 +276,7 @@ function getListOfUsersInRoom() {
 				continue;
 			}
 			webrtcUsers[user.id] = new WebRTCUser(user);
+			webrtcUsers[user.id].attachStreamToPc(stream);
 			webrtcUsers[user.id].doCall();
 		}
 	})
@@ -236,7 +294,7 @@ function crGetUserMedia() {
 		addVideoElem(stream);
 
 		if (crHasRTCPeerConnection()) {
-			getListOfUsersInRoom();
+			getListOfUsersInRoom(stream);
 		} else {
 			showErrorPopup('Your browser doesn\'t support WebRTC');
 		}
