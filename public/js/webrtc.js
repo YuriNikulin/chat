@@ -1,4 +1,5 @@
 var webrtcObj = {},
+	videoResolution = 1.33,
 	webrtcUsers = {};
 webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
@@ -109,6 +110,7 @@ function addVideoElem(stream, muted) {
 	if (muted) {
 		videoElem.muted = true;
 	}
+	resizeElem(videoElem, videoResolution);
 
 	return videoElem;
 }
@@ -336,4 +338,7 @@ function crHasRTCPeerConnection() {
 
 window.addEventListener('load', function() {
 	crGetConnection();
+});
+window.addEventListener('resize', function() {
+	resizeAllVideos(videoResolution);
 })

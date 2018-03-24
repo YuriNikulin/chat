@@ -40,7 +40,9 @@
 			}
 
 			&__video {
-				max-width: 100%;
+				width: 100%;
+				background: #000;
+				transition: $anim_duration;
 			}
 		}
 	}

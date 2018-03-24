@@ -134,8 +134,14 @@ function crIsChatClosed() {
 	var container = document.querySelector('.cr-video');
 	if (chatClosed && usersClosed) {
 		container.classList.add('cr-video--no-chat')
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDuration);
 	} else {
 		container.classList.remove('cr-video--no-chat');
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDuration);
 	}
 }
 

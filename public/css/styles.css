@@ -534,7 +534,9 @@ a {
         .cr-video-item {
           width: 33.33333%; } }
       .cr-video-item__video {
-        max-width: 100%; }
+        width: 100%;
+        background: #000;
+        transition: 0.3s; }
   .cr-settings__opener {
     float: right;
     color: #fff;

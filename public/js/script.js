@@ -22,6 +22,19 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function resizeElem(elem, resolution) {
+	var width = elem.getBoundingClientRect().width;
+	var newHeight = width / resolution;
+	elem.style.height = newHeight + 'px';
+}
+
+function resizeAllVideos(resolution) {
+	var items = document.querySelectorAll('.cr-video video');
+	for (var i = 0; i < items.length; i++) {
+		resizeElem(items[i], resolution);
+	}
+}
+
 function webrtcMsg(from, to, msg) {
 	if (namespace) {
 		namespace.emit('webrtcMsg', {
