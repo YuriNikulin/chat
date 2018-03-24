@@ -20,6 +20,7 @@ namespace.on('server_sends_wid', function(data) {
 	currentUser.wid = data;
 })
 
+
 namespace.on('user_wants_join_room', function(name, id) {
 	var invitationContainer = document.createElement('div'),
 		acceptButton = document.createElement('a'),

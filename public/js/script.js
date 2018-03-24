@@ -22,6 +22,16 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function webrtcMsg(from, to, msg) {
+	if (namespace) {
+		namespace.emit('webrtcMsg', {
+			'from': from,
+			'to': to,
+			'msg': msg
+		});
+	}
+}
+
 function basicRender(tagName, elemClassName, container, deleteIfExists) {
 	if (elemClassName && container) {
 		var oldElemClass = '.' + elemClassName.replace(/\s/g, '.');
@@ -500,10 +510,11 @@ function authorization() {
 		nicknameSpan;	
 	userNickname = currentUser.username = getUserNickname();
 
-	socket.emit('user_sends_nickname', userNickname);
 	if (!userNickname) {
-		userNickname = 'anonymous user';
+		userNickname = currentUser.username = 'anonymous';
 	}
+
+	socket.emit('user_sends_nickname', userNickname);
 
 	if (nicknameContainer) {
 		for (var i = 0; i < nicknameContainer.length; i++) {

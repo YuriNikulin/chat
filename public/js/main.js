@@ -7,8 +7,11 @@ socket.on('debug_data', function(data) {
 socket.on('name_set', function(data) {
 	closePopup();
 	authorization();
-
-	currentUser.username = data.name;
+	if (!data.name) {
+		currentUser.username = 'anonymous';
+	} else {
+		currentUser.username = data.name;
+	}
 	removeUser(currentUser);
 	appendUser(currentUser, document.querySelector('.users'));
 });

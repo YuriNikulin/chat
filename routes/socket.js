@@ -240,11 +240,20 @@ exports.initialize = function(server) {
 
 				socket.on('w_user_requests_list_of_users', function(socket) {
 					var socket = newNamespace.sockets[socket];
-					socket.emit('w_server_fetches_list_of_users', Object.keys(newNamespace.sockets));
+					var users = [];
+					for (var i in newNamespace.sockets) {
+						users.push(newUserToFetch(newNamespace.sockets[i]));
+					}
+					socket.emit('w_server_fetches_list_of_users', users);
 				})
 
-				socket.on('webrtcMsg', function(msg) {
-					socket.broadcast.emit('webrtcMsg', msg);
+				socket.on('webrtcMsg', function(data) {
+					if (newNamespace.sockets[data.to]) {
+						newNamespace.sockets[data.to].emit('webrtcMsg', {
+							'from': data.from,
+							'msg': data.msg
+						});
+					}
 				})
 
 			})

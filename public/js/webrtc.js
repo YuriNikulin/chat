@@ -4,12 +4,27 @@ webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 };
 
-function WebRTCUser() {
+namespace.on('webrtcMsg', function(data) {
+	if (data.msg.type == 'offer') {
+		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
+	}
+})
+
+function WebRTCUser(user) {
 	this.pc = new RTCPeerConnection(webrtcObj.config);
+	this.username = user.username;
+	this.wid = user.wid || user.id;
+	this.doCall = function() {
+		var pc = this.pc;
+		var wid = this.wid;
+		pc.createOffer().then(function(offer) {
+			pc.setLocalDescription(offer);
+			webrtcMsg(currentUser, wid, offer);
+		})
+	}
 }
 
 function addVideoElem(stream) {
-	// debugger;
 	var container = document.querySelector('.cr-video-items');
 	var videoElemContainer = basicRender('div', 'cr-video-item', container);
 	var videoElem = basicRender('video', 'cr-video-item__video', videoElemContainer);
@@ -166,31 +181,31 @@ function startPeerConnection(stream) {
 	namespace.on('webrtcMsg', function(data) {
 		data = JSON.parse(data);
 
-		if (data.type == 'offer') {
-			// var remoteConnection = new RTCPeerConnection(webrtcObj.conf);
-			debugger;
-			var remoteDescription = new RTCSessionDescription(data);
+		// if (data.type == 'offer') {
+		// 	// var remoteConnection = new RTCPeerConnection(webrtcObj.conf);
+		// 	debugger;
+		// 	var remoteDescription = new RTCSessionDescription(data);
 
-			localConnection.onaddstream = function(e) {
-				addVideoElem(e.stream);
-			}
+		// 	localConnection.onaddstream = function(e) {
+		// 		addVideoElem(e.stream);
+		// 	}
 
-			localConnection.setRemoteDescription(remoteDescription).then(function() {
-				console.log('normal');
-				localConnection.createAnswer().then(function(answer) {
-					namespace.emit('webrtcMsg', JSON.stringify(answer));
-					return localConnection.setLocalDescription(answer);
-				}).then(function() {
-					console.log('polnyi kaef');
-				})
-			});
-		} else if (data.type == 'answer') {
-			localConnection.setRemoteDescription(new RTCSessionDescription(data));
-		} else if (data.type == 'candidate' && data.msg) {
-			if (localConnection.remoteDescription.sdp) {
-				localConnection.addIceCandidate(new RTCIceCandidate(data.msg)).then(function() { console.log('poluchilos') });
-			}
-		}
+		// 	localConnection.setRemoteDescription(remoteDescription).then(function() {
+		// 		console.log('normal');
+		// 		localConnection.createAnswer().then(function(answer) {
+		// 			namespace.emit('webrtcMsg', JSON.stringify(answer));
+		// 			return localConnection.setLocalDescription(answer);
+		// 		}).then(function() {
+		// 			console.log('polnyi kaef');
+		// 		})
+		// 	});
+		// } else if (data.type == 'answer') {
+		// 	localConnection.setRemoteDescription(new RTCSessionDescription(data));
+		// } else if (data.type == 'candidate' && data.msg) {
+		// 	if (localConnection.remoteDescription.sdp) {
+		// 		localConnection.addIceCandidate(new RTCIceCandidate(data.msg)).then(function() { console.log('poluchilos') });
+		// 	}
+		// }
 	})
 }
 
@@ -198,12 +213,13 @@ function getListOfUsersInRoom() {
 	namespace.emit('w_user_requests_list_of_users', currentUser.wid);
 
 	namespace.on('w_server_fetches_list_of_users', function(data) {
-		for (var i in data) {
-			if (data[i] == currentUser.wid) {
+		for (var i = 0; i < data.length; i++) {
+			var user = JSON.parse(data[i]);
+			if (user.id == currentUser.wid) {
 				continue;
 			}
-			webrtcUsers[data[i]] = new WebRTCUser();
-			debugger;
+			webrtcUsers[user.id] = new WebRTCUser(user);
+			webrtcUsers[user.id].doCall();
 		}
 	})
 }
