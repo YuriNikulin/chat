@@ -7,6 +7,7 @@ webrtcObj.config = {
 namespace.on('webrtcMsg', function(data) {
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
+		webrtcUsers[data.from.wid].attachStreamToPc();
 		webrtcUsers[data.from.wid].handleOffer(data.msg);
 	} else if (data.msg.type == 'answer') {
 		webrtcUsers[data.from.wid].handleAnswer(data.msg);
@@ -17,6 +18,7 @@ namespace.on('webrtcMsg', function(data) {
 
 function WebRTCUser(user) {
 	var self = this;
+	this.stream = webrtcObj.stream;
 	this.pc = new RTCPeerConnection(webrtcObj.config);
 	this.pc.onicecandidate = function(event) {
 		if (event.candidate) {
@@ -26,7 +28,7 @@ function WebRTCUser(user) {
 			});
 		}
 	}
-	
+
 	this.pc.onaddstream = function(e) {
 		addVideoElem(e.stream);
 	}
@@ -35,7 +37,9 @@ function WebRTCUser(user) {
 	this.wid = user.wid || user.id;
 	this.iceCandidates = [];
 
-	this.attachStreamToPc = function(stream) {
+	this.attachStreamToPc = function() {
+		debugger;
+		var stream = this.stream;
 		var pc = this.pc;
 		var tracks = stream.getTracks();
 		if (typeof(pc.addTrack) == 'function') {
@@ -70,7 +74,7 @@ function WebRTCUser(user) {
 				pc.setLocalDescription(answer);
 				webrtcMsg(currentUser, wid, answer);
 			})
-		})
+		});
 	}
 
 	this.handleAnswer = function(answer) {
@@ -266,7 +270,7 @@ function startPeerConnection(stream) {
 	})
 }
 
-function getListOfUsersInRoom(stream) {
+function getListOfUsersInRoom() {
 	namespace.emit('w_user_requests_list_of_users', currentUser.wid);
 
 	namespace.on('w_server_fetches_list_of_users', function(data) {
@@ -276,7 +280,7 @@ function getListOfUsersInRoom(stream) {
 				continue;
 			}
 			webrtcUsers[user.id] = new WebRTCUser(user);
-			webrtcUsers[user.id].attachStreamToPc(stream);
+			webrtcUsers[user.id].attachStreamToPc();
 			webrtcUsers[user.id].doCall();
 		}
 	})
@@ -292,9 +296,9 @@ function crGetUserMedia() {
 		audio: false
 	}, function(stream){
 		addVideoElem(stream);
-
+		webrtcObj.stream = stream;
 		if (crHasRTCPeerConnection()) {
-			getListOfUsersInRoom(stream);
+			getListOfUsersInRoom();
 		} else {
 			showErrorPopup('Your browser doesn\'t support WebRTC');
 		}
