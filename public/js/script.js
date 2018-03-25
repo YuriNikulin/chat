@@ -44,6 +44,12 @@ function resizeElem(elem, resolution) {
 	setTimeout(ex, 100);
 }
 
+function resizeElems(elems, resolution) {
+	for (var i = 0; i < elems.length; i++) {
+		resizeElem(elems[i], resolution);
+	}
+}
+
 function resizeAllVideos(resolution) {
 	var items = document.querySelectorAll('.cr-video video');
 	for (var i = 0; i < items.length; i++) {
@@ -296,6 +302,38 @@ function cloneVideo(elem, container) {
 	container.appendChild(clone);
 	resizeElem(video, videoResolution);
 	showElem(clone);
+	resizeAllActiveVideo();
+	restrictAllActiveVideo();
+}
+
+function restrictAllActiveVideo() {
+	var items = document.querySelectorAll('.cr-video-main video');
+	var windowHeight = getWindowHeight();
+	var headerHeight = document.querySelector('.cr-header').offsetHeight;
+	var thumbnailsHeight;
+	var thumbnails = document.querySelectorAll('.cr-video-items .cr-video-item');
+
+	for (var i = 0; i < thumbnails.length; i++) {
+		if (thumbnails[i].offsetHeight) {
+			thumbnailsHeight = thumbnails[i].offsetHeight;
+			break;
+		}
+	}
+
+	
+		thumbnailsHeight = 100;
+	
+
+	var maxHeight = windowHeight - headerHeight - thumbnailsHeight;
+	for (var i = 0; i < items.length; i++) {
+		items[i].style.maxHeight = maxHeight + 'px';
+	}
+}
+
+function resizeAllActiveVideo() {
+	var container = document.querySelector('.cr-video-main');
+	var items = container.querySelectorAll('video');
+	resizeElems(items, videoResolution);
 }
 
 function videoTogglerCheck(elem, container, mainContainer) {

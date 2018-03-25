@@ -26,7 +26,7 @@
 		}
 
 		&-main {
-			
+			display: flex;
 		}
 
 		&-item {
@@ -52,7 +52,9 @@
 			}
 
 			&.active {
-				width: 50%;
+				width: auto;
+				flex-grow: 1;
+				flex-basis: 100%;
 			}
 
 			&__user {

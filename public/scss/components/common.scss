@@ -376,6 +376,10 @@ a {
 		border-bottom: 1px solid $base;
 		position: relative;
 
+		&:last-child {
+			border-bottom: none;
+		}
+
 		&:after {
 			content: '\ea10';
 			font-family: icomoon;
@@ -390,6 +394,10 @@ a {
 		&:active,
 		&:focus {
 			border-bottom: 1px solid $base;
+
+			&:last-child {
+				border-bottom: none;
+			}
 		}
 
 		span {
