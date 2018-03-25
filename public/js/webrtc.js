@@ -45,10 +45,17 @@ function WebRTCUser(user) {
 	this.remove = function() {
 		var video = self.videoElem;
 		var parent = video.parentNode;
-		if (video && video.parentNode) {
+		if (video && parent) {
 			hideElem(video);
+			if (parent.clone) {
+				var cloneVideo = parent.clone.querySelector('video');
+				hideElem(cloneVideo);
+				setTimeout(function() {
+					hideElem(parent.clone, true);
+				}, animDuration);
+			}
 			setTimeout(function() {
-				hideElem(video.parentNode, true);
+				hideElem(parent, true);
 			}, animDuration)
 		}
 		delete webrtcUsers[self.wid];
@@ -114,12 +121,14 @@ function addVideoElem(stream, muted, self) {
 		var usernameElem = basicRender('span', 'cr-video-item__user', videoElemContainer);
 		usernameElem.innerHTML = self.username;
 	}
+
+	if (self == currentUser) {
+		videoElem.dataset.self = true;
+		videoElem.muted = true;
+	}
 	
 	videoElem.srcObject = stream;
 	videoElem.autoplay = true;
-	if (muted) {
-		videoElem.muted = true;
-	}
 	videoElemContainer.addEventListener('click', function() {
 		videoTogglerCheck(this, container, mainContainer);
 	});

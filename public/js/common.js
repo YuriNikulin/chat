@@ -12,8 +12,8 @@ var currentUser = {},
 		{'mode': 'sm', 'value': 620},
 	],
 	activeVideoBreakpoints = {
-		'xxl': 4,
-		'xl': 3,
+		'xxl': 3,
+		'xl': 2,
 		'lg': 2,
 		'md': 1,
 		'sm': 1
