@@ -6,7 +6,7 @@ webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 };
 
-namespace.on('webrtcMsg', function(data) {
+namespace.on('webrtcMsg', function(data) {	
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
 		webrtcUsers[data.from.wid].attachStreamToPc();

@@ -285,6 +285,10 @@ function cloneVideo(elem, container) {
 }
 
 function videoTogglerCheck(elem, container, mainContainer) {
+	if (!elem) {
+		return;
+	}
+
 	if (!container) {
 		container = document.querySelector('.cr-video-items')
 	}
@@ -299,15 +303,14 @@ function videoTogglerCheck(elem, container, mainContainer) {
 	} else {
 		elem.classList.add('active');
 		var mode = getAdaptiveMode();
-		checkMainVideoContainer(mainContainer, activeVideoBreakpoints[mode]);
+		checkMainVideoContainer(mainContainer, activeVideoBreakpoints[mode] - 1);
 		cloneVideo(elem, mainContainer);
 	}
 }
 
 function checkMainVideoContainer(container, allowedElems) {
 	var items = container.querySelectorAll('.cr-video-item');
-	debugger;
-	if (items.length < allowedElems) {
+	if (items.length <= allowedElems) {
 		return;
 	}
 
