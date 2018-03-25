@@ -22,6 +22,19 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function getAdaptiveMode() {
+	var width = getWindowWidth();
+	var mode = adaptiveBreakpoints[0].mode;
+	for (var i = 1; i < adaptiveBreakpoints.length; i++) {
+		if (width <= adaptiveBreakpoints[i].value) {
+			mode = adaptiveBreakpoints[i].mode;
+		} else {
+			return mode;
+		}
+	}
+	return mode;
+}
+
 function resizeElem(elem, resolution) {
 	var width = elem.getBoundingClientRect().width;
 	var newHeight = width / resolution;
@@ -62,6 +75,24 @@ function basicRender(tagName, elemClassName, container, deleteIfExists) {
 		container.appendChild(elem);
 	}
 	return elem;
+}
+
+function hideElem(elem, remove) {
+	elem.classList.remove('shown');
+	setTimeout(function() {
+		if (remove) {
+			elem.parentNode.removeChild(elem);
+		} else {
+			elem.style.display = 'none';
+		}
+	}, animDuration)
+}
+
+function showElem(elem) {
+	elem.style.removeProperty('display');
+	setTimeout(function() {
+		elem.classList.add('shown');
+	}, 10)
 }
 
 function showErrorPopup(data) {
@@ -164,7 +195,7 @@ function leadingZero(number) {
 }
 
 function getWindowWidth() {
-	return window.outerWidth;
+	return window.innerWidth;
 }
 
 function getWindowHeight() {
@@ -232,7 +263,58 @@ function selectItemSelectbox(item) {
 	item.classList.add('active');
 	closeSelectbox(parent);
 	parent.dispatchEvent(selectboxChangeEvent);
+}
 
+function cloneVideo(elem, container) {
+	var video = elem.querySelector('video');
+	var src = video.srcObject;
+	var clone = elem.cloneNode(true);
+	var webrtcObj = video.webrtcObj;
+	
+	video = clone.querySelector('video');
+	video.srcObject = src;
+	clone.addEventListener('click', function() {
+		videoTogglerCheck(this);
+	});
+	hideElem(elem, true);
+	webrtcObj.videoElem = video;
+	video.webrtcObj = webrtcObj;
+	container.appendChild(clone);
+	resizeElem(video, videoResolution);
+	showElem(clone);
+}
+
+function videoTogglerCheck(elem, container, mainContainer) {
+	if (!container) {
+		container = document.querySelector('.cr-video-items')
+	}
+
+	if (!mainContainer) {
+		mainContainer = document.querySelector('.cr-video-main');
+	}
+
+	if (elem.classList.contains('active')) {
+		elem.classList.remove('active');
+		cloneVideo(elem, container);
+	} else {
+		elem.classList.add('active');
+		var mode = getAdaptiveMode();
+		checkMainVideoContainer(mainContainer, activeVideoBreakpoints[mode]);
+		cloneVideo(elem, mainContainer);
+	}
+}
+
+function checkMainVideoContainer(container, allowedElems) {
+	var items = container.querySelectorAll('.cr-video-item');
+	debugger;
+	if (items.length < allowedElems) {
+		return;
+	}
+
+	var difference = items.length - allowedElems;
+	for (var i = 0; i <= difference; i++) {
+		videoTogglerCheck(items[i]);
+	}
 }
 
 function removeInputErrors(container) {

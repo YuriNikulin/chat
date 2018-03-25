@@ -7,7 +7,7 @@
 		max-width: $xll;
 		padding-left: $gutter;
 		font-size: 0;
-		transition: $anim_duration ease-in-out;
+		margin: 0 auto;
 
 		@media (max-width: $xll + $chat_width--lg + $gutter) {
 			padding-right: $chat_width--lg + $gutter * 2;
@@ -25,11 +25,18 @@
 			}
 		}
 
+		&-main {
+			
+		}
+
 		&-item {
-			display: inline-block;
+			display: none;
 			vertical-align: top;
 			padding: $gutter / 2;
 			width: (100% / 6);
+			cursor: pointer;
+			transition: $anim_duration ease-in-out;
+			opacity: 0;
 
 			@media (max-width: 1920px) {
 				width: 25%;
@@ -39,10 +46,32 @@
 				width: (100% / 3);
 			}
 
+			&.shown {
+				display: inline-block;
+				opacity: 1;
+			}
+
+			&.active {
+				width: 50%;
+			}
+
+			&__user {
+				font-size: 16px;
+				display: block;
+				color: #fff;
+				margin-top: 5px;
+				text-align: center;
+			}
+
 			&__video {
 				width: 100%;
 				background: #000;
+				opacity: 0;
 				transition: $anim_duration;
+
+				&.shown {
+					opacity: 1;
+				}
 			}
 		}
 	}

@@ -137,7 +137,7 @@ function crIsChatClosed() {
 		setTimeout(function() {
 			resizeAllVideos(videoResolution);
 		}, animDuration);
-	} else {
+	} else if (!chatClosed && !usersClosed) {
 		container.classList.remove('cr-video--no-chat');
 		setTimeout(function() {
 			resizeAllVideos(videoResolution);

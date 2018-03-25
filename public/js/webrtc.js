@@ -1,5 +1,6 @@
 var webrtcObj = {},
 	videoResolution = 1.33,
+	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
 webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
@@ -38,14 +39,17 @@ function WebRTCUser(user) {
 	}
 
 	this.pc.onaddstream = function(e) {
-		self.videoElem = addVideoElem(e.stream);
+		self.videoElem = addVideoElem(e.stream, false, self);
 	}
 
 	this.remove = function() {
 		var video = self.videoElem;
 		var parent = video.parentNode;
-		if (video) {
-			parent.parentNode.removeChild(parent);
+		if (video && video.parentNode) {
+			hideElem(video);
+			setTimeout(function() {
+				hideElem(video.parentNode, true);
+			}, animDuration)
 		}
 		delete webrtcUsers[self.wid];
 	}
@@ -101,17 +105,31 @@ function WebRTCUser(user) {
 	}
 }
 
-function addVideoElem(stream, muted) {
+function addVideoElem(stream, muted, self) {
 	var container = document.querySelector('.cr-video-items');
+	var mainContainer = mainVideoContainer;
 	var videoElemContainer = basicRender('div', 'cr-video-item', container);
 	var videoElem = basicRender('video', 'cr-video-item__video', videoElemContainer);
+	if (self.username) {
+		var usernameElem = basicRender('span', 'cr-video-item__user', videoElemContainer);
+		usernameElem.innerHTML = self.username;
+	}
+	
 	videoElem.srcObject = stream;
 	videoElem.autoplay = true;
 	if (muted) {
 		videoElem.muted = true;
 	}
-	resizeElem(videoElem, videoResolution);
+	videoElemContainer.addEventListener('click', function() {
+		videoTogglerCheck(this, container, mainContainer);
+	});
+	videoElem.webrtcObj = self;
 
+	showElem(videoElemContainer);
+	setTimeout(function() {
+		resizeElem(videoElem, videoResolution);
+		showElem(videoElem);
+	}, animDuration);
 	return videoElem;
 }
 
@@ -317,7 +335,7 @@ function crGetUserMedia() {
 		video: webrtcObj.video,
 		audio: webrtcObj.audio
 	}, function(stream){
-		addVideoElem(stream, true);
+		addVideoElem(stream, true, currentUser);
 		webrtcObj.stream = stream;
 		if (crHasRTCPeerConnection()) {
 			getListOfUsersInRoom();
@@ -341,4 +359,5 @@ window.addEventListener('load', function() {
 });
 window.addEventListener('resize', function() {
 	resizeAllVideos(videoResolution);
+	checkMainVideoContainer(mainVideoContainer, activeVideoBreakpoints[getAdaptiveMode()]);
 })
