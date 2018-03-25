@@ -4,6 +4,7 @@ var currentUser = {},
 	gutter = 15,
 	videoResolution = 1.33,
 	animDuration = 300,
+	animDurationSm = 150,
 	adaptiveBreakpoints = [
 		{'mode': 'xxl', 'value': 2560},
 		{'mode': 'xl', 'value': 1400},

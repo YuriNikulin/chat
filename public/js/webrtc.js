@@ -52,11 +52,11 @@ function WebRTCUser(user) {
 				hideElem(cloneVideo);
 				setTimeout(function() {
 					hideElem(parent.clone, true);
-				}, animDuration);
+				}, animDurationSm);
 			}
 			setTimeout(function() {
 				hideElem(parent, true);
-			}, animDuration)
+			}, animDurationSm)
 		}
 		delete webrtcUsers[self.wid];
 	}
@@ -138,7 +138,7 @@ function addVideoElem(stream, muted, self) {
 	setTimeout(function() {
 		resizeElem(videoElem, videoResolution);
 		showElem(videoElem);
-	}, animDuration);
+	}, animDurationSm);
 	return videoElem;
 }
 
@@ -367,6 +367,8 @@ window.addEventListener('load', function() {
 	crGetConnection();
 });
 window.addEventListener('resize', function() {
-	resizeAllVideos(videoResolution);
+	setTimeout(function() {
+		resizeAllVideos(videoResolution);
+	}, animDurationSm);
 	checkMainVideoContainer(mainVideoContainer, activeVideoBreakpoints[getAdaptiveMode()]);
 })

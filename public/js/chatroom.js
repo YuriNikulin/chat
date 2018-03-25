@@ -109,6 +109,8 @@ function crSettings() {
 		sChat = sContainer.querySelector('.cr-settings__chat'),
 		sUsers = sContainer.querySelector('.cr-settings__users'),
 		crChat = document.querySelector('.cr-chat-chat'),
+		crVideoContainer = document.querySelector('.cr-video-items'),
+		crVideoGrid = document.querySelector('#cr-settings__grid'),
 		crUsers = document.querySelector('.cr-chat-users');
 
 	for (var i = 0; i < sItems.length; i++) {
@@ -121,6 +123,18 @@ function crSettings() {
 		toggleElem(crChat);
 		chatClosed ? chatClosed = false : chatClosed = true;
 		crIsChatClosed();
+	})
+
+	crVideoGrid.addEventListener('keyup', function() {
+		var value = this.value;
+		var oldClass = crVideoContainer.className.match(/cr-video-items--grid-\d*/g);
+		if (oldClass) {
+			crVideoContainer.classList.remove(oldClass[0]);
+		}
+		crVideoContainer.classList.add('cr-video-items--grid-' + value);
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDurationSm);
 	})
 
 	sUsers.addEventListener('click', function() {
