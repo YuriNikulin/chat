@@ -88,7 +88,7 @@ function hideElem(elem, remove) {
 	}, animDuration)
 }
 
-function showElem(elem) {
+function showElem(elem, func) {
 	elem.style.removeProperty('display');
 	setTimeout(function() {
 		elem.classList.add('shown');
@@ -270,15 +270,22 @@ function cloneVideo(elem, container) {
 	var src = video.srcObject;
 	var clone = elem.cloneNode(true);
 	var webrtcObj = video.webrtcObj;
+
+	if (video.muted = true) {
+		var muted = true;
+	}
+
+	elem.clone = clone;
 	
 	video = clone.querySelector('video');
+	if (muted) {
+		video.muted = true;
+	}
 	video.srcObject = src;
 	clone.addEventListener('click', function() {
-		videoTogglerCheck(this);
+		videoTogglerCheck(elem);
 	});
-	hideElem(elem, true);
-	webrtcObj.videoElem = video;
-	video.webrtcObj = webrtcObj;
+	hideElem(elem);
 	container.appendChild(clone);
 	resizeElem(video, videoResolution);
 	showElem(clone);
@@ -299,7 +306,12 @@ function videoTogglerCheck(elem, container, mainContainer) {
 
 	if (elem.classList.contains('active')) {
 		elem.classList.remove('active');
-		cloneVideo(elem, container);
+		hideElem(elem.clone, true);
+		var video = elem.querySelector('video');
+		showElem(elem);
+		setTimeout(function() {
+			resizeElem(video, videoResolution);
+		}, animDuration);
 	} else {
 		elem.classList.add('active');
 		var mode = getAdaptiveMode();
@@ -309,15 +321,15 @@ function videoTogglerCheck(elem, container, mainContainer) {
 }
 
 function checkMainVideoContainer(container, allowedElems) {
-	var items = container.querySelectorAll('.cr-video-item');
-	if (items.length <= allowedElems) {
-		return;
-	}
+	// var items = container.querySelectorAll('.cr-video-item');
+	// if (items.length <= allowedElems) {
+	// 	return;
+	// }
 
-	var difference = items.length - allowedElems;
-	for (var i = 0; i <= difference; i++) {
-		videoTogglerCheck(items[i]);
-	}
+	// var difference = items.length - allowedElems;
+	// for (var i = 0; i <= difference; i++) {
+	// 	videoTogglerCheck(items[i]);
+	// }
 }
 
 function removeInputErrors(container) {
