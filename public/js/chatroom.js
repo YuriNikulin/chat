@@ -74,6 +74,11 @@ function crAccordion() {
 	function calcContentSize() {
 		windowHeight = getWindowHeight();
 		contentSize = (windowHeight / items.length) - (((gutter * 2) / items.length) + document.querySelector('.cr-chat__title').offsetHeight);
+		var adaptiveMode = getAdaptiveMode();
+		if (adaptiveMode == 'md' || adaptiveMode == 'sm') {
+			contentSize += gutter;
+			contentSize += contentSize;
+		}
 		for (var i = 0; i < items.length; i++) {
 			if (items[i].classList.contains('open')) {
 				items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
