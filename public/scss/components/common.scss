@@ -4,7 +4,11 @@ body {
 }
 
 body, html {
-	height: 100%;
+	min-height: 100%;
+}
+
+body {
+	height: 100vh;
 }
 
 input, textarea, button, select {
@@ -30,6 +34,12 @@ a {
 .mb {
 	&--reg {
 		margin-bottom: 20px;
+	}
+}
+
+.mt {
+	&--reg {
+		margin-top: 20px;
 	}
 }
 
@@ -113,6 +123,11 @@ a {
 		position: relative;
 		top: 1px;
 	}
+}
+
+.row {
+	margin-left: -$gutter / 2;
+	margin-right: -$gutter / 2;
 }
 
 .input {
@@ -367,6 +382,10 @@ a {
 		border-bottom: 1px solid $base;
 		position: relative;
 
+		&:last-child {
+			border-bottom: none;
+		}
+
 		&:after {
 			content: '\ea10';
 			font-family: icomoon;
@@ -381,6 +400,10 @@ a {
 		&:active,
 		&:focus {
 			border-bottom: 1px solid $base;
+
+			&:last-child {
+				border-bottom: none;
+			}
 		}
 
 		span {

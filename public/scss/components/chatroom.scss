@@ -2,6 +2,134 @@
 	background-color: $cr_bg;
 	height: 100%;
 
+	&-video {
+		width: 100%;
+		max-width: $xll;
+		padding-left: $gutter;
+		font-size: 0;
+		margin: 0 auto;
+
+		@media (max-width: $xll + $chat_width--lg + $gutter) {
+			padding-right: $chat_width--lg + $gutter * 2;
+
+			&--no-chat {
+				padding-right: $gutter;
+			}
+		}
+
+		@media (max-width: $xll) {
+			padding-right: $chat_width + $gutter * 2;
+
+			&--no-chat {
+				padding-right: $gutter;
+			}
+		}
+
+		&-main {
+			display: flex;
+		}
+
+		&-items {
+			&--grid- {
+				&1 {
+					.cr-video-item {
+						width: 100%;
+					}
+				}
+
+				&2 {
+					.cr-video-item {
+						width: (100% / 2);
+					}
+				}
+
+				&3 {
+					.cr-video-item {
+						width: (100% / 3);
+					}
+				}
+
+				&4 {
+					.cr-video-item {
+						width: (100% / 4);
+					}
+				}
+
+				&5 {
+					.cr-video-item {
+						width: (100% / 5);
+					}
+				}
+
+				&6 {
+					.cr-video-item {
+						width: (100% / 6);
+					}
+				}
+
+				&7 {
+					.cr-video-item {
+						width: (100% / 7);
+					}
+				}
+
+				&8 {
+					.cr-video-item {
+						width: (100% / 8);
+					}
+				}
+			}
+		}
+
+		&-item {
+			display: none;
+			vertical-align: top;
+			padding: $gutter / 2;
+			width: (100% / 6);
+			cursor: pointer;
+			transition: $anim_duration--sm ease-in-out;
+			opacity: 0;
+
+			@media (max-width: 1920px) {
+				width: 25%;
+			}
+
+			@media (max-width: $xl - 1) {
+				width: (100% / 3);
+			}
+
+			&.shown {
+				display: inline-block;
+				opacity: 1;
+			}
+
+			&.active {
+				width: auto;
+				flex-grow: 1;
+				flex-basis: 100%;
+			}
+
+			&__user {
+				font-size: 16px;
+				display: block;
+				color: #fff;
+				margin-top: 5px;
+				text-align: center;
+			}
+
+			&__video {
+				width: 100%;
+				background: #000;
+				opacity: 0;
+				transition: $anim_duration--sm ease-in-out;
+
+				&.shown {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
 	&-settings {
 		&__opener {
 			float: right;
@@ -56,7 +184,11 @@
 		position: fixed;
 		bottom: $gutter;
 		right: $gutter;
-		width: 300px;
+		width: $chat_width--lg;
+
+		@media (max-width: $xll) {
+			width: $chat_width;
+		}
 
 		&-chat {
 			&__unread {

@@ -5,12 +5,21 @@ namespace.emit('initiator_check', getUserId());
 
 var socket = io.connect();
 
+var chatClosed = false,
+	usersClosed = false;
+
 var msgUnreadCounter = 80;
 
 namespace.on('server_requests_username', function() {
 	userName = getUserNickname();
 	namespace.emit('user_sends_username', userName);
 })
+
+namespace.on('server_sends_wid', function(data) {
+	document.cookie = 'chatUserWid=' + data;
+	currentUser.wid = data;
+})
+
 
 namespace.on('user_wants_join_room', function(name, id) {
 	var invitationContainer = document.createElement('div'),
@@ -64,11 +73,17 @@ function crAccordion() {
 
 	function calcContentSize() {
 		windowHeight = getWindowHeight();
-		console.log(windowHeight);
 		contentSize = (windowHeight / items.length) - (((gutter * 2) / items.length) + document.querySelector('.cr-chat__title').offsetHeight);
+		for (var i = 0; i < items.length; i++) {
+			if (items[i].classList.contains('open')) {
+				items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
+			}
+		}
 	}
 
 	calcContentSize();
+
+	window.addEventListener('resize', calcContentSize);
 
 	for (var i = 0; i < items.length; i++) {
 		items[i].querySelector('.cr-chat__title').onclick = function() {
@@ -94,6 +109,8 @@ function crSettings() {
 		sChat = sContainer.querySelector('.cr-settings__chat'),
 		sUsers = sContainer.querySelector('.cr-settings__users'),
 		crChat = document.querySelector('.cr-chat-chat'),
+		crVideoContainer = document.querySelector('.cr-video-items'),
+		crVideoGrid = document.querySelector('#cr-settings__grid'),
 		crUsers = document.querySelector('.cr-chat-users');
 
 	for (var i = 0; i < sItems.length; i++) {
@@ -104,11 +121,42 @@ function crSettings() {
 
 	sChat.addEventListener('click', function() {
 		toggleElem(crChat);
+		chatClosed ? chatClosed = false : chatClosed = true;
+		crIsChatClosed();
+	})
+
+	crVideoGrid.addEventListener('keyup', function() {
+		var value = this.value;
+		var oldClass = crVideoContainer.className.match(/cr-video-items--grid-\d*/g);
+		if (oldClass) {
+			crVideoContainer.classList.remove(oldClass[0]);
+		}
+		crVideoContainer.classList.add('cr-video-items--grid-' + value);
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDurationSm);
 	})
 
 	sUsers.addEventListener('click', function() {
 		toggleElem(crUsers);
+		usersClosed ? usersClosed = false : usersClosed = true;
+		crIsChatClosed();
 	})
+}
+
+function crIsChatClosed() {
+	var container = document.querySelector('.cr-video');
+	if (chatClosed && usersClosed) {
+		container.classList.add('cr-video--no-chat')
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDuration);
+	} else if (!chatClosed || !usersClosed) {
+		container.classList.remove('cr-video--no-chat');
+		setTimeout(function() {
+			resizeAllVideos(videoResolution);
+		}, animDuration);
+	}
 }
 
 function crChat() {

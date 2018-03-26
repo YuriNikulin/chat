@@ -22,6 +22,91 @@ function chatSizeCalculate() {
 	window.addEventListener('resize', calc);
 }
 
+function getAdaptiveMode() {
+	var width = getWindowWidth();
+	var mode = adaptiveBreakpoints[0].mode;
+	for (var i = 1; i < adaptiveBreakpoints.length; i++) {
+		if (width <= adaptiveBreakpoints[i].value) {
+			mode = adaptiveBreakpoints[i].mode;
+		} else {
+			return mode;
+		}
+	}
+	return mode;
+}
+
+function resizeElem(elem, resolution) {
+	function ex() {
+		var width = elem.getBoundingClientRect().width;
+		var newHeight = width / resolution;
+		elem.style.height = newHeight + 'px';
+	}
+	setTimeout(ex, 100);
+}
+
+function resizeElems(elems, resolution) {
+	for (var i = 0; i < elems.length; i++) {
+		resizeElem(elems[i], resolution);
+	}
+}
+
+function resizeAllVideos(resolution) {
+	var items = document.querySelectorAll('.cr-video video');
+	for (var i = 0; i < items.length; i++) {
+		resizeElem(items[i], resolution);
+	}
+}
+
+function webrtcMsg(from, to, msg) {
+	if (namespace) {
+		namespace.emit('webrtcMsg', {
+			'from': from,
+			'to': to,
+			'msg': msg
+		});
+	}
+}
+
+function basicRender(tagName, elemClassName, container, deleteIfExists) {
+	if (elemClassName && container) {
+		var oldElemClass = '.' + elemClassName.replace(/\s/g, '.');
+		var oldElem = container.querySelector(oldElemClass);
+		if (oldElem && deleteIfExists) {
+			oldElem.parentNode.removeChild(oldElem);
+		}
+	}
+
+	var elem = document.createElement(tagName);
+	if (elemClassName) {
+		elem.className = elemClassName;
+	}
+	if (container) {
+		container.appendChild(elem);
+	}
+	return elem;
+}
+
+function hideElem(elem, remove) {
+	if (!elem) {
+		return;
+	}
+	elem.classList.remove('shown');
+	setTimeout(function() {
+		if (remove && elem.parentNode) {
+			elem.parentNode.removeChild(elem);
+		} else {
+			elem.style.display = 'none';
+		}
+	}, animDuration)
+}
+
+function showElem(elem, func) {
+	elem.style.removeProperty('display');
+	setTimeout(function() {
+		elem.classList.add('shown');
+	}, 10)
+}
+
 function showErrorPopup(data) {
 	var errorPopup = document.createElement('div'),
 		errorText = document.createElement('p'),
@@ -81,26 +166,28 @@ function getUserNickname() {
 	return userNickname;
 }
 
-function getUserId() {
-	var userId = document.cookie.match( /chatUserId=([^;]+)/);
-	if (userId) {
-		userId = userId[1];
+function getFromCookie(parameter) {
+	var pattern = new RegExp(parameter + '=([^;]+)');
+	var match = document.cookie.match(pattern);
+	if (match) {
+		match = match[1];
 	}   else {
-		userId = null;
+		match = null;
 	}
 
-	return userId;
+	return match;
+}
+
+function getUserId() {
+	return getFromCookie('chatUserId');
+}
+
+function getUserWid() {
+	return getFromCookie('chatUserWid');
 }
 
 function getRoomId() {
-	var RoomId = document.cookie.match( /chatRoomId=([^;]+)/);
-	if (RoomId) {
-		RoomId = RoomId[1];
-	}   else {
-		RoomId = null;
-	}
-
-	return RoomId;
+	return getFromCookie('chatRoomId');
 }
 
 function appendOverlay(overlayClassList) {
@@ -120,7 +207,7 @@ function leadingZero(number) {
 }
 
 function getWindowWidth() {
-	return window.outerWidth;
+	return window.innerWidth;
 }
 
 function getWindowHeight() {
@@ -145,7 +232,6 @@ function removeOverlay() {
 
 function selectboxes() {
 	var selectboxes = document.querySelectorAll('.selectbox');
-	
 	
 	for (var i = 0; i < selectboxes.length; i++) {
 		
@@ -188,7 +274,123 @@ function selectItemSelectbox(item) {
 	item.classList.add('active');
 	closeSelectbox(parent);
 	parent.dispatchEvent(selectboxChangeEvent);
+}
 
+function cloneVideo(elem, container) {
+	var video = elem.querySelector('video');
+	var src = video.srcObject;
+	var clone = elem.cloneNode(true);
+
+	if (video.muted == true) {
+		var muted = true;
+	}
+
+	video.muted = true;
+
+	elem.clone = clone;
+	clone.clone = elem;
+	
+	video = clone.querySelector('video');
+	if (muted) {
+		video.muted = true;
+	}
+	video.srcObject = src;
+	clone.addEventListener('click', function() {
+		videoTogglerCheck(elem);
+	});
+	hideElem(elem);
+	container.appendChild(clone);
+	resizeElem(video, videoResolution);
+	showElem(clone);
+	resizeAllActiveVideo();
+	restrictAllActiveVideo();
+}
+
+function restrictAllActiveVideo() {
+	var items = document.querySelectorAll('.cr-video-main video');
+	var windowHeight = getWindowHeight();
+	var headerHeight = document.querySelector('.cr-header').offsetHeight;
+	var thumbnailsHeight;
+	var thumbnails = document.querySelectorAll('.cr-video-items .cr-video-item');
+
+	for (var i = 0; i < thumbnails.length; i++) {
+		if (thumbnails[i].offsetHeight) {
+			thumbnailsHeight = thumbnails[i].offsetHeight;
+			break;
+		}
+	}
+
+	
+		thumbnailsHeight = 100;
+	
+
+	var maxHeight = windowHeight - headerHeight - thumbnailsHeight;
+	for (var i = 0; i < items.length; i++) {
+		items[i].style.maxHeight = maxHeight + 'px';
+	}
+}
+
+function resizeAllActiveVideo() {
+	var container = document.querySelector('.cr-video-main');
+	var items = container.querySelectorAll('video');
+	resizeElems(items, videoResolution);
+}
+
+function videoTogglerCheck(elem, container, mainContainer) {
+	if (!elem) {
+		return;
+	}
+
+	if (!container) {
+		container = document.querySelector('.cr-video-items')
+	}
+
+	if (!mainContainer) {
+		mainContainer = document.querySelector('.cr-video-main');
+	}
+
+	if (elem.classList.contains('active')) {
+		removeVideoClone(elem);
+	} else {
+		elem.classList.add('active');
+		var mode = getAdaptiveMode();
+		checkMainVideoContainer(mainContainer, activeVideoBreakpoints[mode] - 1);
+		cloneVideo(elem, mainContainer);
+	}
+}
+
+function removeVideoClone(elem) {
+	if (!elem) {
+		return;
+	}
+
+	elem.classList.remove('active');
+	hideElem(elem.clone, true);
+	var video = elem.querySelector('video');
+
+	if (!video.dataset.self) {
+		video.muted = false;
+	}
+
+	showElem(elem);
+	setTimeout(function() {
+		resizeElem(video, videoResolution);
+	}, animDuration);
+}
+
+function checkMainVideoContainer(container, allowedElems) {
+	var items = container.querySelectorAll('.cr-video-item');
+	if (items.length <= allowedElems) {
+		return;
+	}
+
+	var difference = items.length - allowedElems;
+
+	for (var i = 0; i < difference; i++) {
+		if (items[i]) {
+			removeVideoClone(items[i].clone);
+		}
+	}
 }
 
 function removeInputErrors(container) {
@@ -479,10 +681,11 @@ function authorization() {
 		nicknameSpan;	
 	userNickname = currentUser.username = getUserNickname();
 
-	socket.emit('user_sends_nickname', userNickname);
 	if (!userNickname) {
-		userNickname = 'anonymous user';
+		userNickname = currentUser.username = 'anonymous';
 	}
+
+	socket.emit('user_sends_nickname', userNickname);
 
 	if (nicknameContainer) {
 		for (var i = 0; i < nicknameContainer.length; i++) {
