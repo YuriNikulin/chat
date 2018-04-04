@@ -25,6 +25,10 @@
 			}
 		}
 
+		@media (max-width: $md) {
+			padding-right: $gutter;
+		}
+
 		&-main {
 			display: flex;
 		}
@@ -96,6 +100,10 @@
 
 			@media (max-width: $xl - 1) {
 				width: (100% / 3);
+			}
+
+			@media (max-width: $lg) {
+				width: (100% / 2);
 			}
 
 			&.shown {
@@ -188,6 +196,12 @@
 
 		@media (max-width: $xll) {
 			width: $chat_width;
+		}
+
+		@media (max-width: $md) {
+			width: 100%;
+			bottom: 0;
+			right: 0;
 		}
 
 		&-chat {
