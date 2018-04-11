@@ -34,16 +34,6 @@ function newRoomToFetch(room) {
 exports.initialize = function(server) {
 	io = io.listen(server);
 	io.sockets.on('connection', function(socket) {
-		// socket.on('message', function(message) {
-		// 	message = JSON.parse(message);
-		// 	message.author = socket.username;
-		// 	if (message.type == "userMessage") {
-		// 		socket.broadcast.send(JSON.stringify(message));
-		// 		message.type = "myMessage";
-		// 		socket.send(JSON.stringify(message));
-		// 	}
-		// });
-
 
 		socket.on('disconnect', function() {
 			console.log('disconnected!');
@@ -246,7 +236,6 @@ exports.initialize = function(server) {
 					for (var i in newNamespace.sockets) {
 						users.push(newUserToFetch(newNamespace.sockets[i]));
 					}
-					console.log(socket);
 					socket.emit('w_server_fetches_list_of_users', users);
 				})
 
