@@ -44,7 +44,6 @@ exports.initialize = function(server) {
 		// 	}
 		// });
 
-		debugger;
 
 		socket.on('disconnect', function() {
 			console.log('disconnected!');
