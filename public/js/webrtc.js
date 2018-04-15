@@ -369,7 +369,7 @@ function crGetUserMedia() {
 	}
 
 	navigator.getUserMedia({
-		video: webrtcConstraints,
+		video: true,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
