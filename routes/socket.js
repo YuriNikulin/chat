@@ -246,8 +246,9 @@ exports.initialize = function(server) {
 					for (var i in newNamespace.sockets) {
 						users.push(newUserToFetch(newNamespace.sockets[i]));
 					}
-					console.log(socket);
-					socket.emit('w_server_fetches_list_of_users', users);
+					if (socket) {
+						socket.emit('w_server_fetches_list_of_users', users);
+					}
 				})
 
 				socket.on('webrtcMsg', function(data) {

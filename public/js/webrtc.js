@@ -44,7 +44,7 @@ function setBandwidth(sdp) {
 
 function setBandwidth(sdp) {
 	var audioBandwidth = 50;
-	var videoBandwidth = 264;
+	var videoBandwidth = 200;
 	
     sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
     sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
