@@ -336,6 +336,7 @@ function getListOfUsersInRoom() {
 }
 
 function crGetUserMedia() {
+	console.log('heroku has worked');
 	if (crHasUserMedia()) {
 		navigator.getUserMedia = crHasUserMedia();
 	}
@@ -353,7 +354,7 @@ function crGetUserMedia() {
 		}
 
 	}, function(error) {
-		console.log(error);
+		console.log(error.message);
 	})
 };
 
