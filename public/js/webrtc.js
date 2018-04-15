@@ -7,10 +7,10 @@ webrtcObj.config = {
 };
 webrtcConstraints = {
 	width: {
-		 min: 100, max: 111 
+		 min: 50, max: 61 
 	},
 	height: {
-		 min: 100, max: 111
+		 min: 50, max: 61
 	}
 };
 
