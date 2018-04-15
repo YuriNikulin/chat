@@ -5,6 +5,14 @@ var webrtcObj = {},
 webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 };
+webrtcConstraints = {
+	width: {
+		 min: 100, max: 111 
+	},
+	height: {
+		 min: 100, max: 111
+	}
+};
 
 namespace.on('webrtcMsg', function(data) {	
 	if (data.msg.type == 'offer') {
@@ -341,7 +349,7 @@ function crGetUserMedia() {
 	}
 
 	navigator.getUserMedia({
-		video: webrtcObj.video,
+		video: webrtcConstraints,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
