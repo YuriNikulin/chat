@@ -108,7 +108,6 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
-			offer.sdp = setBandwidth(offer.sdp);
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -125,7 +124,6 @@ function WebRTCUser(user) {
 		var remoteDescription = new RTCSessionDescription(offer);
 		pc.setRemoteDescription(offer).then(function() {
 			pc.createAnswer().then(function(answer) {
-				answer.sdp = setBandwidth(answer.sdp);
 				pc.setLocalDescription(answer);
 				webrtcMsg(currentUser, wid, answer);
 			})
@@ -369,7 +367,7 @@ function crGetUserMedia() {
 	}
 
 	navigator.getUserMedia({
-		video: webrtcConstraints,
+		video: true,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
