@@ -5,6 +5,14 @@ var webrtcObj = {},
 webrtcObj.config = {
 	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
 };
+webrtcConstraints = {
+	width: {
+		 min: 50, max: 61 
+	},
+	height: {
+		 min: 50, max: 61
+	}
+};
 
 namespace.on('webrtcMsg', function(data) {	
 	if (data.msg.type == 'offer') {
@@ -24,6 +32,24 @@ namespace.on('w_user_disconnected', function(user) {
 		user.remove();
 	}
 })
+
+function setBandwidth(sdp) {
+	var audioBandwidth = 50;
+	var videoBandwidth = 264;
+	
+    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
+    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
+    return sdp;
+}
+
+function setBandwidth(sdp) {
+	var audioBandwidth = 50;
+	var videoBandwidth = 200;
+	
+    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
+    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
+    return sdp;
+}
 
 function WebRTCUser(user) {
 	var self = this;
@@ -82,6 +108,7 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
+			offer.sdp = setBandwidth(offer.sdp);
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -98,6 +125,7 @@ function WebRTCUser(user) {
 		var remoteDescription = new RTCSessionDescription(offer);
 		pc.setRemoteDescription(offer).then(function() {
 			pc.createAnswer().then(function(answer) {
+				answer.sdp = setBandwidth(answer.sdp);
 				pc.setLocalDescription(answer);
 				webrtcMsg(currentUser, wid, answer);
 			})
@@ -341,7 +369,7 @@ function crGetUserMedia() {
 	}
 
 	navigator.getUserMedia({
-		video: webrtcObj.video,
+		video: true,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
@@ -353,7 +381,7 @@ function crGetUserMedia() {
 		}
 
 	}, function(error) {
-		console.log(error);
+		console.log(error.message);
 	})
 };
 
