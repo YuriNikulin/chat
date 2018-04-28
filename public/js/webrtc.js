@@ -15,7 +15,7 @@ webrtcConstraints = {
 };
 
 namespace.on('webrtcMsg', function(data) {
-	debugger;
+	// debugger;
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
 		webrtcUsers[data.from.wid].attachStreamToPc();
@@ -116,6 +116,7 @@ function WebRTCUser(user) {
 
 	this.handleCandidate = function(candidate) {
 		candidate = new RTCIceCandidate(candidate.candidate);
+		debugger;
 		this.pc.addIceCandidate(candidate);
 	}
 
