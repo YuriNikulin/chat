@@ -14,7 +14,8 @@ webrtcConstraints = {
 	}
 };
 
-namespace.on('webrtcMsg', function(data) {	
+namespace.on('webrtcMsg', function(data) {
+	debugger;
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
 		webrtcUsers[data.from.wid].attachStreamToPc();
