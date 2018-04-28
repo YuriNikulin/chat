@@ -57,6 +57,7 @@ function WebRTCUser(user) {
 	var self = this;
 	this.stream = webrtcObj.stream;
 	this.pc = new RTCPeerConnection(webrtcObj.config);
+	debugger;
 	this.pc.onicecandidate = function(event) {
 		if (event.candidate) {
 			webrtcMsg(currentUser, self.wid, {
