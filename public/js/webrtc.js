@@ -3,7 +3,7 @@ var webrtcObj = {},
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
 webrtcObj.config = {
-	'iceServers': [{ "url": "stun:stun.1.google.com:19302" }]
+	'iceServers': [{ "url": "stun:stun.12connect.com:3478" }]
 };
 webrtcConstraints = {
 	width: {
