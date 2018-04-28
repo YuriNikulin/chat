@@ -19,15 +19,18 @@ webrtcConstraints = {
 namespace.on('webrtcMsg', function(data) {
 	// debugger;
 	console.log(data);
-	if (data.msg.type == 'offer') {
-		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
-		webrtcUsers[data.from.wid].attachStreamToPc();
-		webrtcUsers[data.from.wid].handleOffer(data.msg);
-	} else if (data.msg.type == 'answer') {
-		webrtcUsers[data.from.wid].handleAnswer(data.msg);
-	} else if (data.msg.type == 'candidate') {
-		webrtcUsers[data.from.wid].handleCandidate(data.msg);
-	}
+	setTimeouf(function() {
+		if (data.msg.type == 'offer') {
+			webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
+			webrtcUsers[data.from.wid].attachStreamToPc();
+			webrtcUsers[data.from.wid].handleOffer(data.msg);
+		} else if (data.msg.type == 'answer') {
+			webrtcUsers[data.from.wid].handleAnswer(data.msg);
+		} else if (data.msg.type == 'candidate') {
+			webrtcUsers[data.from.wid].handleCandidate(data.msg);
+		}
+	}, 5000);
+	
 })
 
 namespace.on('w_user_disconnected', function(user) {
@@ -321,32 +324,6 @@ function startPeerConnection(stream) {
 
 	namespace.on('webrtcMsg', function(data) {
 		data = JSON.parse(data);
-
-		// if (data.type == 'offer') {
-		// 	// var remoteConnection = new RTCPeerConnection(webrtcObj.conf);
-		// 	debugger;
-		// 	var remoteDescription = new RTCSessionDescription(data);
-
-		// 	localConnection.onaddstream = function(e) {
-		// 		addVideoElem(e.stream);
-		// 	}
-
-		// 	localConnection.setRemoteDescription(remoteDescription).then(function() {
-		// 		console.log('normal');
-		// 		localConnection.createAnswer().then(function(answer) {
-		// 			namespace.emit('webrtcMsg', JSON.stringify(answer));
-		// 			return localConnection.setLocalDescription(answer);
-		// 		}).then(function() {
-		// 			console.log('polnyi kaef');
-		// 		})
-		// 	});
-		// } else if (data.type == 'answer') {
-		// 	localConnection.setRemoteDescription(new RTCSessionDescription(data));
-		// } else if (data.type == 'candidate' && data.msg) {
-		// 	if (localConnection.remoteDescription.sdp) {
-		// 		localConnection.addIceCandidate(new RTCIceCandidate(data.msg)).then(function() { console.log('poluchilos') });
-		// 	}
-		// }
 	})
 }
 
@@ -395,6 +372,9 @@ function crHasRTCPeerConnection() {
 
 
 window.addEventListener('load', function() {
+	turnGetServer().then(function(result) {
+		console.log(result);
+	})
 	crGetConnection();
 });
 window.addEventListener('resize', function() {
