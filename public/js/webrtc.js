@@ -4,9 +4,7 @@ var webrtcObj = {},
 	webrtcUsers = {};
 webrtcObj.config = {
 	'iceServers': [{ 
-		url: 'turn:numb.viagenie.ca',
-		credential: 'muazkh',
-		username: 'webrtc@live.com'
+		url: 'stun:stunserver.org:3478',
 	}]
 };
 webrtcConstraints = {
