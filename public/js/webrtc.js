@@ -116,7 +116,6 @@ function WebRTCUser(user) {
 
 	this.handleCandidate = function(candidate) {
 		candidate = new RTCIceCandidate(candidate.candidate);
-		debugger;
 		this.pc.addIceCandidate(candidate);
 	}
 
