@@ -276,5 +276,5 @@ window.addEventListener('load', function() {
 	authorization();
 	usersOnlineMonitoring();
 	usersInvitation();
-
+	selectboxes();
 })

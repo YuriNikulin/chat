@@ -2,6 +2,17 @@ h2.title.h2.mb--reg.tal Settings
 div.cr-settings
 	a(class="users-user cr-settings__item cr-settings__chat selected") Show chat 
 	a(class="users-user cr-settings__item cr-settings__users selected") Show users online
+	div.input-container.mt--reg
+		div(class="selectbox input" id="video-bandwidth")
+			span(class="selectbox__title input--text input" data-value="auto" data-triggered="false") Auto
+			i(class="icon-cheveron-down icon")
+			ul.selectbox-container
+				li(class="selectbox__item input--text input active" data-value="1024") 1024
+				li(class="selectbox__item input--text input" data-value="768") 768
+				li(class="selectbox__item input--text input" data-value="620") 620
+				li(class="selectbox__item input--text input" data-value="320") 320
+				li(class="selectbox__item input--text input" data-value="auto") Auto
+		label(for="video-bandwidth" class="input-label") Select the bandwidth of media streaming	
 	div(class="input-container mt--reg")
 		input(class="input input--text" id="cr-settings__grid" placeholder="Number from 1 to 8")
-		label(for="cr-settings__grid" class="input-label") Number of video in a row. Enter any integer value from 1 to 8	
+		label(for="cr-settings__grid" class="input-label") Number of video in a row. Enter any integer value from 1 to 8

@@ -3,13 +3,21 @@ var webrtcObj = {},
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
 webrtcObj.config = {
-		'iceServers': [{"urls":["stun:64.233.165.127:19302","stun:[2A00:1450:4010:C08::7F]:19302"]},
-		{"urls":["turn:64.233.165.127:19305?transport=udp",
-		"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
-		"turn:64.233.165.127:19305?transport=tcp",
-		"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
-		"username":"CKbwm9cFEgaCKpYAbN4Yzc/s6OMTIICjBQ",
-		"credential":"TdER9d1SSU5dmIoJrph3NFdR8ks="}]
+		'iceServers': 
+			[
+				{"urls":["stun:64.233.165.127:19302","stun:[2A00:1450:4010:C08::7F]:19302"]},
+				{"urls":["turn:64.233.165.127:19305?transport=udp",
+				"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
+				"turn:64.233.165.127:19305?transport=tcp",
+				"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
+				"username":"CKbwm9cFEgaCKpYAbN4Yzc/s6OMTIICjBQ",
+				"credential":"TdER9d1SSU5dmIoJrph3NFdR8ks="}
+			],
+		'width': {
+			min: 150,
+			max: 180
+		}	
+
 };
 webrtcConstraints = {
 	width: {
@@ -374,12 +382,19 @@ function crHasRTCPeerConnection() {
 	return !!window.RTCPeerConnection;
 }
 
+function bandwidthChange() {
+	var bandwidthChangeSelectbox = document.querySelector('#video-bandwidth');
+	var bandwidthChangeSpan = bandwidthChangeSelectbox.querySelector('.selectbox__title');
+	bandwidthChangeSelectbox.addEventListener('selectboxChange', function() {
+		var newBandwidth = bandwidthChangeSpan.dataset.value;
+		console.log(newBandwidth);
+	})
+}
+
 
 window.addEventListener('load', function() {
-	// turnGetServer().then(function(result) {
-	// 	console.log(result);
-	// })
 	crGetConnection();
+	bandwidthChange();
 });
 window.addEventListener('resize', function() {
 	setTimeout(function() {
