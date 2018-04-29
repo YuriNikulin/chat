@@ -3,9 +3,32 @@ var webrtcObj = {},
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
 webrtcObj.config = {
-	'iceServers': [{ 
-		url: 'stun:stunserver.org:3478',
-	}]
+		'iceServers': [
+			{url: 'stun:stunserver.org:3478'},
+			{url:'stun:23.21.150.121:3478'},
+			{url:'stun:iphone-stun.strato-iphone.de:3478'},
+			{url:'stun:numb.viagenie.ca:3478'},
+			{url:'stun:s1.taraba.net:3478'},
+			{url:'stun:s2.taraba.net:3478'},
+			{url:'stun:stun.12connect.com:3478'},
+			{url:'stun:stun.12voip.com:3478'},
+			{url:'stun:stun.1und1.de:3478'},
+			{url:'stun:stun.2talk.co.nz:3478'},
+			{url:'stun:stun.2talk.com:3478'},
+			{url:'stun:stun.3clogic.com:3478'},
+			{url:'stun:stun.3cx.com:3478'},
+			{url:'stun:stun.a-mm.tv:3478'},
+			{url:'stun:stun.aa.net.uk:3478'},
+			{url:'stun:stun.acrobits.cz:3478'},
+			{url:'stun:stun.actionvoip.com:3478'},
+			{url:'stun:stun.advfn.com:3478'},
+			{url:'stun:stun.aeta-audio.com:3478'},
+			{url:'stun:stun.aeta.com:3478'},
+			{url:'stun:stun.alltel.com.au:3478'},
+			{url:'stun:stun.altar.com.pl:3478'},
+			{url:'stun:stun.annatel.net:3478'},
+			{url:'stun:stun.antisip.com:3478'},
+		]
 };
 webrtcConstraints = {
 	width: {
@@ -372,9 +395,9 @@ function crHasRTCPeerConnection() {
 
 
 window.addEventListener('load', function() {
-	turnGetServer().then(function(result) {
-		console.log(result);
-	})
+	// turnGetServer().then(function(result) {
+	// 	console.log(result);
+	// })
 	crGetConnection();
 });
 window.addEventListener('resize', function() {
