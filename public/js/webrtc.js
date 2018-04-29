@@ -3,45 +3,31 @@ var webrtcObj = {},
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
 webrtcObj.config = {
-		'iceServers': 
-			[
-				{"urls":["stun:64.233.165.127:19302","stun:[2A00:1450:4010:C08::7F]:19302"]},
-				{"urls":["turn:64.233.165.127:19305?transport=udp",
-				"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
-				"turn:64.233.165.127:19305?transport=tcp",
-				"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
-				"username":"CKbwm9cFEgaCKpYAbN4Yzc/s6OMTIICjBQ",
-				"credential":"TdER9d1SSU5dmIoJrph3NFdR8ks="}
-			],
-		'width': {
-			min: 150,
-			max: 180
-		}	
+	'iceServers': 
+		[
+			{"urls":["stun:64.233.165.127:19302","stun:[2A00:1450:4010:C08::7F]:19302"]},
+			{"urls":["turn:64.233.165.127:19305?transport=udp",
+			"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
+			"turn:64.233.165.127:19305?transport=tcp",
+			"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
+			"username":"CKbwm9cFEgaCKpYAbN4Yzc/s6OMTIICjBQ",
+			"credential":"TdER9d1SSU5dmIoJrph3NFdR8ks="}
+		],
+};
 
-};
-webrtcConstraints = {
-	width: {
-		 min: 50, max: 61 
-	},
-	height: {
-		 min: 50, max: 61
-	}
-};
+var bandwidthLimit = getFromCookie('chatRoomBandwidth');
+if (bandwidthLimit) webrtcObj.config.bandwidthLimit = bandwidthLimit;
 
 namespace.on('webrtcMsg', function(data) {
-	// debugger;
-	console.log(data);
-	setTimeout(function() {
-		if (data.msg.type == 'offer') {
-			webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
-			webrtcUsers[data.from.wid].attachStreamToPc();
-			webrtcUsers[data.from.wid].handleOffer(data.msg);
-		} else if (data.msg.type == 'answer') {
-			webrtcUsers[data.from.wid].handleAnswer(data.msg);
-		} else if (data.msg.type == 'candidate') {
-			webrtcUsers[data.from.wid].handleCandidate(data.msg);
-		}
-	}, 5000);
+	if (data.msg.type == 'offer') {
+		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
+		webrtcUsers[data.from.wid].attachStreamToPc();
+		webrtcUsers[data.from.wid].handleOffer(data.msg);
+	} else if (data.msg.type == 'answer') {
+		webrtcUsers[data.from.wid].handleAnswer(data.msg);
+	} else if (data.msg.type == 'candidate') {
+		webrtcUsers[data.from.wid].handleCandidate(data.msg);
+	}
 	
 })
 
@@ -53,20 +39,8 @@ namespace.on('w_user_disconnected', function(user) {
 })
 
 function setBandwidth(sdp) {
-	var audioBandwidth = 50;
-	var videoBandwidth = 264;
-	
-    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
-    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
-    return sdp;
-}
-
-function setBandwidth(sdp) {
-	var audioBandwidth = 30;
-	var videoBandwidth = 256;
-	
-    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
-    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
+	var limit = 100
+    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + limit + '\r\n');
     return sdp;
 }
 
@@ -127,6 +101,10 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
+			debugger;
+			if (webrtcObj.config.bandwidthLimit) {
+				offer.sdp = setBandwidth(offer.sdp);
+			}
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -151,6 +129,10 @@ function WebRTCUser(user) {
 	}
 
 	this.handleAnswer = function(answer) {
+		debugger;
+		if (webrtcObj.config.bandwidthLimit) {
+			answer.sdp = setBandwidth(answer.sdp);
+		}
 		var pc = this.pc;
 		pc.setRemoteDescription(answer).then(function() {
 			console.log('Answer has been processed');
@@ -310,35 +292,6 @@ function crHasUserMedia() {
 	return (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia); 
 }
 
-function startPeerConnection(stream) {
-	var localConnection = new RTCPeerConnection(webrtcObj.config);
-	var tracks = stream.getTracks();
-	if (typeof(localConnection.addTrack) == 'function') {
-		for (var i = 0; i < tracks.length; i++) {
-			localConnection.addTrack(tracks[i], stream);
-		}
-	} else {
-		localConnection.addStream(stream);
-	}		
-
-	localConnection.createOffer().then(function(offer) {
-		namespace.emit('webrtcMsg', JSON.stringify(offer));
-		console.log(offer);
-		return localConnection.setLocalDescription(offer);
-	});
-
-	localConnection.onicecandidate = function(event) {
-		namespace.emit('webrtcMsg', JSON.stringify({
-			'type': 'candidate',
-			'msg': event.candidate
-		}));
-	}
-
-	namespace.on('webrtcMsg', function(data) {
-		data = JSON.parse(data);
-	})
-}
-
 function getListOfUsersInRoom() {
 	namespace.emit('w_user_requests_list_of_users', currentUser.wid);
 
@@ -387,7 +340,8 @@ function bandwidthChange() {
 	var bandwidthChangeSpan = bandwidthChangeSelectbox.querySelector('.selectbox__title');
 	bandwidthChangeSelectbox.addEventListener('selectboxChange', function() {
 		var newBandwidth = bandwidthChangeSpan.dataset.value;
-		console.log(newBandwidth);
+		document.cookie = 'chatRoomBandwidth=' + (newBandwidth == 'auto' ? '' : newBandwidth);
+		window.location.replace('/chatroom');
 	})
 }
 
