@@ -41,7 +41,7 @@ namespace.on('w_user_disconnected', function(user) {
 function setBandwidth(sdp) {
 	var limit = 100
     sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + limit + '\r\n');
-    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:audio\r\nb=AS:' + limit + '\r\n');
+    sdp = sdp.replace(/a=mid:aideo\r\n/g, 'a=mid:audio\r\nb=AS:' + limit + '\r\n');
     return sdp;
 }
 
