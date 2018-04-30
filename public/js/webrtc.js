@@ -33,18 +33,10 @@ namespace.on('w_user_disconnected', function(user) {
 	}
 })
 
-function setBandwidth(sdp) {
-	var audioBandwidth = 50;
-	var videoBandwidth = 264;
-	
-    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
-    sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
-    return sdp;
-}
 
 function setBandwidth(sdp) {
 	var audioBandwidth = 50;
-	var videoBandwidth = 200;
+	var videoBandwidth = 144;
 	
     sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + audioBandwidth + '\r\n');
     sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + videoBandwidth + '\r\n');
