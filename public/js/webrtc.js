@@ -102,10 +102,10 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
-			debugger;
-			if (webrtcObj.config.bandwidthLimit) {
+			
+			
 				offer.sdp = setBandwidth(offer.sdp);
-			}
+			
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -130,10 +130,10 @@ function WebRTCUser(user) {
 	}
 
 	this.handleAnswer = function(answer) {
-		debugger;
-		if (webrtcObj.config.bandwidthLimit) {
+		
+		
 			answer.sdp = setBandwidth(answer.sdp);
-		}
+		
 		var pc = this.pc;
 		pc.setRemoteDescription(answer).then(function() {
 			console.log('Answer has been processed');
