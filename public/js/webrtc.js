@@ -2,6 +2,9 @@ var webrtcObj = {},
 	videoResolution = 1.33,
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
+
+var iceServersRequestUrl = "https://networktraversal.googleapis.com/v1alpha/iceconfig?key=AIzaSyAJdh2HkajseEIltlZ3SIXO02Tze9sO3NY";
+
 webrtcObj.config = {
 	'iceServers': 
 		[
@@ -10,8 +13,8 @@ webrtcObj.config = {
 			"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
 			"turn:64.233.165.127:19305?transport=tcp",
 			"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
-			"username":"CKbwm9cFEgaCKpYAbN4Yzc/s6OMTIICjBQ",
-			"credential":"TdER9d1SSU5dmIoJrph3NFdR8ks="}
+			"username":"COjoodcFEgYtHi8cOA4Yzc/s6OMTIICjBQ",
+			"credential":"7El/rU/IX973eE+G5E2yV3rviHk="}
 		],
 };
 
@@ -40,6 +43,7 @@ namespace.on('w_user_disconnected', function(user) {
 
 function setBandwidth(sdp) {
 	var limit = 100
+    sdp = sdp.replace(/a=mid:audio\r\n/g, 'a=mid:audio\r\nb=AS:' + limit + '\r\n');
     sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + limit + '\r\n');
     return sdp;
 }
@@ -101,10 +105,10 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
-			debugger;
-			if (webrtcObj.config.bandwidthLimit) {
+			
+			
 				offer.sdp = setBandwidth(offer.sdp);
-			}
+			
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -129,10 +133,10 @@ function WebRTCUser(user) {
 	}
 
 	this.handleAnswer = function(answer) {
-		debugger;
-		if (webrtcObj.config.bandwidthLimit) {
+		
+		
 			answer.sdp = setBandwidth(answer.sdp);
-		}
+		
 		var pc = this.pc;
 		pc.setRemoteDescription(answer).then(function() {
 			console.log('Answer has been processed');
@@ -308,13 +312,22 @@ function getListOfUsersInRoom() {
 	})
 }
 
+webrtcConstraints = {
+	width: {
+		 min: 50, max: 61 
+	},
+	height: {
+		 min: 50, max: 61
+	}
+};
+
 function crGetUserMedia() {
 	if (crHasUserMedia()) {
 		navigator.getUserMedia = crHasUserMedia();
 	}
 
 	navigator.getUserMedia({
-		video: true,
+		video: webrtcConstraints,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
@@ -347,8 +360,11 @@ function bandwidthChange() {
 
 
 window.addEventListener('load', function() {
-	crGetConnection();
-	bandwidthChange();
+	requestIceServers(iceServersRequestUrl).then(function(iceServers) {
+		console.log(iceServers);
+	});
+	// crGetConnection();
+	// bandwidthChange();
 });
 window.addEventListener('resize', function() {
 	setTimeout(function() {
