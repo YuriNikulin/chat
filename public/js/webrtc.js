@@ -360,11 +360,8 @@ function bandwidthChange() {
 
 
 window.addEventListener('load', function() {
-	requestIceServers(iceServersRequestUrl).then(function(iceServers) {
-		console.log(iceServers);
-	});
-	// crGetConnection();
-	// bandwidthChange();
+	crGetConnection();
+	bandwidthChange();
 });
 window.addEventListener('resize', function() {
 	setTimeout(function() {
