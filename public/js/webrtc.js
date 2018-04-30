@@ -2,6 +2,9 @@ var webrtcObj = {},
 	videoResolution = 1.33,
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	webrtcUsers = {};
+
+var iceServersRequestUrl = "https://networktraversal.googleapis.com/v1alpha/iceconfig?key=AIzaSyAJdh2HkajseEIltlZ3SIXO02Tze9sO3NY";
+
 webrtcObj.config = {
 	'iceServers': 
 		[
@@ -357,8 +360,11 @@ function bandwidthChange() {
 
 
 window.addEventListener('load', function() {
-	crGetConnection();
-	bandwidthChange();
+	requestIceServers(iceServersRequestUrl).then(function(iceServers) {
+		console.log(iceServers);
+	});
+	// crGetConnection();
+	// bandwidthChange();
 });
 window.addEventListener('resize', function() {
 	setTimeout(function() {
