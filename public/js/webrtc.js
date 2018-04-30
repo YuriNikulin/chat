@@ -104,7 +104,7 @@ function WebRTCUser(user) {
 		pc.createOffer().then(function(offer) {
 			
 			
-				offer.sdp = setBandwidth(offer.sdp);
+				// offer.sdp = setBandwidth(offer.sdp);
 			
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
@@ -132,7 +132,7 @@ function WebRTCUser(user) {
 	this.handleAnswer = function(answer) {
 		
 		
-			answer.sdp = setBandwidth(answer.sdp);
+			// answer.sdp = setBandwidth(answer.sdp);
 		
 		var pc = this.pc;
 		pc.setRemoteDescription(answer).then(function() {
