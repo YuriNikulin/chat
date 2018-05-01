@@ -321,7 +321,6 @@ function crGetUserMedia() {
 	}
 
 	var getUserMediaVideo;
-	debugger;
 
 	if (webrtcObj.constraints) {
 		getUserMediaVideo = webrtcObj.constraints;

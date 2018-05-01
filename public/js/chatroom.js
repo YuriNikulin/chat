@@ -71,6 +71,14 @@ function crAccordion() {
 		windowheight,
 		contentSize;
 
+	var adaptiveMode = getAdaptiveMode();	
+
+	if (adaptiveMode == 'md' || adaptiveMode == 'sm') {
+		for (var i = 0; i < items.length; i++) {
+			items[i].classList.remove('open');
+		}
+	}	
+
 	function calcContentSize() {
 		windowHeight = getWindowHeight();
 		contentSize = (windowHeight / items.length) - (((gutter * 2) / items.length) + document.querySelector('.cr-chat__title').offsetHeight);
@@ -79,16 +87,24 @@ function crAccordion() {
 			contentSize += gutter;
 			contentSize += contentSize;
 		}
-		for (var i = 0; i < items.length; i++) {
+		for (i = 0; i < items.length; i++) {
 			if (items[i].classList.contains('open')) {
 				items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
 			}
 		}
 	}
 
+	function calcContainerSize() {
+		var container = document.querySelector('.cr');
+		var height = getWindowHeight();
+		container.style.minHeight = height + 'px';
+	}
+
 	calcContentSize();
+	calcContainerSize();
 
 	window.addEventListener('resize', calcContentSize);
+	window.addEventListener('resize', calcContainerSize);
 
 	for (var i = 0; i < items.length; i++) {
 		items[i].querySelector('.cr-chat__title').onclick = function() {
