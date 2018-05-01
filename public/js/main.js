@@ -133,6 +133,15 @@ function nr(invitedUsers) {
 	}	
 }
 
+function setLimitForMobiles() {
+	var mode = getAdaptiveMode();
+	if (!(mode == 'md' || mode == 'sm' || mode == 'xs')) {
+		document.cookie = 'chatRoomBandwidth=';
+		return;
+	}
+	document.cookie = 'chatRoomBandwidth=320';
+}
+
 window.addEventListener('load', function() {
 	requestUserId();
 	authorization();
@@ -140,4 +149,5 @@ window.addEventListener('load', function() {
 	selectboxes();
 	usersInvitation();
 	rooms();
+	setLimitForMobiles();
 })

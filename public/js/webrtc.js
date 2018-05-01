@@ -18,7 +18,7 @@ webrtcObj.config = {
 		],
 };
 
-webrtcObj.constraints = {};
+webrtcObj.constraints = false;
 
 var bandwidthLimit = getFromCookie('chatRoomBandwidth');
 if (bandwidthLimit) {
@@ -323,14 +323,14 @@ function crGetUserMedia() {
 	var getUserMediaVideo;
 	debugger;
 
-	if (webrtc.constraints) {
-		getUserMediaVideo = webrtc.constraints;
+	if (webrtcObj.constraints) {
+		getUserMediaVideo = webrtcObj.constraints;
 	} else {
 		getUserMediaVideo = webrtcObj.video
 	}
 
 	navigator.getUserMedia({
-		video: webrtcConstraints,
+		video: getUserMediaVideo,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
