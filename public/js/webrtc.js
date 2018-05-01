@@ -18,8 +18,19 @@ webrtcObj.config = {
 		],
 };
 
+webrtcObj.constraints = {};
+
 var bandwidthLimit = getFromCookie('chatRoomBandwidth');
-if (bandwidthLimit) webrtcObj.config.bandwidthLimit = bandwidthLimit;
+if (bandwidthLimit) {
+	webrtcObj.constraints = {
+		width: {
+			max: bandwidthLimit
+		},
+		height: {
+			max: bandwidthLimit
+		}
+	}
+};
 
 namespace.on('webrtcMsg', function(data) {
 	if (data.msg.type == 'offer') {
@@ -105,10 +116,6 @@ function WebRTCUser(user) {
 		var pc = this.pc;
 		var wid = this.wid;
 		pc.createOffer().then(function(offer) {
-			
-			
-			// offer.sdp = setBandwidth(offer.sdp);
-			
 			pc.setLocalDescription(offer);
 			webrtcMsg(currentUser, wid, offer);
 		})
@@ -133,10 +140,6 @@ function WebRTCUser(user) {
 	}
 
 	this.handleAnswer = function(answer) {
-		
-		
-			// answer.sdp = setBandwidth(answer.sdp);
-		
 		var pc = this.pc;
 		pc.setRemoteDescription(answer).then(function() {
 			console.log('Answer has been processed');
@@ -312,18 +315,18 @@ function getListOfUsersInRoom() {
 	})
 }
 
-webrtcConstraints = {
-	width: {
-		max: 140 
-	},
-	height: {
-		max: 140
-	}
-};
-
 function crGetUserMedia() {
 	if (crHasUserMedia()) {
 		navigator.getUserMedia = crHasUserMedia();
+	}
+
+	var getUserMediaVideo;
+	debugger;
+
+	if (webrtc.constraints) {
+		getUserMediaVideo = webrtc.constraints;
+	} else {
+		getUserMediaVideo = webrtcObj.video
 	}
 
 	navigator.getUserMedia({
