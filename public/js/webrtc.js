@@ -314,10 +314,10 @@ function getListOfUsersInRoom() {
 
 webrtcConstraints = {
 	width: {
-		max: 768 
+		max: 140 
 	},
 	height: {
-		max: 768
+		max: 140
 	}
 };
 
