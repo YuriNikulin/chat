@@ -314,10 +314,10 @@ function getListOfUsersInRoom() {
 
 webrtcConstraints = {
 	width: {
-		 min: 50, max: 61 
+		max: 768 
 	},
 	height: {
-		 min: 50, max: 61
+		max: 768
 	}
 };
 
@@ -327,7 +327,7 @@ function crGetUserMedia() {
 	}
 
 	navigator.getUserMedia({
-		video: true,
+		video: webrtcConstraints,
 		audio: webrtcObj.audio
 	}, function(stream){
 		addVideoElem(stream, true, currentUser);
@@ -339,7 +339,7 @@ function crGetUserMedia() {
 		}
 
 	}, function(error) {
-		console.log(error.message);
+		showErrorPopup(error.message);
 	})
 };
 
