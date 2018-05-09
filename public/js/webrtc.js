@@ -13,8 +13,8 @@ webrtcObj.config = {
 			"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
 			"turn:64.233.165.127:19305?transport=tcp",
 			"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
-			"username":"CLnTpdcFEga2qzPOoNIYzc/s6OMTIICjBQ",
-			"credential":"B1U7gONzEu4v3c/VmZzbEEJktE4="}
+			"username":"COD9z9cFEgbce8gTCTkYzc/s6OMTIICjBQ",
+			"credential":"OjT3d78s6HjU/5TNWGmvML8B0RU="}
 		],
 };
 
