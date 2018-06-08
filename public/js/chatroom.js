@@ -8,7 +8,7 @@ var socket = io.connect();
 var chatClosed = false,
 	usersClosed = false;
 
-var msgUnreadCounter = 80;
+var msgUnreadCounter = 0;
 
 namespace.on('server_requests_username', function() {
 	userName = getUserNickname();

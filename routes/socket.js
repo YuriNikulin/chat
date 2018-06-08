@@ -161,6 +161,7 @@ exports.initialize = function(server) {
 				newNamespace,
 				invitedUsers;
 
+			console.log(data);
 			newNamespaceName = '/' + data.roomInitiator.id + '_'  + data.roomName.match(/[^,\s]/g).join("");
 			newNamespace = io.of(newNamespaceName);
 			newNamespace.roomInitiator = data.roomInitiator;
