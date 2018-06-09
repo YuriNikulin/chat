@@ -232,6 +232,17 @@ exports.initialize = function(server) {
 							newNamespace.removeNamespace();
 						}, 10000);
 					}
+
+					if (socket.id == newNamespace.roomInitiator.id) {
+						var newInitiator;
+						for (var j in newNamespace.sockets) {
+							newInitiator = newNamespace.sockets[j];
+							break;
+						}
+						newNamespace.roomInitiator.id = newInitiator.id;
+						newInitiator.emit('be_initiator');
+					}
+
 					newNamespace.send(JSON.stringify({
 						'message': socket.username + ' has left',
 						'type': 'serverMessage'
