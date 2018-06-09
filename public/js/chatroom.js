@@ -10,6 +10,8 @@ var chatClosed = false,
 
 var msgUnreadCounter = 0;
 
+var isInitiator = false;
+
 namespace.on('server_requests_username', function() {
 	userName = getUserNickname();
 	namespace.emit('user_sends_username', userName);
@@ -28,7 +30,9 @@ namespace.on('room_is_full', function() {
 })
 
 namespace.on('be_initiator', function() {
-	console.log(`i'm an initiator.`);
+	console.log('i am initiator');
+	isInitiator = true;
+	crMuteInitiatorCheck();
 })
 
 namespace.on('user_wants_join_room', function(name, id) {
@@ -132,6 +136,21 @@ function crAccordion() {
 			items[i].querySelector('.cr-chat-content').style.height = contentSize + 'px';
 		}
 	}
+}
+
+function crMuteInitiatorCheck() {
+	var settingsContainer = document.querySelector('.cr-settings-selects');
+	if (isInitiator) {
+		var oldElem = settingsContainer.querySelector('.cr-settings__mute');
+		if (oldElem) return;
+		var elem = document.createElement('a');
+		elem.classList.add('users-user', 'cr-settings__item', 'cr-settings__mute');
+		elem.innerHTML = 'One person talks';
+		settingsContainer.appendChild(elem);
+		elem.addEventListener('click', function() {
+			this.classList.toggle('selected');
+		})
+	} 
 }
 
 function crSettings() {
@@ -297,6 +316,7 @@ window.addEventListener('load', function() {
 
 	crAccordion();
 	crSettings();
+	crMuteInitiatorCheck();
 	crChat();
 	requestUserId();
 	authorization();
