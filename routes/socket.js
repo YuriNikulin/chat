@@ -121,6 +121,7 @@ exports.initialize = function(server) {
 		})
 
 		socket.on('user_wants_join_room', function(room) {
+			
 			var namespace = io.nsps[room],
 				initiator;
 			if (!namespace || !namespace.sockets) {
@@ -196,15 +197,21 @@ exports.initialize = function(server) {
 					clearTimeout(newNamespace.removeTimer);
 				}
 
+				if (Object.keys(newNamespace.sockets).length > newNamespace.roomMaxUsersCount) {
+					socket.emit('room_is_full');
+				}
+				
 				socket.emit('server_requests_username');
-				socket.emit('server_sends_wid', socket.id);
-
+				
 				io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 
-				socket.on('initiator_check', function(data) {
-					if (data == newNamespace.roomInitiator.id) {
+				socket.on('initiator_check', function(id, wid) {
+					
+					if (id == newNamespace.roomInitiator.id || wid == newNamespace.roomInitiator.id) {
 						newNamespace.roomInitiator.id = socket.id;
+						socket.emit('be_initiator');
 					}
+					socket.emit('server_sends_wid', socket.id);
 				})
 
 				socket.on('user_sends_username', function(username) {
@@ -240,8 +247,10 @@ exports.initialize = function(server) {
 							break;
 						}
 						if (newInitiator) {
+							console.log('new initiator is ' + newInitiator.id);
 							newNamespace.roomInitiator.id = newInitiator.id;
 							newInitiator.emit('be_initiator');
+							
 						}
 					}
 
@@ -249,6 +258,12 @@ exports.initialize = function(server) {
 						'message': socket.username + ' has left',
 						'type': 'serverMessage'
 					}));
+					if (newInitiator) {
+						newInitiator.send(JSON.stringify({
+							'message': 'You are the room host now',
+							'type': 'serverMessage'
+						}));
+					}
 					newNamespace.emit('w_user_disconnected', socket.id);
 
 					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);

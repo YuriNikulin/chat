@@ -1,7 +1,7 @@
 
 var namespace = io(getRoomId());
 
-namespace.emit('initiator_check', getUserId());
+namespace.emit('initiator_check', getUserId(), getFromCookie('chatUserWid'));
 
 var socket = io.connect();
 
@@ -18,6 +18,17 @@ namespace.on('server_requests_username', function() {
 namespace.on('server_sends_wid', function(data) {
 	document.cookie = 'chatUserWid=' + data;
 	currentUser.wid = data;
+})
+
+namespace.on('room_is_full', function() {
+	showErrorPopup('The room is full');
+	setTimeout(function() {
+		window.location.replace('/');
+	}, 2000)
+})
+
+namespace.on('be_initiator', function() {
+	console.log(`i'm an initiator.`);
 })
 
 namespace.on('user_wants_join_room', function(name, id) {
