@@ -51,6 +51,12 @@
 .icon-cheveron-outline-right:before {
   content: "\e904"; }
 
+.icon-volume-medium:before {
+  content: "\ea27"; }
+
+.icon-volume-mute2:before {
+  content: "\ea2a"; }
+
 @keyframes input_error_animation {
   0% {
     opacity: 0;

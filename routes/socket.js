@@ -239,8 +239,10 @@ exports.initialize = function(server) {
 							newInitiator = newNamespace.sockets[j];
 							break;
 						}
-						newNamespace.roomInitiator.id = newInitiator.id;
-						newInitiator.emit('be_initiator');
+						if (newInitiator) {
+							newNamespace.roomInitiator.id = newInitiator.id;
+							newInitiator.emit('be_initiator');
+						}
 					}
 
 					newNamespace.send(JSON.stringify({
