@@ -277,8 +277,8 @@ exports.initialize = function(server) {
 					io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 				});
 
-				socket.on('w_user_requests_list_of_users', function(socket) {
-					var socket = newNamespace.sockets[socket];
+				socket.on('w_user_requests_list_of_users', function() {
+					debugger;
 					var users = [];
 					for (var i in newNamespace.sockets) {
 						users.push(newUserToFetch(newNamespace.sockets[i]));
