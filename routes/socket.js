@@ -278,7 +278,6 @@ exports.initialize = function(server) {
 				});
 
 				socket.on('w_user_requests_list_of_users', function() {
-					debugger;
 					var users = [];
 					for (var i in newNamespace.sockets) {
 						users.push(newUserToFetch(newNamespace.sockets[i]));
