@@ -34,6 +34,17 @@ if (bandwidthLimit) {
 	}
 };
 
+function unmuteHandler(wid) {
+	var videoElems = document.querySelectorAll('.cr-video-item');
+	for (var i = 0; i < videoElems.length; i++) {
+		if (wid == videoElems[i].dataset.wid) {
+			unmuteUser(videoElems[i]);
+		} else {
+			muteUser(videoElems[i]);
+		}
+	}
+} 
+
 namespace.on('webrtcMsg', function(data) {
 	if (data.msg.type == 'offer') {
 		webrtcUsers[data.from.wid] = new WebRTCUser(data.from);
@@ -57,14 +68,7 @@ namespace.on('w_user_disconnected', function(user) {
 namespace.on('unmute_user', function(wid) {
 	muteMode = true;
 	unmutedUserWid = wid;
-	var videoElems = document.querySelectorAll('.cr-video-item');
-	for (var i = 0; i < videoElems.length; i++) {
-		if (wid == videoElems[i].dataset.wid) {
-			unmuteUser(videoElems[i]);
-		} else {
-			muteUser(videoElems[i]);
-		}
-	}
+	unmuteHandler(wid);
 })
 
 namespace.on('disable_mute_mode', function() {

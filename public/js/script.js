@@ -304,6 +304,9 @@ function cloneVideo(elem, container) {
 	showElem(clone);
 	resizeAllActiveVideo();
 	restrictAllActiveVideo();
+	if (unmutedUserWid) {
+		unmutedHandler(unmutedUserWid);
+	}
 }
 
 function restrictAllActiveVideo() {

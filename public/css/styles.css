@@ -544,6 +544,8 @@ a {
         padding-right: 15px; } }
     .cr-video-main {
       display: flex; }
+      .cr-video-main:hover .cr-video-item__unmute {
+        display: block; }
     .cr-video-items:hover .cr-video-item__unmute {
       display: block; }
     .cr-video-items--grid-1 .cr-video-item {
@@ -580,6 +582,9 @@ a {
       @media (max-width: 1024px) {
         .cr-video-item {
           width: 50%; } }
+      @media (max-width: 1399px) {
+        .cr-video-item .cr-video-item__unmute {
+          display: block; } }
       .cr-video-item.shown {
         display: inline-block;
         opacity: 1; }

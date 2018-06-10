@@ -31,6 +31,12 @@
 
 		&-main {
 			display: flex;
+
+			&:hover {
+				.cr-video-item__unmute {
+					display: block;
+				}
+			}
 		}
 
 		&-items {
@@ -110,6 +116,12 @@
 
 			@media (max-width: $lg) {
 				width: (100% / 2);
+			}
+
+			@media (max-width: $xl - 1) {
+				.cr-video-item__unmute {
+					display: block;
+				}
 			}
 
 			&.shown {
