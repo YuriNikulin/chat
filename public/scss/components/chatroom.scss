@@ -34,6 +34,11 @@
 		}
 
 		&-items {
+			&:hover {
+				.cr-video-item__unmute {
+					display: block;
+				}
+			}
 			&--grid- {
 				&1 {
 					.cr-video-item {
@@ -93,6 +98,7 @@
 			cursor: pointer;
 			transition: $anim_duration--sm ease-in-out;
 			opacity: 0;
+			position: relative;
 
 			@media (max-width: 1920px) {
 				width: 25%;
@@ -115,6 +121,28 @@
 				width: auto;
 				flex-grow: 1;
 				flex-basis: 100%;
+			}
+
+			&__unmute {
+				position: absolute;
+				right: $gutter / 2;
+				top: $gutter / 2;
+				background-color: $primary;
+				color: #fff;
+				font-size: 16px;
+				width: $unmute_button_size;
+				height: $unmute_button_size;
+				line-height: $unmute_button_size;
+				text-align: center;
+				display: none;
+
+				&:hover {
+					background-color: $active;
+				}
+			}
+
+			&__icon {
+				margin-left: 5px;
 			}
 
 			&__user {

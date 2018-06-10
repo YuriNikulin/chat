@@ -2,6 +2,7 @@ var webrtcObj = {},
 	videoResolution = 1.33,
 	mainVideoContainer = document.querySelector('.cr-video-main'),
 	muteMode = false,
+	unmutedUserWid,
 	webrtcUsers = {};
 
 var iceServersRequestUrl = "https://networktraversal.googleapis.com/v1alpha/iceconfig?key=AIzaSyAJdh2HkajseEIltlZ3SIXO02Tze9sO3NY";
@@ -55,6 +56,7 @@ namespace.on('w_user_disconnected', function(user) {
 
 namespace.on('unmute_user', function(wid) {
 	muteMode = true;
+	unmutedUserWid = wid;
 	var videoElems = document.querySelectorAll('.cr-video-item');
 	for (var i = 0; i < videoElems.length; i++) {
 		if (wid == videoElems[i].dataset.wid) {
@@ -67,10 +69,30 @@ namespace.on('unmute_user', function(wid) {
 
 function unmuteUser(elem) {
 	console.log(elem, 'unmuted!');
+	elem.classList.add('unmuted');
+	var span = elem.querySelector('.cr-video-item__user');
+	var icon = document.createElement('i');
+	icon.classList.add('icon-volume-medium', 'cr-video-item__icon');
+	span.appendChild(icon);
+	if (elem.dataset.wid != currentUser.wid) {
+		var video = elem.querySelector('video');
+		video.muted = false;
+	}
 }
 
 function muteUser(elem) {
-	console.log(elem, 'muted!');
+	elem.classList.remove('unmuted');
+	var video = elem.querySelector('video');
+	video.muted = true;
+
+	if (!isInitiator) return;
+
+	var muteButton = basicRender('span', 'cr-video-item__unmute', elem, true);
+	var muteIcon = basicRender('i', 'icon-volume-mute2', muteButton);
+	muteButton.addEventListener('click', function(event) {
+		event.stopPropagation();
+		console.log(elem.dataset.wid);
+	})
 }
 
 function toggleMuteMode(toEnable) {
