@@ -1,6 +1,7 @@
 var webrtcObj = {},
 	videoResolution = 1.33,
 	mainVideoContainer = document.querySelector('.cr-video-main'),
+	muteMode = false,
 	webrtcUsers = {};
 
 var iceServersRequestUrl = "https://networktraversal.googleapis.com/v1alpha/iceconfig?key=AIzaSyAJdh2HkajseEIltlZ3SIXO02Tze9sO3NY";
@@ -51,6 +52,32 @@ namespace.on('w_user_disconnected', function(user) {
 		user.remove();
 	}
 })
+
+namespace.on('unmute_user', function(wid) {
+	muteMode = true;
+	var videoElems = document.querySelectorAll('.cr-video-item');
+	for (var i = 0; i < videoElems.length; i++) {
+		if (wid == videoElems[i].dataset.wid) {
+			unmuteUser(videoElems[i]);
+		} else {
+			muteUser(videoElems[i]);
+		}
+	}
+})
+
+function unmuteUser(elem) {
+	console.log(elem, 'unmuted!');
+}
+
+function muteUser(elem) {
+	console.log(elem, 'muted!');
+}
+
+function toggleMuteMode(toEnable) {
+	if (toEnable) {
+		namespace.emit('unmute_user', getFromCookie('chatUserWid'));
+	} 
+}
 
 function setBandwidth(sdp) {
 	var limit = 100
@@ -161,6 +188,8 @@ function addVideoElem(stream, muted, self) {
 		videoElem.dataset.self = true;
 		videoElem.muted = true;
 	}
+
+	videoElemContainer.dataset.wid = (self.wid || self.id);
 	
 	videoElem.srcObject = stream;
 	videoElem.autoplay = true;

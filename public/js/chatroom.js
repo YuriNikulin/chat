@@ -143,12 +143,22 @@ function crMuteInitiatorCheck() {
 	if (isInitiator) {
 		var oldElem = settingsContainer.querySelector('.cr-settings__mute');
 		if (oldElem) return;
+
 		var elem = document.createElement('a');
 		elem.classList.add('users-user', 'cr-settings__item', 'cr-settings__mute');
+		console.log(muteMode);
+		if (muteMode) {
+			elem.classList.add('selected');
+		}
+
 		elem.innerHTML = 'One person talks';
+
 		settingsContainer.appendChild(elem);
+
 		elem.addEventListener('click', function() {
+			console.log('clicked!');
 			this.classList.toggle('selected');
+			toggleMuteMode(this.classList.contains('selected'));
 		})
 	} 
 }

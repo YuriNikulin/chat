@@ -206,12 +206,20 @@ exports.initialize = function(server) {
 				io.of('/').emit('room_has_been_updated', newNamespace.name, 'currentUsers', Object.keys(newNamespace.sockets).length + '/' + newNamespace.roomMaxUsersCount);
 
 				socket.on('initiator_check', function(id, wid) {
-					
 					if (id == newNamespace.roomInitiator.id || wid == newNamespace.roomInitiator.id) {
 						newNamespace.roomInitiator.id = socket.id;
 						socket.emit('be_initiator');
 					}
 					socket.emit('server_sends_wid', socket.id);
+				})
+
+				socket.on('unmute_user', function(wid) {
+					newNamespace.unmutedUserWid = wid; 
+					newNamespace.emit('unmute_user', wid);
+					newNamespace.send(JSON.stringify({
+						'message': socket.username + ' has enabled One Person Talks mode',
+						'type': 'serverMessage'
+					}))
 				})
 
 				socket.on('user_sends_username', function(username) {
