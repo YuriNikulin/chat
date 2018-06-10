@@ -70,6 +70,14 @@ namespace.on('unmute_user', function(wid) {
 function unmuteUser(elem) {
 	console.log(elem, 'unmuted!');
 	elem.classList.add('unmuted');
+	var oldIcon = elem.querySelector('.cr-video-item__icon');
+	var oldUnmute = elem.querySelector('.cr-video-item__unmute');
+	if (oldIcon) {
+		oldIcon.parentNode.removeChild(oldIcon);
+	}
+	if (oldUnmute) {
+		oldUnmute.parentNode.removeChild(oldUnmute);
+	}
 	var span = elem.querySelector('.cr-video-item__user');
 	var icon = document.createElement('i');
 	icon.classList.add('icon-volume-medium', 'cr-video-item__icon');
@@ -87,11 +95,15 @@ function muteUser(elem) {
 
 	if (!isInitiator) return;
 
+	var oldIcon = elem.querySelector('.cr-video-item__icon');
+	if (oldIcon) {
+		oldIcon.parentNode.removeChild(oldIcon);
+	}
 	var muteButton = basicRender('span', 'cr-video-item__unmute', elem, true);
-	var muteIcon = basicRender('i', 'icon-volume-mute2', muteButton);
+	var muteIcon = basicRender('i', 'icon-volume-medium', muteButton);
 	muteButton.addEventListener('click', function(event) {
 		event.stopPropagation();
-		console.log(elem.dataset.wid);
+		namespace.emit('unmute_user', elem.dataset.wid);
 	})
 }
 
