@@ -38,6 +38,7 @@ namespace.on('be_initiator', function() {
 	console.log('i am initiator');
 	isInitiator = true;
 	crMuteInitiatorCheck();
+	toggleMuteMode(muteMode);
 })
 
 namespace.on('user_wants_join_room', function(name, id) {

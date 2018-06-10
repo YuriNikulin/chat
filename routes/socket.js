@@ -213,13 +213,28 @@ exports.initialize = function(server) {
 					socket.emit('server_sends_wid', socket.id);
 				})
 
+				socket.on('user_added_video', function() {
+					if (newNamespace.unmutedUserWid) {
+						newNamespace.emit('unmute_user', newNamespace.unmutedUserWid);
+					}
+				}) 
+				
 				socket.on('unmute_user', function(wid) {
-					newNamespace.unmutedUserWid = wid; 
+					newNamespace.unmutedUserWid = wid;
+					var unmutedSocketUsername = newNamespace.sockets[wid];
+					if (!unmutedSocketUsername) return;
+					unmutedSocketUsername = unmutedSocketUsername.username;
+
 					newNamespace.emit('unmute_user', wid);
 					newNamespace.send(JSON.stringify({
-						'message': socket.username + ' has enabled One Person Talks mode',
+						'message': unmutedSocketUsername + ' is now talking',
 						'type': 'serverMessage'
 					}))
+				})
+
+				socket.on('disable_mute_mode', function() {
+					delete newNamespace.unmutedUserWid
+					newNamespace.emit('disable_mute_mode');
 				})
 
 				socket.on('user_sends_username', function(username) {

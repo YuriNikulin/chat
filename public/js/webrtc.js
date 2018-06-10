@@ -67,6 +67,27 @@ namespace.on('unmute_user', function(wid) {
 	}
 })
 
+namespace.on('disable_mute_mode', function() {
+	muteMode = false;
+	var videoElems = document.querySelectorAll('.cr-video-item');
+	for (var i = 0; i < videoElems.length; i++) {
+		var currentElem = videoElems[i];
+		currentElem.classList.remove('unmuted');
+		var unmuteButton = currentElem.querySelector('.cr-video-item__unmute');
+		var talkingIcon = currentElem.querySelector('.cr-video-item__icon');
+		if (unmuteButton) {
+			hideElem(unmuteButton, true);
+		}
+		if (talkingIcon) {
+			hideElem(talkingIcon, true);
+		}
+		if (currentUser.wid != currentElem.dataset.wid) {
+			var video = currentElem.querySelector('video');
+			video.muted = false;
+		}
+	}
+})
+
 function unmuteUser(elem) {
 	console.log(elem, 'unmuted!');
 	elem.classList.add('unmuted');
@@ -93,12 +114,11 @@ function muteUser(elem) {
 	var video = elem.querySelector('video');
 	video.muted = true;
 
-	if (!isInitiator) return;
-
 	var oldIcon = elem.querySelector('.cr-video-item__icon');
 	if (oldIcon) {
 		oldIcon.parentNode.removeChild(oldIcon);
 	}
+	if (!isInitiator) return;
 	var muteButton = basicRender('span', 'cr-video-item__unmute', elem, true);
 	var muteIcon = basicRender('i', 'icon-volume-medium', muteButton);
 	muteButton.addEventListener('click', function(event) {
@@ -110,7 +130,9 @@ function muteUser(elem) {
 function toggleMuteMode(toEnable) {
 	if (toEnable) {
 		namespace.emit('unmute_user', getFromCookie('chatUserWid'));
-	} 
+	} else {
+		namespace.emit('disable_mute_mode');
+	}
 }
 
 function setBandwidth(sdp) {
@@ -237,6 +259,7 @@ function addVideoElem(stream, muted, self) {
 		resizeElem(videoElem, videoResolution);
 		showElem(videoElem);
 	}, animDurationSm);
+	namespace.emit('user_added_video', currentUser.wid);
 	return videoElem;
 }
 
