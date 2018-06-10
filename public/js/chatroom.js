@@ -20,6 +20,11 @@ namespace.on('server_requests_username', function() {
 namespace.on('server_sends_wid', function(data) {
 	document.cookie = 'chatUserWid=' + data;
 	currentUser.wid = data;
+
+	var selfVideo = document.querySelector('video[data-self="true"]');
+	if (selfVideo) {
+		selfVideo.parentNode.dataset.wid = data;
+	}
 })
 
 namespace.on('room_is_full', function() {
