@@ -10,12 +10,7 @@ var iceServersRequestUrl = "https://networktraversal.googleapis.com/v1alpha/icec
 webrtcObj.config = {
 	'iceServers': 
 		[
-			{"urls":["stun:64.233.165.127:19302","stun:[2A00:1450:4010:C08::7F]:19302"]},
-			{"urls":["turn:64.233.165.127:19305?transport=udp",
-			"turn:[2A00:1450:4010:C01::7F]:19305?transport=udp",
-			"turn:64.233.165.127:19305?transport=tcp",
-			"turn:[2A00:1450:4010:C01::7F]:19305?transport=tcp"],
-			"username":"CMX9/tgFEgYEz4dc2OoYzc/s6OMTIICjBQ","credential":"Qv1kyecCwRXdvr2sRHQJOQjXqZw="}
+			{"urls":["stun:64.233.161.127:19302","stun:[2A00:1450:4010:C01::7F]:19302"]},{"urls":["turn:64.233.165.127:19305?transport=udp","turn:[2A00:1450:4010:C08::7F]:19305?transport=udp","turn:64.233.165.127:19305?transport=tcp","turn:[2A00:1450:4010:C08::7F]:19305?transport=tcp"],"username":"CLbjrtkFEgbPZt4i/IkYzc/s6OMTIICjBQ","credential":"2TmqJboFQqJGCwa5prtI5/I6GaE="}
 		],
 };
 
